@@ -1,0 +1,45 @@
+{
+    "pages": [
+        "pages/bind/bind",
+        "pages/task/task",
+        "pages/workbench/workbench",
+        "pages/ucenter/ucenter",
+        "pages/ucenter/my-contract/my-contract",
+        "pages/ucenter/my-payroll-detail/my-payroll-detail"
+    ],
+    "subPackages": [],
+    "window": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "uni-app",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
+    },
+    "tabBar": {
+        "color": "#7A7E83",
+        "selectedColor": "#007AFF",
+        "borderStyle": "black",
+        "backgroundColor": "#FFFFFF",
+        "list": [
+            {
+                "pagePath": "pages/task/task",
+                "iconPath": "static/tabbar/list.png",
+                "selectedIconPath": "static/tabbar/list_active.png",
+                "text": "代办"
+            },
+            {
+                "pagePath": "pages/workbench/workbench",
+                "iconPath": "static/tabbar/grid.png",
+                "selectedIconPath": "static/tabbar/grid_active.png",
+                "text": "工作台"
+            },
+            {
+                "pagePath": "pages/ucenter/ucenter",
+                "iconPath": "static/tabbar/me.png",
+                "selectedIconPath": "static/tabbar/me_active.png",
+                "text": "我的"
+            }
+        ]
+    },
+    "usingComponents": {},
+    "sitemapLocation": "sitemap.json"
+}
