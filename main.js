@@ -14,16 +14,20 @@ uni.getAccessToken = () => {
 	return cache.accessToken.value;
 }
 
-
 uni.getUserDetails = () => {
 	const cache = uni.getStorageSync("pengsoft")
 	return cache.userDetails;
 }
 
-// uni.hasAnyRole = (role: string) => {
-// 	const cache = uni.getStorageSync("pengsoft");
-// 	cache.userDetails.roles.some()
-// }
+uni.hasRole = (roleCode) => {
+	const cache = uni.getStorageSync("pengsoft");
+	return cache.userDetails.roles.some(role => role.code === roleCode);
+}
+
+uni.hasAuthority = (authorityCode) => {
+	const cache = uni.getStorageSync("pengsoft");
+	return cache.userDetails.authorities.some(authority => authority === authorityCode);
+}
 
 uni.addInterceptor('request', {
 	invoke(args) {

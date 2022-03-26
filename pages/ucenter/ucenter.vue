@@ -75,7 +75,6 @@
 		onShow() {
 			const me = this;
 			const userDetails = uni.getUserDetails();
-			console.log(userDetails.roles);
 			if (userDetails.person) {
 				if (userDetails.person.avatar) {
 					me.avatar = userDetails.person.avatar.accessPath;
