@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<view class="home-menu-wrap" v-for="(item,index) in menus" v-if="isMenuVisible(item)">
-
 			<uni-section :title="item.name" type="line">
 				<view class="home-menu-container">
-					<view v-for="(child,index2) in item.children" class="home-menu-item" v-if="isMenuVisible(child)">
+					<view v-for="(child,index2) in item.children" class="home-menu-item" @click="handleClickMenu(child)"
+						v-if="isMenuVisible(child)">
 						<uni-icons class="menu-icon" :type="child.icon" size="30" />
 						<text class="menu-text"> {{child.name}} </text>
 					</view>
@@ -23,11 +23,13 @@
 					role: ['bu_manager', 'supervision_engineer', 'security_officer'],
 					children: [{
 						name: '安全检查',
-						icon: 'vip',
+						icon: 'shop-filled',
+						url: '/pages/modules/ss/safety-check/list/list',
 						role: ['bu_manager', 'supervision_engineer', 'security_officer'],
 					}, {
 						name: '安全培训',
-						icon: 'vip',
+						icon: 'shop-filled',
+						url: '/pages/modules/ss/safety-training/list/list',
 						role: ['bu_manager', 'security_officer'],
 					}]
 				}, {
@@ -35,11 +37,13 @@
 					role: ['bu_manager', 'cashier', 'worker'],
 					children: [{
 						name: '合同',
-						icon: 'vip',
+						icon: 'shop-filled',
+						url: '/pages/modules/oa/contract/list/list',
 						role: ['bu_manager', 'cashier', 'worker'],
 					}, {
 						name: '工资',
-						icon: 'vip',
+						icon: 'shop-filled',
+						url: '/pages/modules/oa/payroll-detail/list/list',
 						role: ['bu_manager', 'cashier', 'worker'],
 					}]
 				}]
@@ -50,6 +54,12 @@
 			isMenuVisible(menu) {
 				// return uni.hasAnyRole(menu.role);
 				return true
+			},
+			handleClickMenu(item) {
+				console.log(item)
+				uni.navigateTo({
+					url: item.url
+				})
 			}
 		}
 	}
@@ -57,13 +67,13 @@
 
 <style lang="scss">
 	.home-menu-wrap {
-		margin: 15px;
-		padding-bottom: 20px ;
+		margin: 8px;
+		padding-bottom: 20px;
 		border-radius: 4px;
 		border: 1px solid #EBEEF5;
 		background: #FFFFFF;
 		box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 3px 1px;
-		
+
 		// reset
 		.uni-section {
 			margin: 0;

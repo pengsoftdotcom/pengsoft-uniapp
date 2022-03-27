@@ -13,6 +13,7 @@
 </script>
 
 <style lang="scss">
+	@import './common/uni.css';
 	/*每个页面公共css */
 	// 设置整个项目的背景色
 	page {
