@@ -1,6 +1,6 @@
 import App from './App'
 
-const URL_PREFIX = 'http://461z6k8624.qicp.vip';
+const URL_PREFIX = 'https://api.pengsoft.com';
 
 uni.isAuthenticated = () => {
 	const cache = uni.getStorageSync("pengsoft")
