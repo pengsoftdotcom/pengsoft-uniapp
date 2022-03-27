@@ -141,7 +141,14 @@ var _default =
 
 
   },
-  methods: {} };exports.default = _default;
+  methods: {},
+
+
+  onShow: function onShow() {
+    // uni.navigateTo({
+    // 	url: '../modules/oa/contract/list/list'
+    // })
+  } };exports.default = _default;
 
 /***/ })
 

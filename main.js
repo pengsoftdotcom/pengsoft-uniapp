@@ -19,14 +19,26 @@ uni.getUserDetails = () => {
 	return cache.userDetails;
 }
 
-uni.hasRole = (roleCode) => {
+uni.hasAnyRole = (roleCode) => {
 	const cache = uni.getStorageSync("pengsoft");
-	return cache.userDetails.roles.some(role => role.code === roleCode);
+	return cache.userDetails.roles.some(role => {
+		if (Array.isArray(roleCode)) {
+			return roleCode.some(code => code === role.code);
+		} else {
+			return role.code === roleCode;
+		}
+	});
 }
 
 uni.hasAuthority = (authorityCode) => {
 	const cache = uni.getStorageSync("pengsoft");
-	return cache.userDetails.authorities.some(authority => authority === authorityCode);
+	return cache.userDetails.authorities.some(authority => {
+		if (Array.isArray(authorityCode)) {
+			return authorityCode.some(code => code === authority);
+		} else {
+			return authority === authorityCode;
+		}
+	});
 }
 
 uni.addInterceptor('request', {

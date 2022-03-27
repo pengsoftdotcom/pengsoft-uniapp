@@ -128,7 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
 //
 //
 //
@@ -137,11 +137,35 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 var _default =
 {
   data: function data() {
-    return {};
+    return {
+      menus: [{
+        name: '工地安全',
+        role: ['bu_manager', 'supervision_engineer', 'security_officer'],
+        children: [{
+          name: '安全检查',
+          role: ['bu_manager', 'supervision_engineer', 'security_officer'] },
+        {
+          name: '安全培训',
+          role: ['bu_manager', 'security_officer'] }] },
+
+      {
+        name: '保障支付',
+        role: ['bu_manager', 'cashier', 'worker'],
+        children: [{
+          name: '合同',
+          role: ['bu_manager', 'cashier', 'worker'] },
+        {
+          name: '工资',
+          role: ['bu_manager', 'cashier', 'worker'] }] }] };
+
 
 
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    isMenuVisible: function isMenuVisible(menu) {
+      return uni.hasAnyRole(menu.role);
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })
 

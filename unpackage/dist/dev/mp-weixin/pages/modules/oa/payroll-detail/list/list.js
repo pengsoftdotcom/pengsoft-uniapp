@@ -128,7 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
 //
 //
 //
@@ -137,11 +137,40 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 var _default =
 {
   data: function data() {
-    return {};
+    return {
+      pageData: {
+        page: 0,
+        size: 20 },
+
+      listData: [],
+      filterData: {} };
+
 
 
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    findPage: function findPage() {
+      uni.request({
+        url: '/api/oa/contract/find-page',
+        data: Object.assign({
+          page: this.pageData.page,
+          size: this.pageData.size },
+        this.filterData),
+        success: function success(res) {
+          this.pageData.total = res.totalElements;
+          // 是否首页
+          this.pageData.first = res.first;
+          // 是否末页
+          this.pageData.last = res.last;
+          this.listData = res.content;
+        } });
+
+    } },
+
+  onShow: function onShow() {
+    this.findPage();
+  } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })
 

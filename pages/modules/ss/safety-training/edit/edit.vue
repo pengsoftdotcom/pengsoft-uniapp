@@ -13,11 +13,6 @@
 		},
 		methods: {
 			
-		},
-		onShow() {
-			// uni.navigateTo({
-			// 	url: '../modules/oa/contract/list/list'
-			// })
 		}
 	}
 </script>

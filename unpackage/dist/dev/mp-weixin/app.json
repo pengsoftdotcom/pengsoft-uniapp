@@ -7,7 +7,11 @@
     "pages/modules/oa/contract/list/list",
     "pages/modules/oa/contract/edit/edit",
     "pages/modules/oa/payroll-detail/list/list",
-    "pages/modules/oa/payroll-detail/edit/edit"
+    "pages/modules/oa/payroll-detail/edit/edit",
+    "pages/modules/ss/safety-training/list/list",
+    "pages/modules/ss/safety-training/edit/edit",
+    "pages/modules/ss/safety-check/list/list",
+    "pages/modules/ss/safety-check/edit/edit"
   ],
   "subPackages": [],
   "window": {
