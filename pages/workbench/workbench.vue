@@ -1,6 +1,16 @@
 <template>
 	<view>
+		<view class="home-menu-wrap" v-for="(item,index) in menus" v-if="isMenuVisible(item)">
 
+			<uni-section :title="item.name" type="line">
+				<view class="home-menu-container">
+					<view v-for="(child,index2) in item.children" class="home-menu-item" v-if="isMenuVisible(child)">
+						<uni-icons class="menu-icon" :type="child.icon" size="30" />
+						<text class="menu-text"> {{child.name}} </text>
+					</view>
+				</view>
+			</uni-section>
+		</view>
 	</view>
 </template>
 
@@ -13,9 +23,11 @@
 					role: ['bu_manager', 'supervision_engineer', 'security_officer'],
 					children: [{
 						name: '安全检查',
+						icon: 'vip',
 						role: ['bu_manager', 'supervision_engineer', 'security_officer'],
 					}, {
 						name: '安全培训',
+						icon: 'vip',
 						role: ['bu_manager', 'security_officer'],
 					}]
 				}, {
@@ -23,22 +35,63 @@
 					role: ['bu_manager', 'cashier', 'worker'],
 					children: [{
 						name: '合同',
+						icon: 'vip',
 						role: ['bu_manager', 'cashier', 'worker'],
 					}, {
 						name: '工资',
+						icon: 'vip',
 						role: ['bu_manager', 'cashier', 'worker'],
 					}]
 				}]
 			}
 		},
+		onLoad() {},
 		methods: {
 			isMenuVisible(menu) {
-				return uni.hasAnyRole(menu.role);
+				// return uni.hasAnyRole(menu.role);
+				return true
 			}
 		}
 	}
 </script>
 
-<style>
+<style lang="scss">
+	.home-menu-wrap {
+		margin: 15px;
+		padding-bottom: 20px ;
+		border-radius: 4px;
+		border: 1px solid #EBEEF5;
+		background: #FFFFFF;
+		box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 3px 1px;
+		
+		// reset
+		.uni-section {
+			margin: 0;
+		}
 
+		.home-menu-container {
+			display: flex;
+			overflow: hidden;
+
+			.home-menu-item {
+				width: 33.33%;
+				padding: 8px;
+				box-sizing: border-box;
+				flex: none;
+
+				.menu-icon {
+					display: block;
+					text-align: center;
+					padding: 8px;
+				}
+
+				.menu-text {
+					display: block;
+					text-align: center;
+					font-size: 13px;
+				}
+			}
+		}
+
+	}
 </style>

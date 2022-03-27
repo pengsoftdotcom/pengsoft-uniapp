@@ -81,7 +81,7 @@
 			},
 			afterSignedIn() {
 				uni.switchTab({
-					url: '/pages/task/task'
+					url: '/pages/workbench/workbench'
 				});
 			},
 			bind() {
