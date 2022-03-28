@@ -34,20 +34,20 @@
 				listData: [],
 			}
 		},
+		onLoad() {
+			this.getList();
+		},
+		onPullDownRefresh() {
+			this.pageData.page = 0;
+			this.getList();
+		},
+		onReachBottom() {
+			if (this.status !== 'noMore') {
+				this.pageData.page += 1;
+				this.getList();
+			}
+		},
 		methods: {
-			onLoad() {
-				this.getList();
-			},
-			onPullDownRefresh() {
-				this.pageData.page = 0;
-				this.getList();
-			},
-			onReachBottom() {
-				if (this.status !== 'noMore') {
-					this.pageData.page += 1;
-					this.getList();
-				}
-			},
 			getList() {
 				this.status = 'more';
 				if (this.pageData.page !== 0) {

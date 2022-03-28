@@ -7,7 +7,7 @@
 					<view>{{ item.trainer.person.name }}</view>
 					<view>{{ item.submittedAt }}</view>
 					<view>
-						<uni-icons type="location" color="#007aff" size="12"/> {{ item.address }}
+						<uni-icons type="location" color="#007aff" size="12" /> {{ item.address }}
 					</view>
 				</view>
 			</view>
@@ -33,20 +33,20 @@
 				listData: [],
 			}
 		},
+		onLoad() {
+			this.getList();
+		},
+		onPullDownRefresh() {
+			this.pageData.page = 0;
+			this.getList();
+		},
+		onReachBottom() {
+			if (this.status !== 'noMore') {
+				this.pageData.page += 1;
+				this.getList();
+			}
+		},
 		methods: {
-			onLoad() {
-				this.getList();
-			},
-			onPullDownRefresh() {
-				this.pageData.page = 0;
-				this.getList();
-			},
-			onReachBottom() {
-				if (this.status !== 'noMore') {
-					this.pageData.page += 1;
-					this.getList();
-				}
-			},
 			getList() {
 				this.status = 'more';
 				if (this.pageData.page !== 0) {
