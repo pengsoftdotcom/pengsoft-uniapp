@@ -30,6 +30,17 @@ uni.hasAnyRole = (roleCode) => {
 	});
 }
 
+uni.page = {
+	pageData: {
+		page: 0,
+		size: 20
+	},
+	listData: [],
+	filterData: {
+	
+	}
+}
+
 uni.hasAuthority = (authorityCode) => {
 	const cache = uni.getStorageSync("pengsoft");
 	return cache.userDetails.authorities.some(authority => {

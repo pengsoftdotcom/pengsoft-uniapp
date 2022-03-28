@@ -61,7 +61,7 @@
 									type: 'mpOpenid'
 								},
 								success() {
-									uni.clearStorage();
+									uni.clearStorageSync();
 									uni.navigateTo({
 										url: '../bind/bind'
 									})

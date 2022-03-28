@@ -1,21 +1,6 @@
 <template>
 	<view>
-		<view class="uni-list">
-			<block v-for="(value, index) in listData" :key="index">
-				<view class="uni-list-cell" hover-class="uni-list-cell-hover">
-					<view class="uni-media-list">
-						<view class="uni-media-list-body">
-							<view class="uni-media-list-text-top">{{ value.name }}</view>
-							<view class="uni-media-list-text-bottom">
-								<text>{{ value.addr }}</text>
-								<text>{{ value.time }}</text>
-							</view>
-						</view>
-					</view>
-				</view>
-			</block>
-		</view>
-		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
+		
 	</view>
 </template>
 
@@ -48,7 +33,7 @@
 		methods: {
 			findPage() {
 				uni.request({
-					url: '/api/ss/safety-training/find-page',
+					url: '/api/oa/payroll-record/find-page',
 					data: {
 						...{
 							page: this.pageData.page,
@@ -65,7 +50,7 @@
 						this.pageData.last = res.last;
 					}
 				});
-
+		
 			}
 		},
 		onShow() {

@@ -43,7 +43,7 @@
 					}, {
 						name: '工资',
 						icon: 'shop-filled',
-						url: '/pages/modules/oa/payroll-detail/list/list',
+						url: '/pages/modules/oa/payroll-record/list/list',
 						role: ['bu_manager', 'cashier', 'worker'],
 					}]
 				}]
