@@ -55,7 +55,6 @@
 				return uni.hasAnyRole(menu.role);
 			},
 			handleClickMenu(item) {
-				console.log(item)
 				uni.navigateTo({
 					url: item.url
 				})
