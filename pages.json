@@ -75,8 +75,8 @@
             "path" : "pages/modules/ss/safety-check/list/list",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "navigationBarTitleText": "安全检查",
+                "enablePullDownRefresh": true
             }
             
         }

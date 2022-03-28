@@ -71,7 +71,7 @@
 		border-radius: 4px;
 		border: 1px solid #EBEEF5;
 		background: #FFFFFF;
-		box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 3px 1px;
+		box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
 
 		// reset
 		.uni-section {
