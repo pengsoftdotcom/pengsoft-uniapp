@@ -1,6 +1,7 @@
 import App from './App'
 
 const URL_PREFIX = 'https://api.pengsoft.com';
+// const URL_PREFIX = 'http://localhost:8080';
 
 uni.isAuthenticated = () => {
 	const cache = uni.getStorageSync("pengsoft")
@@ -64,8 +65,8 @@ uni.addInterceptor('request', {
 		if (!args.header['Content-Type']) {
 			args.header['Content-Type'] = 'application/x-www-form-urlencoded';
 		}
-		if (!args.header['Content-Language']) {
-			args.header['Content-Language'] = 'zh_CN';
+		if (!args.header['Accept-Language']) {
+			args.header['Accept-Language'] = 'zh-CN';
 		}
 		if (uni.isAuthenticated()) {
 			args.header['Authorization'] = 'Bearer ' + uni.getAccessToken();
