@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id)">
 				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
 				<view class="w-list-item-body">
 					<view>{{ item.checker.person.name }}</view>
@@ -71,6 +71,11 @@
 					fail: (data, code) => {
 						console.log('fail' + JSON.stringify(data));
 					}
+				})
+			},
+			edit(id) {
+				uni.navigateTo({
+					url: '../edit/edit?id=' + id
 				})
 			}
 		},
