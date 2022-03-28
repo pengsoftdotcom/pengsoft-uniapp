@@ -33,7 +33,6 @@
 					},
 					success: res => {
 						this.form = res.data;
-						this.handle();
 					}
 				})
 			},
