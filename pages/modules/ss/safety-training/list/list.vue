@@ -72,9 +72,9 @@
 				}, 500);
 
 				return
-
+				const me = this;
 				uni.request({
-					url: '/api/oa/contract/find-page',
+					url: '/api/ss/safety-training/find-page',
 					data: {
 						...{
 							page: this.pageData.page,
@@ -84,12 +84,12 @@
 					},
 					success: res => {
 						if (res.statusCode == 200) {
-							this.listData = this.pageData.page === 0 ? res.content : this.listData.concat(res.content);
-							this.pageData.total = res.totalElements;
+							me.listData = me.listData.concat(res.content);
+							me.pageData.total = res.totalElements;
 							// 是否首页
-							this.pageData.first = res.first;
+							me.pageData.first = res.first;
 							// 是否末页
-							this.pageData.last = res.last;
+							me.pageData.last = res.last;
 						}
 					},
 					fail: (data, code) => {

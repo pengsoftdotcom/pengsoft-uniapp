@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<view class="home-menu-wrap" v-for="(item,index) in menus" v-if="isMenuVisible(item)">
+		<view class="home-menu-wrap" v-for="(item,index) in menus" :key="index" v-if="isMenuVisible(item)">
 			<uni-section :title="item.name" type="line">
 				<view class="home-menu-container">
-					<view v-for="(child,index2) in item.children" class="home-menu-item" @click="handleClickMenu(child)"
+					<view v-for="(child,index2) in item.children" :key="index2" class="home-menu-item" @click="handleClickMenu(child)"
 						v-if="isMenuVisible(child)">
 						<uni-icons class="menu-icon" :type="child.icon" size="30" />
 						<text class="menu-text"> {{child.name}} </text>
@@ -52,8 +52,7 @@
 		onLoad() {},
 		methods: {
 			isMenuVisible(menu) {
-				// return uni.hasAnyRole(menu.role);
-				return true
+				return uni.hasAnyRole(menu.role);
 			},
 			handleClickMenu(item) {
 				console.log(item)

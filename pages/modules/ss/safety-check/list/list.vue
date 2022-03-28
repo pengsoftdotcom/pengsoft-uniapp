@@ -20,19 +20,20 @@
 		},
 		methods: {
 			findPage() {
+				const me = this;
 				uni.request({
-					url: '/api/oa/contract/find-page',
+					url: '/api/ss/safety-check/find-page',
 					data: Object.assign({
 						page: this.pageData.page,
 						size: this.pageData.size
 					}, this.filterData),
 					success(res) {
-						this.pageData.total = res.totalElements;
+						me.pageData.total = res.totalElements;
 						// 是否首页
-						this.pageData.first = res.first;
+						me.pageData.first = res.first;
 						// 是否末页
-						this.pageData.last = res.last;
-						this.listData = res.content
+						me.pageData.last = res.last;
+						me.listData = res.content
 					}
 				})
 			}

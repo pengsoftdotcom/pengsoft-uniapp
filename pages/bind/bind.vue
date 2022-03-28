@@ -21,7 +21,7 @@
 			return {
 				form: {
 					type: 'mpOpenid',
-					username: '18508101366',
+					username: '',
 					captcha: '',
 					value: ''
 				},
