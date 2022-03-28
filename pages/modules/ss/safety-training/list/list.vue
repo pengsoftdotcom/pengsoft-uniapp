@@ -1,19 +1,16 @@
 <template>
 	<view>
-		<view class="uni-list">
-			<block v-for="(value, index) in listData" :key="index">
-				<view class="uni-list-cell" hover-class="uni-list-cell-hover">
-					<view class="uni-media-list">
-						<view class="uni-media-list-body">
-							<view class="uni-media-list-text-top">{{ value.name }}</view>
-							<view class="uni-media-list-text-bottom">
-								<text>{{ value.addr }}</text>
-								<text>{{ value.time }}</text>
-							</view>
-						</view>
+		<view class="w-list-wrap">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item">
+				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
+				<view class="w-list-item-body">
+					<view>{{ item.trainer.person.name }}</view>
+					<view>{{ item.submittedAt }}</view>
+					<view>
+						<uni-icons type="location" color="#007aff" size="12"/> {{ item.address }}
 					</view>
 				</view>
-			</block>
+			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 	</view>
@@ -23,54 +20,59 @@
 	export default {
 		data() {
 			return {
-				...{
 				contentText: {
 					contentdown: '上拉加载更多',
 					contentrefresh: '加载中',
 					contentnomore: '没有更多'
 				},
-				status: 'loading',
-			}, ...uni.page}
-		},
-		onLoad() {
-			this.findPage();
-		},
-		onPullDownRefresh() {
-			console.log('pull')
-			this.pageData.page = 0;
-			this.findPage();
-		},
-		onReachBottom() {
-			this.status = 'more';
-			this.pageData.page += 1;
-			this.findPage();
+				status: 'more',
+				pageData: {
+					page: 0,
+					size: 10
+				},
+				listData: [],
+			}
 		},
 		methods: {
-			findPage() {
+			onLoad() {
+				this.getList();
+			},
+			onPullDownRefresh() {
+				this.pageData.page = 0;
+				this.getList();
+			},
+			onReachBottom() {
+				if (this.status !== 'noMore') {
+					this.pageData.page += 1;
+					this.getList();
+				}
+			},
+			getList() {
+				this.status = 'more';
+				if (this.pageData.page !== 0) {
+					this.status = 'loading';
+				}
 				uni.request({
 					url: '/api/ss/safety-training/find-page',
 					data: {
-						...{
-							page: this.pageData.page,
-							size: this.pageData.size
-						},
-						...this.filterData
+						page: this.pageData.page,
+						size: this.pageData.size,
 					},
-					success: res => {
-						this.listData = this.listData.concat(res.content);
-						this.pageData.total = res.totalElements;
-						// 是否首页
-						this.pageData.first = res.first;
-						// 是否末页
-						this.pageData.last = res.last;
+					success: (res) => {
+						uni.stopPullDownRefresh();
+						this.pageData.total = res.data.totalElements;
+						if (res.data.last) {
+							this.status = 'noMore';
+						}
+						this.listData = this.pageData.page === 0 ? res.data.content :
+							this.listData.concat(res.data.content)
+					},
+					fail: (data, code) => {
+						console.log('fail' + JSON.stringify(data));
 					}
-				});
-
+				})
 			}
 		},
-		onShow() {
-			this.findPage();
-		}
 	}
 </script>
 
