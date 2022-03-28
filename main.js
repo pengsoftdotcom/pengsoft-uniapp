@@ -6,7 +6,7 @@ uni.isAuthenticated = () => {
 	const cache = uni.getStorageSync("pengsoft")
 	const accessToken = cache.accessToken;
 	return accessToken && accessToken.expiredAt && accessToken.expiredAt - new Date().getTime() + 1000 * 60 * 30 >
-	0;
+		0;
 };
 
 uni.getAccessToken = () => {
@@ -37,7 +37,7 @@ uni.page = {
 	},
 	listData: [],
 	filterData: {
-	
+
 	}
 }
 
@@ -65,10 +65,10 @@ uni.addInterceptor('request', {
 			args.header['Content-Type'] = 'application/x-www-form-urlencoded';
 		}
 		if (!args.header['Content-Language']) {
-			args.header['Content-Language'] =  'zh_CN';
+			args.header['Content-Language'] = 'zh_CN';
 		}
 		if (uni.isAuthenticated()) {
-			args.header['Authorization'] =  'Bearer ' + uni.getAccessToken();
+			args.header['Authorization'] = 'Bearer ' + uni.getAccessToken();
 		}
 
 		const success = args.success;
@@ -111,11 +111,17 @@ const failure = (args) => {
 };
 // #ifndef VUE3
 import Vue from 'vue'
+import uView from '@/uni_modules/uview-ui'
+
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({
 	...App
 })
+
+Vue.use(uView)
+// 如此配置即可
+// uni.$u.config.unit = 'rpx'
 app.$mount()
 // #endif
 

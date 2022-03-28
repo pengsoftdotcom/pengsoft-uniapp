@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="clickItem(item)">
 				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
 				<view class="w-list-item-body">
 					<view>{{ item.trainer.person.name }}</view>
@@ -70,6 +70,11 @@
 					fail: (data, code) => {
 						console.log('fail' + JSON.stringify(data));
 					}
+				})
+			},
+			clickItem(item) {
+				uni.navigateTo({
+					url: `/pages/modules/ss/safety-training/edit/edit?type=detail&id=${item.id}`
 				})
 			}
 		},

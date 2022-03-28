@@ -4,6 +4,7 @@
 </script>
 
 <style lang="scss">
+	@import "@/uni_modules/uview-ui/index.scss";
 	@import './common/uni.css';
 	@import './common/custom.scss';
 	/*每个页面公共css */

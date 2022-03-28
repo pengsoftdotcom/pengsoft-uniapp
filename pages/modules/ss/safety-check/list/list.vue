@@ -75,7 +75,7 @@
 			},
 			edit(id) {
 				uni.navigateTo({
-					url: '../edit/edit?id=' + id
+					url: `../edit/edit?id=${id}&type=edit`
 				})
 			}
 		},
