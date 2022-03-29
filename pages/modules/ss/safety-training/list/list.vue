@@ -13,8 +13,10 @@
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
-		<u-button type="primary" text="新增" customStyle="margin-top: 40px; position: fixed; bottom: 0"
-			@click="edit('', 'create')"></u-button>
+			
+		<button class="w-fab-btn" @click="edit('', 'create')">
+			<u-icon color="#fff" name="plus"></u-icon>
+		</button>
 	</view>
 </template>
 

@@ -11,6 +11,7 @@
 				<view class="w-list-item-status" :class="item.status.code ==='safe' ? 'success' : 'warning'">
 					{{item.status.name}}
 				</view>
+				<view class="w-list-item-angle" v-if="item.handledAt">已处理</view>
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />

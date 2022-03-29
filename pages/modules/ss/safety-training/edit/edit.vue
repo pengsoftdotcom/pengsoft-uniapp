@@ -16,15 +16,13 @@
 			<u-form-item label="全员参加" prop="allWorkers" borderBottom>
 				<u-switch v-model="formModel.allWorkers"></u-switch>
 			</u-form-item>
-			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom>
-				<u-datetime-picker :show="estShow" v-model="formModel.estimatedStartTime" mode="datetime"
-					@confirm="estShow = false"></u-datetime-picker>
-				<u-button @click="estShow = true">打开</u-button>
+			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom @click="estShow = true">
+				<u--input v-model="formModel.estimatedStartTime" disabled disabledColor="#ffffff" placeholder="请选择"
+					border="none"></u--input>
 			</u-form-item>
-			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom>
-				<u-datetime-picker :show="estShow" v-model="formModel.estimatedEndTime" mode="datetime">
-				</u-datetime-picker>
-				<u-button @click="estShow = true">打开</u-button>
+			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom @click="eetShow = true">
+				<u--input v-model="formModel.estimatedEndTime" disabled disabledColor="#ffffff" placeholder="请选择"
+					border="none"></u--input>
 			</u-form-item>
 			<u-form-item label="培训地址" prop="address" borderBottom>
 				<u--textarea v-model="formModel.address"></u--textarea>
@@ -35,24 +33,30 @@
 				</u-upload>
 			</u-form-item>
 		</u--form>
-		<view class="toolbar">
-			<u-button v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary"
-				text="保存" @click="save">
+
+		<u-datetime-picker closeOnClickOverlay :show="estShow" mode="datetime" @cancel="estShow=false" v-model="estTime"
+			@close="estShow=false" @confirm="handleStartTimeConfirm">
+		</u-datetime-picker>
+		<u-datetime-picker closeOnClickOverlay :show="eetShow" mode="datetime" @cancel="eetShow=false" v-model="eetTime"
+			@close="eetShow=false" @confirm="handleEndTimeConfirm">
+		</u-datetime-picker>
+
+		<view class="w-form-btn-content">
+			<u-button size="small" v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary" text="保存"
+				@click="save">
 			</u-button>
-			<u-button v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitDisabled()" type="primary"
-				text="提交" @click="saveAndSubmit">
+			<u-button size="small" v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitDisabled()" type="primary" text="提交"
+				@click="saveAndSubmit">
 			</u-button>
-			<u-button v-if="isButtonVisible('submit')" :disabled="isSubmitAndSaveDisabled()" type="primary"
-				text="保存并提交" @click="saveAndSubmit">
+			<u-button size="small" v-if="isButtonVisible('submit')" :disabled="isSubmitAndSaveDisabled()" type="primary" text="保存并提交"
+				@click="saveAndSubmit">
 			</u-button>
-		</view>
-		<view class="toolbar" style="margin-top: 10rpx;">
-			<u-button v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success" text="开始"
+			<u-button size="small" v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success" text="开始"
 				@click="start">
 			</u-button>
-			<u-button v-if="isButtonVisible('end')" :disabled="isEndDisabled()" type="error" text="结束" @click="end">
+			<u-button size="small" v-if="isButtonVisible('end')" :disabled="isEndDisabled()" type="error" text="结束" @click="end">
 			</u-button>
-			<u-button v-if="isButtonVisible('confirm')" :disabled="isConfirmDisabled()" type="primary" text="确认"
+			<u-button size="small" v-if="isButtonVisible('confirm')" :disabled="isConfirmDisabled()" type="primary" text="确认"
 				@click="confirm">
 			</u-button>
 		</view>
@@ -76,13 +80,15 @@
 					subject: '',
 					trainer: null,
 					allWorkers: true,
-					estimatedStartTime: Number(new Date()),
-					estimatedEndTime: Number(new Date()),
+					estimatedStartTime: '',
+					estimatedEndTime: '',
 					address: '',
 					files: []
 				},
 				estShow: false,
 				eetShow: false,
+				estTime: Number(new Date()),
+				eetTime: Number(new Date()),
 				files: [],
 				rules: {
 
@@ -191,7 +197,16 @@
 					});
 				});
 
-			}
+			},
+			handleStartTimeConfirm(e) {
+				console.log(e)
+				this.estShow = false;
+				this.formModel.estimatedStartTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM:ss')
+			},
+			handleEndTimeConfirm(e) {
+				this.eetShow = false;
+				this.formModel.estimatedEndTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM:ss')
+			},
 		},
 	}
 </script>
