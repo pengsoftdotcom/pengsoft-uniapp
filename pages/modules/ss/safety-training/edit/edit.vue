@@ -1,16 +1,61 @@
 <template>
 	<view class="w-form-wrap">
-		<u--form labelPosition="left" :model="formModel" ref="form1">
-			<u-form-item label="姓名" prop="name" borderBottom ref="item1">
-				<u--input v-model="formModel.name" border="none" placeholder="姓名,只能为中文"></u--input>
+		<u--form :labelWidth="95" :model="formModel" :rules="rules" ref="form">
+			<u-form-item label="工程项目" prop="project.name" borderBottom ref="item1">
+				{{formModel.project.name}}
 			</u-form-item>
-			<u-form-item label="姓名" prop="userInfo.name" borderBottom ref="item1">
-				<u-upload :fileList="formModel.fileList1" @afterRead="afterRead" @delete="deletePic" name="1"
-					:maxCount="6">
+			<u-form-item label="编码" prop="code" borderBottom>
+				{{formModel.code}}
+			</u-form-item>
+			<u-form-item label="培训主题" prop="subject" borderBottom required>
+				<u--input v-model="formModel.subject" border="surround"></u--input>
+			</u-form-item>
+			<u-form-item label="培训人" prop="trainer.person.name" borderBottom>
+				{{formModel.trainer.person.name}}
+			</u-form-item>
+			<u-form-item label="全员参加" prop="allWorkers" borderBottom>
+				<u-switch v-model="formModel.allWorkers"></u-switch>
+			</u-form-item>
+			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom>
+				<u-datetime-picker :show="estShow" v-model="formModel.estimatedStartTime" mode="datetime"
+					@confirm="estShow = false"></u-datetime-picker>
+				<u-button @click="estShow = true">打开</u-button>
+			</u-form-item>
+			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom>
+				<u-datetime-picker :show="estShow" v-model="formModel.estimatedEndTime" mode="datetime">
+				</u-datetime-picker>
+				<u-button @click="estShow = true">打开</u-button>
+			</u-form-item>
+			<u-form-item label="培训地址" prop="address" borderBottom>
+				<u--textarea v-model="formModel.address"></u--textarea>
+			</u-form-item>
+			<u-form-item v-if="formModel.startedAt" label="过程图片" prop="files" borderBottom required>
+				<u-upload :capture="['camera']" :fileList="files" @afterRead="afterReadPicture()"
+					@delete="deletePicture" :maxCount="6" :deletable="!formModel.endedAt" :disabled="formModel.endedAt">
 				</u-upload>
 			</u-form-item>
 		</u--form>
-		<u-button type="primary" text="提交" customStyle="margin-top: 50px" @click="submit"></u-button>
+		<view class="toolbar">
+			<u-button v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary"
+				text="保存" @click="save">
+			</u-button>
+			<u-button v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitDisabled()" type="primary"
+				text="提交" @click="saveAndSubmit">
+			</u-button>
+			<u-button v-if="isButtonVisible('submit')" :disabled="isSubmitAndSaveDisabled()" type="primary"
+				text="保存并提交" @click="saveAndSubmit">
+			</u-button>
+		</view>
+		<view class="toolbar" style="margin-top: 10rpx;">
+			<u-button v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success" text="开始"
+				@click="start">
+			</u-button>
+			<u-button v-if="isButtonVisible('end')" :disabled="isEndDisabled()" type="error" text="结束" @click="end">
+			</u-button>
+			<u-button v-if="isButtonVisible('confirm')" :disabled="isConfirmDisabled()" type="primary" text="确认"
+				@click="confirm">
+			</u-button>
+		</view>
 	</view>
 </template>
 
@@ -19,21 +64,36 @@
 		data() {
 			return {
 				titleObj: {
-					add: '新增安全培训',
-					edit: '编辑安全培训',
-					detail: '安全培训详情',
+					create: '新增安全培训',
+					update: '编辑安全培训',
+					detail: '安全检查培训',
 				},
 				type: '',
-				id: '',
 				formModel: {
-					name: '',
-					fileList1: [],
+					id: '',
+					project: null,
+					code: '',
+					subject: '',
+					trainer: null,
+					allWorkers: true,
+					estimatedStartTime: Number(new Date()),
+					estimatedEndTime: Number(new Date()),
+					address: '',
+					files: []
 				},
+				estShow: false,
+				eetShow: false,
+				files: [],
+				rules: {
+
+				}
 			}
 		},
-		onLoad(opt) {
-			console.log(opt)
-			this.type = opt.type;
+		onLoad(option) {
+			uni.getDictionaryItem('safety_check_status', data => this.statusArr = data);
+			this.formModel.id = option.id;
+			this.type = option.type;
+			this.findOne();
 		},
 		onReady() {
 			uni.setNavigationBarTitle({
@@ -41,60 +101,111 @@
 			})
 		},
 		methods: {
-			submit(){
-				console.log(this.formModel)
-			},
-			// 删除图片
-			deletePic(event) {
-				this[`fileList${event.name}`].splice(event.index, 1)
-			},
-			// 新增图片
-			async afterRead(event) {
-				// 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
-				let lists = [].concat(event.file)
-				let fileListLen = this[`fileList${event.name}`].length
-				lists.map((item) => {
-					this[`fileList${event.name}`].push({
-						...item,
-						status: 'uploading',
-						message: '上传中'
-					})
+			findOne() {
+				uni.request({
+					url: '/api/ss/safety-training/find-one-with-files',
+					data: {
+						id: this.formModel.id
+					},
+					success: res => {
+						this.formModel = res.data;
+						if (this.formModel.files) {
+							this.files = this.formModel.files.map(file => uni.convertToFile(file));
+							this.formModel.files;
+						}
+					}
 				})
-				for (let i = 0; i < lists.length; i++) {
-					const result = await this.uploadFilePromise(lists[i].url)
-					let item = this[`fileList${event.name}`][fileListLen]
-					this[`fileList${event.name}`].splice(fileListLen, 1, Object.assign(item, {
-						status: 'success',
-						message: '',
-						url: result
-					}))
-					fileListLen++
-				}
 			},
-			uploadFilePromise(url) {
-				return new Promise((resolve, reject) => {
-					let a = uni.uploadFile({
-						header: {
-							'Authorization': 'Bearer ' + uni.getAccessToken()
+			save() {
+				this.$refs.form.validate().then(res => {}).catch(errors => {
+					console.log(errors);
+				})
+			},
+			saveAndSubmit() {
+				this.$refs.form.validate().then(res => {}).catch(errors => {
+					console.log(errors);
+				})
+			},
+			submit() {
+				this.$refs.form.validate().then(res => {}).catch(errors => {
+					console.log(errors);
+				})
+			},
+			start() {
+				this.$refs.form.validate().then(res => {}).catch(errors => {
+					console.log(errors);
+				})
+			},
+			end() {
+				this.$refs.form.validate().then(res => {}).catch(errors => {
+					console.log(errors);
+				})
+			},
+			confirm() {
+				this.$refs.form.validate().then(res => {}).catch(errors => {
+					console.log(errors);
+				})
+			},
+			isButtonVisible(operation) {
+				return uni.hasAnyAuthority(`ss::safety_training::${operation}`);
+			},
+			isSaveDisabled() {
+				return this.formModel.allWorkers || this.formModel.id;
+			},
+			isSubmitDisabled() {
+				return !this.formModel.id || this.formModel.submittedAt;
+			},
+			isSubmitAndSaveDisabled() {
+				return !this.formModel.allWorkers || this.formModel.submittedAt;
+			},
+			isStartDisabled() {
+				return !this.formModel.submittedAt || this.formModel.startedAt;
+			},
+			isEndDisabled() {
+				return !this.formModel.startedAt || this.formModel.endedAt;
+			},
+			isConfirmDisabled() {
+				return !this.formModel.submittedAt || this.formModel.confirmedAt;
+			},
+			async afterReadPicture(event) {
+				const file = JSON.parse(await uni.upload(event.file, false))[0];
+				if (!this.formModel.files) {
+					this.formModel.files = [];
+				}
+				this.formModel.files.push(file);
+				this.files.push(uni.convertToFile(file));
+			},
+			deletePicture(event) {
+				return new Promise(resolve => {
+					uni.request({
+						url: '/api/ss/safety-training/delete-file-by-asset',
+						method: 'DELETE',
+						data: {
+							id: this.formModel.id,
+							'asset.id': event.file.id
 						},
-						url: 'https://api.pengsoft.com/api/system/asset/upload',
-						filePath: url,
-						name: 'file',
-						formData: {
-							user: 'test'
-						},
-						success: (res) => {
-							setTimeout(() => {
-								resolve(res.data.data)
-							}, 1000)
+						success: res => {
+							this.submitFiles.splice(event.index, 1);
+							resolve();
 						}
 					});
-				})
-			},
+				});
+
+			}
 		},
 	}
 </script>
 
 <style>
+	.toolbar {
+		display: flex;
+	}
 
+	.toolbar button {
+		margin-right: 8rpx;
+	}
+
+	.toolbar :last-child {
+		margin-right: 0;
+	}
 </style>

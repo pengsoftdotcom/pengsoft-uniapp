@@ -13,6 +13,8 @@
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
+		<u-button type="primary" text="新增" customStyle="margin-top: 40px; position: fixed; bottom: 0"
+			@click="edit('', 'create')"></u-button>
 	</view>
 </template>
 
@@ -20,20 +22,10 @@
 	export default {
 		data() {
 			return {
-				contentText: {
-					contentdown: '上拉加载更多',
-					contentrefresh: '加载中',
-					contentnomore: '没有更多'
-				},
-				status: 'more',
-				pageData: {
-					page: 0,
-					size: 10
-				},
-				listData: [],
+				...uni.listModel
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.getList();
 		},
 		onPullDownRefresh() {
@@ -72,9 +64,9 @@
 					}
 				})
 			},
-			clickItem(item) {
+			edit(id, type) {
 				uni.navigateTo({
-					url: `/pages/modules/ss/safety-training/edit/edit?type=detail&id=${item.id}`
+					url: `../edit/edit?id=${id}&type=${type}`
 				})
 			}
 		},

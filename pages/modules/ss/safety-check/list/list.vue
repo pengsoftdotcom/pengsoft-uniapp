@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id)">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'update')">
 				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
 				<view class="w-list-item-body">
 					<view>{{ item.checker.person.name }}</view>
@@ -14,6 +14,8 @@
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
+		<u-button type="primary" text="新增" customStyle="margin-top: 40px; position: fixed; bottom: 0"
+			@click="edit('', 'create')"></u-button>
 	</view>
 </template>
 
@@ -21,20 +23,10 @@
 	export default {
 		data() {
 			return {
-				contentText: {
-					contentdown: '上拉加载更多',
-					contentrefresh: '加载中',
-					contentnomore: '没有更多'
-				},
-				status: 'more',
-				pageData: {
-					page: 0,
-					size: 10
-				},
-				listData: [],
+				...uni.listModel
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.getList();
 		},
 		onPullDownRefresh() {
@@ -73,9 +65,9 @@
 					}
 				})
 			},
-			edit(id) {
+			edit(id, type) {
 				uni.navigateTo({
-					url: `../edit/edit?id=${id}&type=edit`
+					url: `../edit/edit?id=${id}&type=${type}`
 				})
 			}
 		},

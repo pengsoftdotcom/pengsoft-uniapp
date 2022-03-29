@@ -53,7 +53,6 @@
 		},
 		methods: {
 			signIn() {
-				const me = this;
 				uni.request({
 					url: '/oauth/token',
 					header: {
@@ -62,18 +61,18 @@
 					method: 'POST',
 					data: {
 						grant_type: 'mp',
-						mp_open_id: me.form.value
+						mp_open_id: this.form.value
 					},
-					success(res) {
+					success: res => {
 						const cache = {};
 						cache.accessToken = res.data;
 						uni.setStorageSync('pengsoft', cache);
 						uni.request({
 							url: '/api/user-details/current',
-							success(res1) {
+							success: res1 => {
 								cache.userDetails = res1.data;
 								uni.setStorageSync('pengsoft', cache);
-								me.afterSignedIn();
+								this.afterSignedIn();
 							}
 						})
 					}
@@ -85,19 +84,18 @@
 				});
 			},
 			bind() {
-				const me = this;
-				me.$refs.form.validate().then(res => {
+				this.$refs.form.validate().then(res => {
 					uni.request({
 						url: '/api/user-details/bind',
 						method: 'POST',
-						data: me.form,
-						success(res) {
+						data: this.form,
+						success: res => {
 							uni.showModal({
 								content: '绑定成功',
 								showCancel: false,
-								success(res1) {
+								success: res1 => {
 									if (res1.confirm) {
-										me.signIn();
+										this.signIn();
 									}
 								}
 							});
@@ -107,8 +105,7 @@
 
 			},
 			getCaptcha() {
-				const me = this;
-				if (!me.form.username || me.form.username.length != 11) {
+				if (!this.form.username || this.form.username.length != 11) {
 					uni.showToast({
 						title: '请输入正确的手机号码',
 						icon: 'none'
@@ -119,27 +116,27 @@
 					url: '/api/system/captcha/generate',
 					method: 'POST',
 					data: {
-						username: me.form.username
+						username: this.form.username
 					},
-					success() {
+					success: res => {
 						uni.showToast({
 							title: '发送成功',
 							icon: 'none'
 						});
-						let leftSeconds = me.totalSeconds - 1;
-						me.buttonDisabled = true;
-						me.buttonText = '剩余' + me.format(leftSeconds) + '秒';
+						let leftSeconds = this.totalSeconds - 1;
+						this.buttonDisabled = true;
+						this.buttonText = '剩余' + this.format(leftSeconds) + '秒';
 						const interval = setInterval(() => {
 							if (leftSeconds === 1) {
 								clearInterval(interval);
-								leftSeconds = me.totalSeconds;
-								me.buttonDisabled = false;
-								me.buttonText = '获取验证码';
+								leftSeconds = this.totalSeconds;
+								this.buttonDisabled = false;
+								this.buttonText = '获取验证码';
 							} else {
 								leftSeconds -= 1;
 								let buttonText = '剩余'
-								buttonText += me.format(leftSeconds) + '秒';
-								me.buttonText = buttonText;
+								buttonText += this.format(leftSeconds) + '秒';
+								this.buttonText = buttonText;
 							}
 						}, 1000);
 					}
@@ -153,27 +150,26 @@
 			}
 		},
 		onShow() {
-			const me = this;
 			if (uni.isAuthenticated()) {
-				me.afterSignedIn();
+				this.afterSignedIn();
 			} else {
 				wx.login({
-					success(res) {
+					success: res => {
 						uni.request({
 							url: '/api/weixin/ma/' + uni.getAccountInfoSync().miniProgram.appId +
 								'/is-bound',
 							data: {
 								code: res.code
 							},
-							success(res1) {
-								me.form.value = res1.data.openid;
+							success: res1 => {
+								this.form.value = res1.data.openid;
 								if (res1.data.bound) {
-									me.signIn();
+									this.signIn();
 								} else {
 									uni.setNavigationBarTitle({
 										title: '绑定手机'
 									});
-									me.formVisible = true;
+									this.formVisible = true;
 								}
 							}
 						})

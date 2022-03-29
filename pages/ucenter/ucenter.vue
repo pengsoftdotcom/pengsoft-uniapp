@@ -60,7 +60,7 @@
 								data: {
 									type: 'mpOpenid'
 								},
-								success() {
+								complete: () => {
 									uni.clearStorageSync();
 									uni.navigateTo({
 										url: '../bind/bind'
@@ -73,14 +73,13 @@
 			}
 		},
 		onShow() {
-			const me = this;
 			const userDetails = uni.getUserDetails();
 			if (userDetails.person) {
 				if (userDetails.person.avatar) {
-					me.avatar = userDetails.person.avatar.accessPath;
+					this.avatar = userDetails.person.avatar.accessPath;
 				}
 				if (userDetails.person.name) {
-					me.name = userDetails.person.name;
+					this.name = userDetails.person.name;
 				}
 			}
 		}

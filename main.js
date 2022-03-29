@@ -12,13 +12,13 @@ uni.isAuthenticated = () => {
 
 uni.getAccessToken = () => {
 	const cache = uni.getStorageSync("pengsoft")
-	return cache.accessToken.value;
-}
+	return 'Bearer ' + cache.accessToken.value;
+};
 
 uni.getUserDetails = () => {
 	const cache = uni.getStorageSync("pengsoft")
 	return cache.userDetails;
-}
+};
 
 uni.hasAnyRole = (roleCode) => {
 	const cache = uni.getStorageSync("pengsoft");
@@ -29,20 +29,10 @@ uni.hasAnyRole = (roleCode) => {
 			return role.code === roleCode;
 		}
 	});
-}
+};
 
-uni.page = {
-	pageData: {
-		page: 0,
-		size: 20
-	},
-	listData: [],
-	filterData: {
 
-	}
-}
-
-uni.hasAuthority = (authorityCode) => {
+uni.hasAnyAuthority = (authorityCode) => {
 	const cache = uni.getStorageSync("pengsoft");
 	return cache.userDetails.authorities.some(authority => {
 		if (Array.isArray(authorityCode)) {
@@ -51,7 +41,66 @@ uni.hasAuthority = (authorityCode) => {
 			return authority === authorityCode;
 		}
 	});
-}
+};
+
+uni.getDictionaryItem = (code, callback) => {
+	uni.request({
+		url: '/api/system/dictionary-item/find-all-by-type-code',
+		data: {
+			code
+		},
+		success: res => {
+			if (callback) {
+				callback(res.data);
+			}
+		}
+	})
+};
+
+uni.upload = (file, locked) => {
+	return new Promise((resolve, reject) => uni.uploadFile({
+		url: URL_PREFIX + `/api/system/asset/upload?locked=${locked}`,
+		header: {
+			'Authorization': uni.getAccessToken()
+		},
+		filePath: file.url,
+		name: 'file',
+		success: res => resolve(res.data),
+		fail: res => reject(res)
+	}))
+};
+
+uni.download = file => {
+	return new Promise((resolve, reject) => uni.request({
+		url: `/api/system/asset/download?id=${file.id}`,
+		success: res => resolve(res.data)
+	}))
+};
+
+uni.convertToFile = file => {
+	return Object.assign({
+		id: file.id,
+		locked: file.locked,
+		url: file.accessPath
+	})
+};
+
+uni.listModel = {
+	contentText: {
+		contentdown: '上拉加载更多',
+		contentrefresh: '加载中',
+		contentnomore: '没有更多'
+	},
+	status: 'more',
+	pageData: {
+		page: 0,
+		size: 10
+	},
+	listData: [],
+	filterData: {
+
+	}
+};
 
 uni.addInterceptor('request', {
 	invoke(args) {
@@ -69,7 +118,7 @@ uni.addInterceptor('request', {
 			args.header['Accept-Language'] = 'zh-CN';
 		}
 		if (uni.isAuthenticated()) {
-			args.header['Authorization'] = 'Bearer ' + uni.getAccessToken();
+			args.header['Authorization'] = uni.getAccessToken();
 		}
 
 		const success = args.success;
@@ -77,7 +126,9 @@ uni.addInterceptor('request', {
 			if (res.statusCode !== 200) {
 				failure(res);
 			} else {
-				success(res);
+				if (success) {
+					success(res);
+				}
 			}
 		};
 	},
@@ -88,6 +139,7 @@ uni.addInterceptor('request', {
 		uni.hideLoading();
 	}
 });
+
 const failure = (args) => {
 	switch (args.statusCode) {
 		case 422:
@@ -101,12 +153,16 @@ const failure = (args) => {
 			}
 			break;
 		default:
-			uni.showModal({
-				title: '提示',
-				content: args.data.error_description,
-				showCancel: false,
-				confirmColor: '#ff4d4f'
-			});
+			if (args.data) {
+				uni.showModal({
+					title: '提示',
+					content: args.data.error_description,
+					showCancel: false,
+					confirmColor: '#ff4d4f'
+				});
+			} else {
+				console.log(args);
+			}
 			break;
 	}
 };
