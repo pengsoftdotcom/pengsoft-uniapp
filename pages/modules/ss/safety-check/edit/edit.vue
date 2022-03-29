@@ -1,6 +1,6 @@
 <template>
 	<view class="w-form-wrap">
-		<u--form :labelWidth="65" :model="formModel" :rules="rules" ref="form">
+		<u--form :labelWidth="65" :model="formModel" ref="form">
 			<u-form-item label="工程项目" prop="project.name" borderBottom ref="item1">
 				{{formModel.project.name}}
 			</u-form-item>
@@ -41,7 +41,7 @@
 				<u--textarea v-model="formModel.result"></u--textarea>
 			</u-form-item>
 		</u--form>
-		<view class="toolbar">
+		<view class="w-form-btn-content">
 			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="primary" text="提交" @click="submit">
 			</u-button>
 			<u-button v-if="isHandleVisible()" :disabled="isHandleDisabled()" type="success" text="处理" @click="handle">
@@ -78,11 +78,11 @@
 				submitFiles: [],
 				handleFiles: [],
 				rules: {
-					subject: {
+					subject: [{
 						type: 'string',
 						required: true,
 						message: '请填写检查主题'
-					},
+					}],
 					submitFiles: {
 						type: 'array',
 						required: true,
@@ -128,6 +128,7 @@
 			uni.setNavigationBarTitle({
 				title: this.titleObj[this.type]
 			})
+			this.$refs.form.setRules(this.rules)
 		},
 		methods: {
 			findOne() {
@@ -248,12 +249,8 @@
 	}
 </script>
 
-<style>
-	.toolbar {
-		display: flex;
-	}
-
-	.toolbar :first-child {
-		margin-right: 8rpx;
+<style lang="scss">
+	page {
+		background:#fff;
 	}
 </style>

@@ -53,5 +53,43 @@
 
 .w-form-wrap {
 	padding: 15px;
+	padding-bottom: 75px;
 	background: #fff;
+	
+	.w-form-btn-content {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		padding: 8px 4px;
+		box-sizing: border-box;
+		background: #fff;
+		border-top: 1px solid #ddd;
+		display: flex;
+		
+		.u-button {
+			margin: 0 4px;
+		}
+	}
+}
+
+.w-fab-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: none;
+	position: fixed;
+	right: 8px;
+	bottom: 8px;
+	z-index: 10;
+	background: #3c9cff;
+	box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
+	
+	&:focus,&:active {
+		background: darken(#20a0ff,10%);
+		box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
+	}
 }
