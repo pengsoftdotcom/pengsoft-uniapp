@@ -12,6 +12,16 @@
 		overflow: hidden;
 		box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
 		
+		&.border-info {
+			border-right: 8px solid fade-out(#2979ff,0.2);
+		}
+		&.border-warning {
+			border-right: 8px solid fade-out(#f0ad4e,0.2);
+		}
+		&.border-danger {
+			border-right: 8px solid fade-out(#dd524d,0.2);
+		}
+		
 		.w-list-item-title {
 			margin-bottom: 4px;
 			margin-right: 16px;
