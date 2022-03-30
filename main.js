@@ -58,6 +58,7 @@ uni.getDictionaryItem = (code, callback) => {
 };
 
 uni.upload = (file, locked) => {
+	uni.showLoading();
 	return new Promise((resolve, reject) => uni.uploadFile({
 		url: URL_PREFIX + `/api/system/asset/upload?locked=${locked}`,
 		header: {
@@ -66,7 +67,8 @@ uni.upload = (file, locked) => {
 		filePath: file.url,
 		name: 'file',
 		success: res => resolve(res.data),
-		fail: res => reject(res)
+		fail: res => reject(res),
+		complete: () => uni.hideLoading()
 	}))
 };
 
@@ -142,6 +144,20 @@ uni.addInterceptor('request', {
 
 const failure = (args) => {
 	switch (args.statusCode) {
+		case 401:
+			uni.showModal({
+				title: '登录失效',
+				showCancel: false,
+				success(res) {
+					if (res.confirm) {
+						uni.clearStorageSync();
+						uni.navigateTo({
+							url: '/pages/bind/bind'
+						})
+					}
+				}
+			})
+			break;
 		case 422:
 			for (const name in args.data) {
 				for (const error of args.data[name]) {

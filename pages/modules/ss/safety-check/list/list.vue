@@ -4,7 +4,7 @@
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'update')">
 				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
 				<view class="w-list-item-body">
-					<view>{{ item.checker.person.name }}</view>
+					<view>{{item.code}} - {{ item.checker.person.name }}</view>
 					<view>{{ item.submittedAt }}</view>
 					<view>{{ item.project.name }}</view>
 				</view>

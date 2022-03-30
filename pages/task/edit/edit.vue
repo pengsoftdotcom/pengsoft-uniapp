@@ -28,9 +28,9 @@
 		data() {
 			return {
 				titleObj: {
-					create: '新增代办',
-					update: '编辑代办',
-					detail: '代办详情',
+					create: '新增待办',
+					update: '编辑待办',
+					detail: '待办详情',
 				},
 				type: '',
 				formModel: {

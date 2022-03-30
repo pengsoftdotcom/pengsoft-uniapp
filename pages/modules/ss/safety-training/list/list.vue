@@ -4,7 +4,7 @@
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="clickItem(item)">
 				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
 				<view class="w-list-item-body">
-					<view>{{ item.trainer.person.name }}</view>
+					<view>{{item.code}} - {{ item.trainer.person.name }}</view>
 					<view>{{ item.submittedAt }}</view>
 					<view>
 						<uni-icons type="location" color="#007aff" size="12" /> {{ item.address }}

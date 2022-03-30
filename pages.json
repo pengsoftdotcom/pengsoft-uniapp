@@ -9,7 +9,7 @@
 		}, {
 			"path": "pages/task/list/list",
 			"style": {
-				"navigationBarTitleText": "代办",
+				"navigationBarTitleText": "待办",
 				"enablePullDownRefresh": false
 			}
 
@@ -118,7 +118,7 @@
 				"pagePath": "pages/task/list/list",
 				"iconPath": "static/tabbar/list.png",
 				"selectedIconPath": "static/tabbar/list_active.png",
-				"text": "代办"
+				"text": "待办"
 			}, {
 				"pagePath": "pages/workbench/workbench",
 				"iconPath": "static/tabbar/grid.png",
