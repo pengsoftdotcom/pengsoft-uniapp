@@ -19,37 +19,41 @@
 		data() {
 			return {
 				menus: [{
-					name: '工地安全',
-					role: ['bu_manager', 'supervision_engineer', 'security_officer'],
-					children: [{
-						name: '安全检查',
-						icon: 'shop-filled',
-						url: '/pages/modules/ss/safety-check/list/list',
+						name: '工地安全',
 						role: ['bu_manager', 'supervision_engineer', 'security_officer'],
-					}, {
-						name: '安全培训',
-						icon: 'shop-filled',
-						url: '/pages/modules/ss/safety-training/list/list',
-						role: ['bu_manager', 'security_officer'],
-					}]
-				}, {
-					name: '保障支付',
-					role: ['bu_manager', 'cashier', 'worker'],
-					children: [{
-						name: '合同',
-						icon: 'shop-filled',
-						url: '/pages/modules/oa/contract/list/list',
+						children: [{
+							name: '安全检查',
+							icon: 'shop-filled',
+							url: '/pages/modules/ss/safety-check/list/list',
+							role: ['bu_manager', 'supervision_engineer', 'security_officer'],
+						}, {
+							name: '安全培训',
+							icon: 'shop-filled',
+							url: '/pages/modules/ss/safety-training/list/list',
+							role: ['bu_manager', 'security_officer'],
+						}]
+					},
+					{
+						name: '保障支付',
 						role: ['bu_manager', 'cashier', 'worker'],
-					}, {
-						name: '工资',
-						icon: 'shop-filled',
-						url: '/pages/modules/oa/payroll-record/list/list',
-						role: ['bu_manager', 'cashier', 'worker'],
-					}]
-				}]
+						children: [{
+							name: '合同',
+							icon: 'shop-filled',
+							url: '/pages/modules/oa/contract/list/list',
+							role: ['bu_manager', 'cashier', 'worker'],
+						}, {
+							name: '工资',
+							icon: 'shop-filled',
+							url: '/pages/modules/oa/payroll-record/list/list',
+							role: ['bu_manager', 'cashier', 'worker'],
+						}]
+					},
+				],
+				time: '',
 			}
 		},
-		onLoad() {
+		onShow() {
+			this.time = new Date();
 		},
 		methods: {
 			isMenuVisible(menu) {
