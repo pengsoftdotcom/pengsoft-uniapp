@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="clickItem(item)">
-				<view class="w-list-item-title uni-ellipsis-2">{{ item.subject }}</view>
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'detail')">
+				<view class="w-list-item-title uni-ellipsis-2">{{ item.code }} - {{ item.subject }}</view>
 				<view class="w-list-item-body">
-					<view>{{item.code}} - {{ item.trainer.person.name }}</view>
+					<view>{{ item.trainer.person.name }}</view>
 					<view>{{ item.submittedAt }}</view>
 					<view>
 						<uni-icons type="location" color="#007aff" size="12" /> {{ item.address }}
@@ -13,7 +13,7 @@
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
-			
+
 		<button class="w-fab-btn" @click="edit('', 'create')">
 			<u-icon color="#fff" name="plus"></u-icon>
 		</button>

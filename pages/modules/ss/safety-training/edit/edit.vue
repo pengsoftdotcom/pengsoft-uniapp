@@ -45,19 +45,20 @@
 			<u-button size="small" v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary" text="保存"
 				@click="save">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitDisabled()" type="primary" text="提交"
-				@click="saveAndSubmit">
+			<u-button size="small" v-if="isButtonVisible('submit')" :disabled="isSubmitDisabled()" type="primary"
+				text="提交" @click="saveAndSubmit">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('submit')" :disabled="isSubmitAndSaveDisabled()" type="primary" text="保存并提交"
-				@click="saveAndSubmit">
+			<u-button size="small" v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitAndSaveDisabled()"
+				type="primary" text="保存并提交" @click="saveAndSubmit">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success" text="开始"
-				@click="start">
+			<u-button size="small" v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success"
+				text="开始" @click="start">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('end')" :disabled="isEndDisabled()" type="error" text="结束" @click="end">
+			<u-button size="small" v-if="isButtonVisible('end')" :disabled="isEndDisabled()" type="error" text="结束"
+				@click="end">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('confirm')" :disabled="isConfirmDisabled()" type="primary" text="确认"
-				@click="confirm">
+			<u-button size="small" v-if="isButtonVisible('confirm')" :disabled="isConfirmDisabled()" type="primary"
+				text="确认" @click="confirm">
 			</u-button>
 		</view>
 	</view>
@@ -91,12 +92,41 @@
 				eetTime: Number(new Date()),
 				files: [],
 				rules: {
-
+					subject: {
+						type: 'string',
+						required: true,
+						message: '请填写培训主题'
+					},
+					estimatedStartTime: {
+						type: 'string',
+						required: true,
+						message: '请填写预计开始时间'
+					},
+					estimatedEndTime: {
+						type: 'string',
+						required: true,
+						message: '请填写预计结束时间'
+					},
+					address: {
+						type: 'string',
+						required: true,
+						message: '请填写培训地点'
+					},
+					files: {
+						type: 'array',
+						message: '请上传过程图片',
+						validator: (rule, value, callback) => {
+							if (this.formModel.id && (!value || value.length === 0)) {
+								return false;
+							} else {
+								return true;
+							}
+						}
+					}
 				}
 			}
 		},
 		onLoad(option) {
-			uni.getDictionaryItem('safety_check_status', data => this.statusArr = data);
 			this.formModel.id = option.id;
 			this.type = option.type;
 			this.findOne();
@@ -104,7 +134,8 @@
 		onReady() {
 			uni.setNavigationBarTitle({
 				title: this.titleObj[this.type]
-			})
+			});
+			this.$refs.form.setRules(this.rules);
 		},
 		methods: {
 			findOne() {
@@ -123,34 +154,120 @@
 				})
 			},
 			save() {
-				this.$refs.form.validate().then(res => {}).catch(errors => {
+				this.$refs.form.validate().then(res => {
+					uni.request({
+						url: '/api/ss/safety-training/save',
+						method: 'POST',
+						header: {
+							'Content-Type': 'application/json'
+						},
+						data: this.formModel,
+						success: res => uni.showModal({
+							title: '保存成功',
+							success: () => {
+								uni.navigateBack();
+							}
+						})
+					})
+				}).catch(errors => {
 					console.log(errors);
 				})
 			},
 			saveAndSubmit() {
-				this.$refs.form.validate().then(res => {}).catch(errors => {
+				this.$refs.form.validate().then(res => {
+					uni.request({
+						url: '/api/ss/safety-training/save-and-submit',
+						method: 'POST',
+						header: {
+							'Content-Type': 'application/json'
+						},
+						data: this.formModel,
+						success: res => uni.showModal({
+							title: '提交成功',
+							success: () => {
+								uni.navigateBack();
+							}
+						})
+					})
+				}).catch(errors => {
 					console.log(errors);
-				})
+				});
 			},
 			submit() {
-				this.$refs.form.validate().then(res => {}).catch(errors => {
-					console.log(errors);
-				})
+				uni.request({
+					url: '/api/ss/safety-training/submit',
+					method: 'PUT',
+					data: {
+						id: this.formModel.id
+					},
+					success: res => uni.showModal({
+						title: '提交成功',
+						success: () => {
+							uni.navigateBack();
+						}
+					})
+				});
 			},
 			start() {
-				this.$refs.form.validate().then(res => {}).catch(errors => {
+				this.$refs.form.validate().then(res => {
+					uni.showModal({
+						title: '确定开始吗?',
+						success: res => {
+							if (res.confirm) {
+								uni.request({
+									url: '/api/ss/safety-training/start',
+									method: 'PUT',
+									data: {
+										id: this.formModel.id
+									},
+									success: res => uni.showModal({
+										title: '开始成功',
+										success: () => {
+											uni.navigateBack();
+										}
+									})
+								});
+							}
+						}
+					});
+				}).catch(errors => {
 					console.log(errors);
-				})
+				});
 			},
 			end() {
-				this.$refs.form.validate().then(res => {}).catch(errors => {
+				this.$refs.form.validate().then(res => {
+					uni.showModal({
+						title: '确定结束吗?',
+						success: res => {
+							if (res.confirm) {
+								let url = '/api/ss/safety-training/end?id=' + this.formModel.id;
+								if (this.files) {
+									this.files.forEach(file => url += '&file.id=' + file.id);
+								}
+								uni.request({
+									url,
+									method: 'PUT',
+									data: {
+										result: this.formModel.result
+									},
+									success: res => uni.showModal({
+										title: '结束成功',
+										success: () => {
+											uni.navigateBack();
+										}
+									})
+								});
+							}
+						}
+					});
+				}).catch(errors => {
 					console.log(errors);
 				})
 			},
 			confirm() {
 				this.$refs.form.validate().then(res => {}).catch(errors => {
 					console.log(errors);
-				})
+				});
 			},
 			isButtonVisible(operation) {
 				return uni.hasAnyAuthority(`ss::safety_training::${operation}`);

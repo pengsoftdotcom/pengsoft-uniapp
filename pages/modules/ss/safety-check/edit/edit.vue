@@ -78,11 +78,11 @@
 				submitFiles: [],
 				handleFiles: [],
 				rules: {
-					subject: [{
+					subject: {
 						type: 'string',
 						required: true,
 						message: '请填写检查主题'
-					}],
+					},
 					submitFiles: {
 						type: 'array',
 						required: true,
@@ -128,7 +128,7 @@
 			uni.setNavigationBarTitle({
 				title: this.titleObj[this.type]
 			})
-			this.$refs.form.setRules(this.rules)
+			this.$refs.form.setRules(this.rules);
 		},
 		methods: {
 			findOne() {
