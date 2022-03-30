@@ -13,16 +13,9 @@
 			<u-form-item label="检查人" prop="checker.person.name" borderBottom>
 				{{formModel.checker.person.name}}
 			</u-form-item>
-			<u-form-item label="状态" prop="status.id" borderBottom required>
-				<u-radio-group v-model="formModel.status.id">
-					<u-radio :customStyle="{marginRight: '16px'}" v-for="(item, index) in statusArr" :key="index"
-						:label="item.name" :name="item.id">
-					</u-radio>
-				</u-radio-group>
-			</u-form-item>
 			<u-form-item label="检查图片" prop="submitFiles" borderBottom required>
 				<u-upload :capture="['camera']" :fileList="submitFiles" @afterRead="afterReadSubmitPicture()"
-					@delete="deletePicture" :maxCount="6" :deletable="isSubmitDisabled()"
+					@delete="deletePicture" :maxCount="6" :deletable="!isSubmitDisabled()"
 					:disabled="isSubmitDisabled()">
 				</u-upload>
 			</u-form-item>
@@ -32,7 +25,7 @@
 			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="处理图片"
 				prop="handleFiles" borderBottom required>
 				<u-upload :capture="['camera']" :fileList="handleFiles" @afterRead="afterReadHandlePicture()"
-					@delete="deletePicture" :maxCount="6" :deletable="isHandleDisabled()"
+					@delete="deletePicture" :maxCount="6" :deletable="!isHandleDisabled()"
 					:disabled="isHandleDisabled()">
 				</u-upload>
 			</u-form-item>
@@ -42,9 +35,11 @@
 			</u-form-item>
 		</u--form>
 		<view class="w-form-btn-content">
-			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="primary" text="提交" @click="submit">
+			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="success" text="安全" @click="submit">
 			</u-button>
-			<u-button v-if="isHandleVisible()" :disabled="isHandleDisabled()" type="success" text="处理" @click="handle">
+			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="error" text="隐患" @click="submit">
+			</u-button>
+			<u-button v-if="isHandleVisible()" :disabled="isHandleDisabled()" type="primary" text="处理" @click="handle">
 			</u-button>
 		</view>
 	</view>
@@ -155,6 +150,14 @@
 			},
 			isSubmitDisabled() {
 				return this.formModel.submittedAt;
+			},
+			safe() {
+				this.formModel.status = this.statusArr.find(status => status.code === 'safe');
+				this.submit();
+			},
+			risk() {
+				this.formModel.status = this.statusArr.find(status => status.code === 'risk');
+				this.submit();
 			},
 			submit() {
 				this.formModel.status = this.statusArr.find(status => status.id === this.formModel.status.id);
