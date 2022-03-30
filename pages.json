@@ -7,7 +7,14 @@
 				"enablePullDownRefresh": false
 			}
 		}, {
-			"path": "pages/task/task",
+			"path": "pages/task/list/list",
+			"style": {
+				"navigationBarTitleText": "代办",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/task/edit/edit",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
@@ -52,62 +59,50 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/modules/ss/safety-training/list/list",
+			"style": {
+				"navigationBarTitleText": "安全培训",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/modules/ss/safety-training/edit/edit",
+			"style": {
+				"navigationBarTitleText": "安全培训详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/modules/ss/safety-check/list/list",
+			"style": {
+				"navigationBarTitleText": "安全检查",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/modules/ss/safety-check/edit/edit",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/modules/oa/payroll-record/list/list",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/modules/oa/payroll-record/edit/edit",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	    ,{
-            "path" : "pages/modules/ss/safety-training/list/list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "安全培训",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/modules/ss/safety-training/edit/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "安全培训详情",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/modules/ss/safety-check/list/list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "安全检查",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/modules/ss/safety-check/edit/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/modules/oa/payroll-record/list/list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/modules/oa/payroll-record/edit/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -120,7 +115,7 @@
 		"borderStyle": "black",
 		"backgroundColor": "#FFFFFF",
 		"list": [{
-				"pagePath": "pages/task/task",
+				"pagePath": "pages/task/list/list",
 				"iconPath": "static/tabbar/list.png",
 				"selectedIconPath": "static/tabbar/list_active.png",
 				"text": "代办"

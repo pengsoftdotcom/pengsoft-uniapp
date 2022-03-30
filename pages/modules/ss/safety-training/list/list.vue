@@ -71,7 +71,7 @@
 					url: `../edit/edit?id=${id}&type=${type}`
 				})
 			}
-		},
+		}
 	}
 </script>
 

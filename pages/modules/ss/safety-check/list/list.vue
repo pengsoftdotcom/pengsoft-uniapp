@@ -52,7 +52,7 @@
 					url: '/api/ss/safety-check/find-page',
 					data: {
 						page: this.pageData.page,
-						size: this.pageData.size,
+						size: this.pageData.size
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
@@ -62,9 +62,6 @@
 						}
 						this.listData = this.pageData.page === 0 ? res.data.content :
 							this.listData.concat(res.data.content)
-					},
-					fail: (data, code) => {
-						console.log('fail' + JSON.stringify(data));
 					}
 				})
 			},

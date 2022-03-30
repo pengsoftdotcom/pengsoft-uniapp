@@ -49,7 +49,8 @@
 				}]
 			}
 		},
-		onLoad() {},
+		onLoad() {
+		},
 		methods: {
 			isMenuVisible(menu) {
 				return uni.hasAnyRole(menu.role);

@@ -5,7 +5,7 @@
 			<uni-forms-item label="手机号码" name="username" labelAlign="right">
 				<uni-easyinput type="digit" v-model="form.username" maxlength="11" focus />
 			</uni-forms-item>
-			<uni-forms-item ref="test" label="验证码" name="captcha" labelAlign="right" class="captcha">
+			<uni-forms-item label="验证码" name="captcha" labelAlign="right" class="captcha">
 				<uni-easyinput class="input" type="form.digit" v-model="form.captcha" maxlength="6" />
 				<button class="button" type="default" size="mini" :disabled="buttonDisabled"
 					@click="getCaptcha()">{{buttonText}}</button>
@@ -80,7 +80,7 @@
 			},
 			afterSignedIn() {
 				uni.switchTab({
-					url: '/pages/workbench/workbench'
+					url: '/pages/task/list/list'
 				});
 			},
 			bind() {

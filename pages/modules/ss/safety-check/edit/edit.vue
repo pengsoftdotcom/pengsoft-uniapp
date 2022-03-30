@@ -1,7 +1,7 @@
 <template>
 	<view class="w-form-wrap">
 		<u--form :labelWidth="65" :model="formModel" ref="form">
-			<u-form-item label="工程项目" prop="project.name" borderBottom ref="item1">
+			<u-form-item label="工程项目" prop="project.name" borderBottom>
 				{{formModel.project.name}}
 			</u-form-item>
 			<u-form-item label="编码" prop="code" borderBottom>
