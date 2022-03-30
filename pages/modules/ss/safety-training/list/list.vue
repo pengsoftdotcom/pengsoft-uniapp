@@ -2,11 +2,13 @@
 	<view>
 		<view class="w-list-wrap">
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'detail')">
-				<view class="w-list-item-title uni-ellipsis-2">{{ item.code }} - {{ item.subject }}</view>
+				<view class="w-list-item-title ellipsis-2">{{ item.code }} - {{ item.subject }}</view>
 				<view class="w-list-item-body">
-					<view>{{ item.trainer.person.name }}</view>
-					<view>{{ item.submittedAt }}</view>
-					<view>
+					<view style="display: flex;">
+						<text style="flex:auto">{{ item.trainer.person.name }}</text>
+						<text style="flex:none">{{ item.submittedAt }}</text>
+					</view>
+					<view class="ellipsis-1">
 						<uni-icons type="location" color="#007aff" size="12" /> {{ item.address }}
 					</view>
 				</view>

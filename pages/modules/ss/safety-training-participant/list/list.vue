@@ -1,20 +1,17 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-				<view v-for="(item, index) in listData" :key="index" class="w-list-item"
-					@click="edit(item.id, 'detail')">
-					<view class="w-list-item-title uni-ellipsis-2" style="display: flex;">
-						<view style="flex-grow: 1;">
-							{{ item.staff.person.name }}
-						</view>
-						<view>
-							{{ item.status.name ? item.status.name : '未确认'}}
-						</view>
-					</view>
-					<view class="w-list-item-body">
-						{{item.reason ? item.reason : ''}}
-					</view>
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'detail')">
+				<view class="w-list-item-title uni-ellipsis-2" style="display: flex;">
+					{{ item.staff.person.name }}
 				</view>
+				<view class="w-list-item-status" :class="item.status ? itemStatus[item.status.code] : 'info'">
+					{{ item.status ? item.status.name : '未确认'}}
+				</view>
+				<view class="w-list-item-body">
+					{{item.reason ? item.reason : ''}}
+				</view>
+			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 		<button class="w-fab-btn" @click="edit('', 'create')">
@@ -27,6 +24,10 @@
 	export default {
 		data() {
 			return {
+				itemStatus: {
+					leave: 'warning',
+					participate: 'success',
+				},
 				formModel: {},
 				...uni.listModel
 			}

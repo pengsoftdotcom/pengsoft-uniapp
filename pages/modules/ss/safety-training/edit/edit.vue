@@ -18,11 +18,11 @@
 			</u-form-item>
 			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom @click="estShow = true">
 				<u--input v-model="formModel.estimatedStartTime" disabled disabledColor="#ffffff" placeholder="请选择"
-					border="none"></u--input>
+					border="none" suffixIcon="calendar-fill"></u--input>
 			</u-form-item>
 			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom @click="eetShow = true">
 				<u--input v-model="formModel.estimatedEndTime" disabled disabledColor="#ffffff" placeholder="请选择"
-					border="none"></u--input>
+					border="none" suffixIcon="calendar-fill"></u--input>
 			</u-form-item>
 			<u-form-item label="培训地址" prop="address" borderBottom>
 				<u--textarea v-model="formModel.address"></u--textarea>
