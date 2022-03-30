@@ -8,7 +8,8 @@
 						<text style="flex:auto">{{ item.trainer.person.name }}</text>
 						<text style="flex:none">{{ item.submittedAt }}</text>
 					</view>
-					<view v-if="item.startedAt" class="w-list-item-status" :class="item.endedAt ? 'info' : item.startedAt ? 'success' : 'warning'">
+					<view v-if="item.startedAt" class="w-list-item-status"
+						:class="item.endedAt ? 'info' : item.startedAt ? 'success' : 'warning'">
 						{{getStatusName(item)}}
 					</view>
 					<view class="ellipsis-1">
@@ -19,7 +20,8 @@
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 
-		<button class="w-fab-btn" @click="edit('', 'create')">
+		<button v-if="isCreateVisible()" class="w-fab-btn"
+			@click="edit('', 'create')">
 			<u-icon color="#fff" name="plus"></u-icon>
 		</button>
 	</view>
@@ -28,9 +30,7 @@
 <script>
 	export default {
 		data() {
-			return {
-				...uni.listModel
-			}
+			return JSON.parse(JSON.stringify(uni.listModel));
 		},
 		onShow() {
 			this.getList();
@@ -46,11 +46,13 @@
 			}
 		},
 		methods: {
+			isCreateVisible() {
+				return uni.hasAnyRole(['bu_manager', 'security_officer', 'supervision_engineer']);
+			},
 			getStatusCode(item) {
 				if (item.endedAt) {
 					return 'info';
-				}
-				else if (item.startedAt) {
+				} else if (item.startedAt) {
 					return 'success';
 				} else {
 					return null;
@@ -59,8 +61,7 @@
 			getStatusName(item) {
 				if (item.endedAt) {
 					return '已结束';
-				}
-				else if (item.startedAt) {
+				} else if (item.startedAt) {
 					return '进行中';
 				} else {
 					return null;

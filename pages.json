@@ -48,7 +48,7 @@
 		}, {
 			"path": "pages/modules/oa/payroll-detail/list/list",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "发薪明细",
 				"enablePullDownRefresh": false
 			}
 
@@ -90,7 +90,7 @@
 		}, {
 			"path": "pages/modules/oa/payroll-record/list/list",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "发薪记录",
 				"enablePullDownRefresh": false
 			}
 
@@ -106,7 +106,7 @@
             "path" : "pages/modules/ss/safety-training-participant/list/list",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "参与人",
                 "enablePullDownRefresh": false
             }
             

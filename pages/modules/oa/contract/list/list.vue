@@ -1,60 +1,74 @@
 <template>
 	<view>
-		
+		<view class="w-list-wrap">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'update')">
+				<view class="w-list-item-title ellipsis-2">{{ item.partyB.name }}</view>
+				<view class="w-list-item-body">
+					<view style="display: flex;">
+						<text style="flex:auto">{{ item.checker.person.name }}</text>
+						<text style="flex:none">{{ item.submittedAt }}</text>
+					</view>
+					<view>{{ item.project.name }}</view>
+				</view>
+				<view class="w-list-item-status" :class="item.status.code === 'not_uploaded' ? 'danger' : item.status.code === 'unconfirmed' ? 'warning' : 'success'">
+					{{item.status.name}}
+				</view>
+			</view>
+		</view>
+		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 	</view>
 </template>
 
 <script>
 	export default {
 		data() {
-			return {
-				...{
-				contentText: {
-					contentdown: '上拉加载更多',
-					contentrefresh: '加载中',
-					contentnomore: '没有更多'
-				},
-				status: 'loading',
-			}, ...uni.page}
-		},
-		onLoad() {
-			this.findPage();
-		},
-		onPullDownRefresh() {
-			console.log('pull')
-			this.pageData.page = 0;
-			this.findPage();
-		},
-		onReachBottom() {
-			this.status = 'more';
-			this.pageData.page += 1;
-			this.findPage();
-		},
-		methods: {
-			findPage() {
-				uni.request({
-					url: '/api/oa/contract/find-page',
-					data: {
-						...{
-							page: this.pageData.page,
-							size: this.pageData.size
-						},
-						...this.filterData
-					},
-					success: res => {
-						this.listData = this.listData.concat(res.content);
-						this.pageData.total = res.totalElements;
-						// 是否首页
-						this.pageData.first = res.first;
-						// 是否末页
-						this.pageData.last = res.last;
-					}
-				});
-		
-			}
+			return JSON.parse(JSON.stringify(uni.listModel));
 		},
 		onShow() {
-			this.findPage();
+			this.getList();
+		},
+		onPullDownRefresh() {
+			this.pageData.page = 0;
+			this.getList();
+		},
+		onReachBottom() {
+			if (this.status !== 'noMore') {
+				this.pageData.page += 1;
+				this.getList();
+			}
+		},
+		methods: {
+			getList() {
+				this.status = 'more';
+				if (this.pageData.page !== 0) {
+					this.status = 'loading';
+				}
+				let operation = 'find-page-with-party';
+				if (uni.hasAnyRole('worker')) {
+					operation = 'find-page-of-mine';
+				}
+				uni.request({
+					url: `/api/oa/contract/${operation}`,
+					data: {
+						page: this.pageData.page,
+						size: this.pageData.size
+					},
+					success: (res) => {
+						uni.stopPullDownRefresh();
+						this.pageData.total = res.data.totalElements;
+						if (res.data.last) {
+							this.status = 'noMore';
+						}
+						this.listData = this.pageData.page === 0 ? res.data.content :
+							this.listData.concat(res.data.content)
+					}
+				})
+			},
+			edit(id, type) {
+				uni.navigateTo({
+					url: `../edit/edit?id=${id}&type=${type}`
+				})
+			}
 		}
 	}
 </script>

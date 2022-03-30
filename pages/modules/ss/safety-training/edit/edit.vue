@@ -2,16 +2,16 @@
 	<view class="w-form-wrap">
 		<u--form :labelWidth="95" :model="formModel" :rules="rules" ref="form">
 			<u-form-item label="工程项目" prop="project.name" borderBottom>
-				{{formModel.project.name}}
+				{{formModel.project.name ? formModel.project.name : ''}}
 			</u-form-item>
 			<u-form-item label="编码" prop="code" borderBottom>
-				{{formModel.code}}
+				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
 			<u-form-item label="培训主题" prop="subject" borderBottom required>
 				<u--input v-model="formModel.subject" border="surround"></u--input>
 			</u-form-item>
 			<u-form-item label="培训人" prop="trainer.person.name" borderBottom>
-				{{formModel.trainer.person.name}}
+				{{formModel.trainer.person.name ? formModel.trainer.person.name : ''}}
 			</u-form-item>
 			<u-form-item label="全员参加" prop="allWorkers" borderBottom>
 				<u-switch v-model="formModel.allWorkers" :disabled="true"></u-switch>
@@ -150,7 +150,6 @@
 						this.formModel = res.data;
 						if (this.formModel.files) {
 							this.files = this.formModel.files.map(file => uni.convertToFile(file));
-							this.formModel.files;
 						}
 					}
 				})

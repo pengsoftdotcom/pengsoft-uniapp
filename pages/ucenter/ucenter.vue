@@ -7,7 +7,7 @@
 			</view>
 		</view>
 		<uni-list class="center-list" v-for="(submenus , index) in menus" :key="index">
-			<uni-list-item v-for="(submenu,i) in submenus" :key="i" 
+			<uni-list-item v-for="(submenu,i) in submenus" :key="i" v-if="isMenuVisible(submenu)"
 			:title="submenu.title"
 			:link="!!submenu.url" :to="submenu.url"  
 			:show-extra-icon="!!submenu.icon" :extraIcon="{type:submenu.icon,color:'#999'}"
@@ -28,27 +28,30 @@
 					[{
 							title: '合同',
 							icon: 'compose',
-							url: 'my-contract/my-contract',
+							url: '/pages/modules/oa/contract/list/list',
 							badge: 0,
-							role: 'worker'
+							roles: ['worker']
 						},
 						{
 							title: '工资',
 							icon: 'wallet',
-							url: 'my-contract/my-contract',
+							url: '/pages/modules/oa/payroll-detail/list/list',
 							badge: 0,
-							role: 'worker'
-						}, {
+							roles: ['worker']
+						}/* , {
 							title: '考勤',
 							icon: 'notification',
 							url: 'my-contract/my-contract',
-							role: 'worker'
-						}
+							roles: ['worker']
+						} */
 					]
 				]
 			}
 		},
 		methods: {
+			isMenuVisible(menu) {
+				return uni.hasAnyRole(menu.roles);
+			},
 			unbind() {
 				uni.showModal({
 					content: '确定要解除绑定吗？',

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item)">
 				<view class="w-list-item-title uni-ellipsis-2" style="display: flex;">
 					{{ item.staff.person.name }}
 				</view>
@@ -29,7 +29,7 @@
 					participate: 'success',
 				},
 				formModel: {},
-				...uni.listModel
+				...JSON.parse(JSON.stringify(uni.listModel))
 			}
 		},
 		onLoad(option) {
@@ -72,13 +72,10 @@
 					}
 				})
 			},
-			edit(id, type) {
+			edit(item) {
 				uni.navigateTo({
-					url: `../edit/edit?id=${id}&type=${type}`
+					url: `../edit/edit?id=${item.id}`
 				})
-			},
-			submit() {
-				console.log(this.formModel);
 			}
 		}
 	}

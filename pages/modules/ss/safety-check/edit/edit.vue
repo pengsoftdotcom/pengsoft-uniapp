@@ -136,11 +136,9 @@
 						this.formModel = res.data;
 						if (this.formModel.submitFiles) {
 							this.submitFiles = this.formModel.submitFiles.map(file => uni.convertToFile(file));
-							this.formModel.submitFiles;
 						}
 						if (this.formModel.handleFiles) {
 							this.handleFiles = this.formModel.handleFiles.map(file => uni.convertToFile(file));
-							this.formModel.handleFiles;
 						}
 					}
 				})
@@ -248,8 +246,7 @@
 				});
 
 			}
-		},
-
+		}
 	}
 </script>
 

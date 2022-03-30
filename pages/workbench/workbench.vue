@@ -20,7 +20,6 @@
 			return {
 				menus: [{
 						name: '工地安全',
-						role: ['bu_manager', 'supervision_engineer', 'security_officer'],
 						children: [{
 							name: '安全检查',
 							icon: 'shop-filled',
@@ -30,22 +29,21 @@
 							name: '安全培训',
 							icon: 'shop-filled',
 							url: '/pages/modules/ss/safety-training/list/list',
-							role: ['bu_manager', 'security_officer'],
+							role: ['bu_manager', 'security_officer', 'worker'],
 						}]
 					},
 					{
 						name: '保障支付',
-						role: ['bu_manager', 'cashier', 'worker'],
 						children: [{
 							name: '合同',
 							icon: 'shop-filled',
 							url: '/pages/modules/oa/contract/list/list',
-							role: ['bu_manager', 'cashier', 'worker'],
+							role: ['bu_manager', 'cashier'],
 						}, {
 							name: '工资',
 							icon: 'shop-filled',
 							url: '/pages/modules/oa/payroll-record/list/list',
-							role: ['bu_manager', 'cashier', 'worker'],
+							role: ['bu_manager', 'cashier'],
 						}]
 					},
 				],
@@ -57,7 +55,13 @@
 		},
 		methods: {
 			isMenuVisible(menu) {
-				return uni.hasAnyRole(menu.role);
+				let roles = [];
+				if (menu.children) {
+					menu.children.forEach(child => child.role.forEach(role => roles.push(role)));
+				} else {
+					roles = menu.role;
+				}
+				return uni.hasAnyRole(roles);
 			},
 			handleClickMenu(item) {
 				uni.navigateTo({

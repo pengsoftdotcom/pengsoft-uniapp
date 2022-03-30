@@ -27,9 +27,7 @@
 <script>
 	export default {
 		data() {
-			return {
-				...uni.listModel
-			}
+			return JSON.parse(JSON.stringify(uni.listModel));
 		},
 		onShow() {
 			this.getList();
@@ -72,7 +70,7 @@
 					url: `../edit/edit?id=${id}&type=${type}`
 				})
 			}
-		},
+		}
 	}
 </script>
 
