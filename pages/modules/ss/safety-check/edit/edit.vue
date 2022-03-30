@@ -161,7 +161,6 @@
 			},
 			submit() {
 				this.formModel.status = this.statusArr.find(status => status.id === this.formModel.status.id);
-				console.log(this.formModel.status.code);
 				this.$refs.form.validate().then(res => {
 					let url = '/api/ss/safety-check/submit?';
 					if (this.submitFiles) {

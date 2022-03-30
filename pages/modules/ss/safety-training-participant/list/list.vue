@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="w-list-wrap">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'detail')">
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item">
 				<view class="w-list-item-title uni-ellipsis-2" style="display: flex;">
 					{{ item.staff.person.name }}
 				</view>

@@ -8,6 +8,9 @@
 						<text style="flex:auto">{{ item.trainer.person.name }}</text>
 						<text style="flex:none">{{ item.submittedAt }}</text>
 					</view>
+					<view v-if="item.startedAt" class="w-list-item-status" :class="item.endedAt ? 'info' : item.startedAt ? 'success' : 'warning'">
+						{{getStatusName(item)}}
+					</view>
 					<view class="ellipsis-1">
 						<uni-icons type="location" color="#007aff" size="12" /> {{ item.address }}
 					</view>
@@ -43,6 +46,26 @@
 			}
 		},
 		methods: {
+			getStatusCode(item) {
+				if (item.endedAt) {
+					return 'info';
+				}
+				else if (item.startedAt) {
+					return 'success';
+				} else {
+					return null;
+				}
+			},
+			getStatusName(item) {
+				if (item.endedAt) {
+					return '已结束';
+				}
+				else if (item.startedAt) {
+					return '进行中';
+				} else {
+					return null;
+				}
+			},
 			getList() {
 				this.status = 'more';
 				if (this.pageData.page !== 0) {

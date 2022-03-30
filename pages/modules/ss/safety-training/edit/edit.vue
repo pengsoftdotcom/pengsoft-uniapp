@@ -14,13 +14,13 @@
 				{{formModel.trainer.person.name}}
 			</u-form-item>
 			<u-form-item label="全员参加" prop="allWorkers" borderBottom>
-				<u-switch v-model="formModel.allWorkers"></u-switch>
+				<u-switch v-model="formModel.allWorkers" :disabled="true"></u-switch>
 			</u-form-item>
-			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom @click="estShow = true">
+			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom @click="estShow = !formModel.submittedAt">
 				<u--input v-model="formModel.estimatedStartTime" disabled disabledColor="#ffffff" placeholder="请选择"
 					border="none" suffixIcon="calendar-fill"></u--input>
 			</u-form-item>
-			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom @click="eetShow = true">
+			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom @click="eetShow = !formModel.submittedAt">
 				<u--input v-model="formModel.estimatedEndTime" disabled disabledColor="#ffffff" placeholder="请选择"
 					border="none" suffixIcon="calendar-fill"></u--input>
 			</u-form-item>
@@ -41,17 +41,17 @@
 			@close="eetShow=false" @confirm="handleEndTimeConfirm">
 		</u-datetime-picker>
 
-		<u-button size="small" type="primary" text="参与人" @click="editParticipant">
+		<u-button v-if="formModel.createdAt" size="small" type="primary" text="参与人" @click="editParticipant">
 		</u-button>
 		<view class="w-form-btn-content">
-			<u-button size="small" v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary" text="保存"
+			<!-- <u-button size="small" v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary" text="保存"
 				@click="save">
 			</u-button>
 			<u-button size="small" v-if="isButtonVisible('submit')" :disabled="isSubmitDisabled()" type="primary"
 				text="提交" @click="saveAndSubmit">
-			</u-button>
+			</u-button> -->
 			<u-button size="small" v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitAndSaveDisabled()"
-				type="primary" text="保存并提交" @click="saveAndSubmit">
+				type="primary" text="提交" @click="saveAndSubmit">
 			</u-button>
 			<u-button size="small" v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success"
 				text="开始" @click="start">
