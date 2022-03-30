@@ -41,6 +41,8 @@
 			@close="eetShow=false" @confirm="handleEndTimeConfirm">
 		</u-datetime-picker>
 
+		<u-button size="small" type="primary" text="参与人" @click="editParticipant">
+		</u-button>
 		<view class="w-form-btn-content">
 			<u-button size="small" v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary" text="保存"
 				@click="save">
@@ -290,6 +292,11 @@
 			isConfirmDisabled() {
 				return !this.formModel.submittedAt || this.formModel.confirmedAt;
 			},
+			editParticipant() {
+				uni.navigateTo({
+					url: `../../safety-training-participant/list/list?training.id=${this.formModel.id}`
+				})
+			},
 			async afterReadPicture(event) {
 				const file = JSON.parse(await uni.upload(event.file, false))[0];
 				if (!this.formModel.files) {
@@ -323,8 +330,8 @@
 			handleEndTimeConfirm(e) {
 				this.eetShow = false;
 				this.formModel.estimatedEndTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM:ss')
-			},
-		},
+			}
+		}
 	}
 </script>
 
