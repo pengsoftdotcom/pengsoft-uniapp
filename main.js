@@ -169,14 +169,10 @@ const failure = (args) => {
 			})
 			break;
 		case 422:
-			for (const name in args.data) {
-				for (const error of args.data[name]) {
-					uni.showToast({
-						title: error,
-						icon: 'error'
-					});
-				}
-			}
+			uni.showToast({
+				title: '请完成填写后提交',
+				icon: 'none'
+			});
 			break;
 		default:
 			if (args.data) {

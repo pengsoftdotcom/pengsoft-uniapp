@@ -1,11 +1,11 @@
 <template>
 	<view>
 		<view class="w-form-wrap">
-			<u--form :labelWidth="65" :model="formModel" ref="form">
+			<u--form :labelWidth="80" :model="formModel" ref="form">
 				<u-form-item label="乙方" prop="partyB" borderBottom>
 					{{formModel.partyB.name ? formModel.partyB.name : ''}}
 				</u-form-item>
-				<u-form-item label="合同图片" prop="pictures" borderBottom required>
+				<u-form-item label="合同图片" prop="pictures" borderBottom>
 					<u-upload :capture="['camera']" :fileList="pictures" @afterRead="afterReadPicture()"
 						@delete="deletePicture" :maxCount="6" :deletable="!isDisabled()" :disabled="isDisabled()">
 					</u-upload>
@@ -115,9 +115,10 @@
 								}
 							})
 					})
-				}).catch(errors => {
-					console.log(errors);
-				})
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			isConfirmVisible() {
 				return uni.hasAnyRole('worker');
@@ -142,9 +143,10 @@
 							}
 						})
 					})
-				}).catch(errors => {
-					console.log(errors);
-				})
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			async afterReadPicture(event) {
 				const file = JSON.parse(await uni.upload(event.file, true))[0];

@@ -21,7 +21,7 @@
 				menus: [{
 						name: '工地安全',
 						children: [{
-							name: '安全检查',
+							name: '工地检查',
 							icon: 'shop-filled',
 							url: '/pages/modules/ss/safety-check/list/list',
 							role: ['bu_manager', 'supervision_engineer', 'security_officer'],

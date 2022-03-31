@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="w-form-wrap">
-			<u--form :labelWidth="65" :model="formModel" ref="form">
+			<u--form :labelWidth="80" :model="formModel" ref="form">
 				<u-form-item label="姓名" prop="staff.person.name" borderBottom>
 					{{formModel.staff.person.name ? formModel.staff.person.name : ''}}
 				</u-form-item>

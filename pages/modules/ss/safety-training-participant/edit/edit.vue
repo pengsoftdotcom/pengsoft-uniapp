@@ -1,7 +1,7 @@
 <template>
 	<view class="w-form-wrap">
-		<u--form :labelWidth="65" :model="formModel" :rules="rules" ref="form">
-			<u-form-item label="请假理由" prop="reason" borderBottom required>
+		<u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
+			<u-form-item label="请假理由" prop="reason" borderBottom>
 				<u--textarea v-if="!isDisabled()" v-model="formModel.reason"></u--textarea>
 				{{isDisabled() ? formModel.reason ? formModel.reason : '' : ''}}
 			</u-form-item>
@@ -62,9 +62,10 @@
 				this.$refs.form.validate().then(res => {
 					this.formModel['status.id'] = this.statusArr.find(status => status.code === 'leave').id;
 					this.confirm();
-				}).catch(errors => {
-					console.log(errors);
-				});
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			confirm() {
 				uni.clearFormModel(this.formModel);

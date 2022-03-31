@@ -1,13 +1,13 @@
 <template>
 	<view class="w-form-wrap">
-		<u--form :labelWidth="95" :model="formModel" :rules="rules" ref="form">
+		<u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
 			<u-form-item label="工程项目" prop="project.name" borderBottom>
 				{{formModel.project.name ? formModel.project.name : ''}}
 			</u-form-item>
-			<u-form-item label="编码" prop="code" borderBottom>
+			<u-form-item label="培训编码" prop="code" borderBottom>
 				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
-			<u-form-item label="培训主题" prop="subject" borderBottom required>
+			<u-form-item label="培训主题" prop="subject" borderBottom>
 				<u--input v-model="formModel.subject" border="surround"></u--input>
 			</u-form-item>
 			<u-form-item label="培训人" prop="trainer.person.name" borderBottom>
@@ -16,18 +16,18 @@
 			<u-form-item label="全员参加" prop="allWorkers" borderBottom>
 				<u-switch v-model="formModel.allWorkers" :disabled="true"></u-switch>
 			</u-form-item>
-			<u-form-item label="预计开始时间" prop="estimatedStartTime" borderBottom @click="estShow = !formModel.submittedAt">
+			<u-form-item label="预计开始" prop="estimatedStartTime" borderBottom @click="estShow = !formModel.submittedAt">
 				<u--input v-model="formModel.estimatedStartTime" disabled disabledColor="#ffffff" placeholder="请选择"
 					border="none" suffixIcon="calendar-fill"></u--input>
 			</u-form-item>
-			<u-form-item label="预计结束时间" prop="estimatedEndTime" borderBottom @click="eetShow = !formModel.submittedAt">
+			<u-form-item label="预计结束" prop="estimatedEndTime" borderBottom @click="eetShow = !formModel.submittedAt">
 				<u--input v-model="formModel.estimatedEndTime" disabled disabledColor="#ffffff" placeholder="请选择"
 					border="none" suffixIcon="calendar-fill"></u--input>
 			</u-form-item>
 			<u-form-item label="培训地址" prop="address" borderBottom>
 				<u--textarea v-model="formModel.address"></u--textarea>
 			</u-form-item>
-			<u-form-item v-if="formModel.startedAt" label="过程图片" prop="files" borderBottom required>
+			<u-form-item v-if="formModel.startedAt" label="过程图片" prop="files" borderBottom>
 				<u-upload :capture="['camera']" :fileList="files" @afterRead="afterReadPicture()"
 					@delete="deletePicture" :maxCount="6" :deletable="!formModel.endedAt" :disabled="formModel.endedAt">
 				</u-upload>
@@ -170,9 +170,10 @@
 							}
 						})
 					})
-				}).catch(errors => {
-					console.log(errors);
-				})
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			saveAndSubmit() {
 				this.$refs.form.validate().then(res => {
@@ -190,9 +191,10 @@
 							}
 						})
 					})
-				}).catch(errors => {
-					console.log(errors);
-				});
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			submit() {
 				uni.request({
@@ -231,9 +233,10 @@
 							}
 						}
 					});
-				}).catch(errors => {
-					console.log(errors);
-				});
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			end() {
 				this.$refs.form.validate().then(res => {
@@ -261,14 +264,10 @@
 							}
 						}
 					});
-				}).catch(errors => {
-					console.log(errors);
-				})
-			},
-			confirm() {
-				this.$refs.form.validate().then(res => {}).catch(errors => {
-					console.log(errors);
-				});
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			isButtonVisible(operation) {
 				return uni.hasAnyAuthority(`ss::safety_training::${operation}`);

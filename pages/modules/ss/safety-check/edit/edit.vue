@@ -1,37 +1,41 @@
 <template>
 	<view class="w-form-wrap">
-		<u--form :labelWidth="65" :model="formModel" ref="form">
+		<u--form :labelWidth="80" :model="formModel" ref="form">
 			<u-form-item label="工程项目" prop="project.name" borderBottom>
 				{{formModel.project.name ? formModel.project.name : ''}}
 			</u-form-item>
-			<u-form-item label="编码" prop="code" borderBottom>
+			<u-form-item label="检查编码" prop="code" borderBottom>
 				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
-			<u-form-item label="检查主题" prop="subject" borderBottom required>
-				<u--input v-model="formModel.subject" border="surround"></u--input>
+			<u-form-item label="检查类型" prop="type.id" borderBottom>
+				<u-radio-group v-model="formModel.type.id" @change="setType()" :disabled="isSubmitDisabled()">
+					<u-radio :customStyle="{marginRight: '16px'}" v-for="(item, index) in typeArr" :key="index"
+						:label="item.name" :name="item.id">
+					</u-radio>
+				</u-radio-group>
 			</u-form-item>
 			<u-form-item label="检查人" prop="checker.person.name" borderBottom>
 				{{formModel.checker.person.name ? formModel.checker.person.name : ''}}
 			</u-form-item>
-			<u-form-item label="检查图片" prop="submitFiles" borderBottom required>
+			<u-form-item label="检查图片" prop="submitFiles" borderBottom>
 				<u-upload :capture="['camera']" :fileList="submitFiles" @afterRead="afterReadSubmitPicture()"
 					@delete="deletePicture" :maxCount="6" :deletable="!isSubmitDisabled()"
 					:disabled="isSubmitDisabled()">
 				</u-upload>
 			</u-form-item>
-			<u-form-item label="描述" prop="reason" borderBottom required>
-				<u--textarea v-model="formModel.reason"></u--textarea>
+			<u-form-item label="检查描述" prop="reason" borderBottom>
+				<u--textarea v-model="formModel.reason" :disabled="isSubmitDisabled()"></u--textarea>
 			</u-form-item>
 			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="处理图片"
-				prop="handleFiles" borderBottom required>
+				prop="handleFiles" borderBottom>
 				<u-upload :capture="['camera']" :fileList="handleFiles" @afterRead="afterReadHandlePicture()"
 					@delete="deletePicture" :maxCount="6" :deletable="!isHandleDisabled()"
 					:disabled="isHandleDisabled()">
 				</u-upload>
 			</u-form-item>
 			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="处理结果" prop="result"
-				borderBottom required>
-				<u--textarea v-model="formModel.result"></u--textarea>
+				borderBottom>
+				<u--textarea v-model="formModel.result" :disabled="isHandleDisabled()"></u--textarea>
 			</u-form-item>
 		</u--form>
 		<view class="w-form-btn-content">
@@ -56,19 +60,9 @@
 				},
 				type: '',
 				formModel: {
-					id: '',
-					project: '', // 工程项目
-					code: '', // 编码
-					subject: '', // 检查主题
-					checker: '', // 检查人
-					status: '', // 状态
-					submitFiles: [], // 检查图片
-					reason: '', // 描述
-					submittedAt: '', // 提交时间
-					handleFiles: [], // 处理图片
-					result: '', // 处理结果
-					handledAt: '' // 处理时间
+					id: ''
 				},
+				typeArr: [],
 				statusArr: [],
 				submitFiles: [],
 				handleFiles: [],
@@ -114,6 +108,7 @@
 			}
 		},
 		onLoad(option) {
+			uni.getDictionaryItem('safety_check_type', data => this.typeArr = data);
 			uni.getDictionaryItem('safety_check_status', data => this.statusArr = data);
 			this.formModel.id = option.id;
 			this.type = option.type;
@@ -126,6 +121,9 @@
 			this.$refs.form.setRules(this.rules);
 		},
 		methods: {
+			setType() {
+				this.formModel.type = this.typeArr.find(type => type.id = this.formModel.type.id);
+			},
 			findOne() {
 				uni.request({
 					url: '/api/ss/safety-check/find-one-with-files',
@@ -144,7 +142,7 @@
 				})
 			},
 			isSubmitVisible() {
-				return uni.hasAnyAuthority('ss::safety_check::submit');
+				return !uni.hasAnyAuthority('ss::safety_check::handle') && uni.hasAnyAuthority('ss::safety_check::submit');
 			},
 			isSubmitDisabled() {
 				return this.formModel.submittedAt;
@@ -180,9 +178,10 @@
 								}
 							})
 					})
-				}).catch(errors => {
-					console.log(errors);
-				})
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			isHandleVisible() {
 				return uni.hasAnyAuthority('ss::safety_check::handle');
@@ -209,9 +208,10 @@
 							}
 						})
 					})
-				}).catch(errors => {
-					console.log(errors);
-				})
+				}).catch(errors => uni.showToast({
+					title: '请完成填写后提交',
+					icon: 'none'
+				}));
 			},
 			async afterReadSubmitPicture(event) {
 				const file = JSON.parse(await uni.upload(event.file, false))[0];
@@ -252,6 +252,6 @@
 
 <style lang="scss">
 	page {
-		background:#fff;
+		background: #fff;
 	}
 </style>
