@@ -2,16 +2,16 @@
 	<view class="w-form-wrap">
 		<u--form :labelWidth="65" :model="formModel" ref="form">
 			<u-form-item label="工程项目" prop="project.name" borderBottom>
-				{{formModel.project.name}}
+				{{formModel.project.name ? formModel.project.name : ''}}
 			</u-form-item>
 			<u-form-item label="编码" prop="code" borderBottom>
-				{{formModel.code}}
+				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
 			<u-form-item label="检查主题" prop="subject" borderBottom required>
 				<u--input v-model="formModel.subject" border="surround"></u--input>
 			</u-form-item>
 			<u-form-item label="检查人" prop="checker.person.name" borderBottom>
-				{{formModel.checker.person.name}}
+				{{formModel.checker.person.name ? formModel.checker.person.name : ''}}
 			</u-form-item>
 			<u-form-item label="检查图片" prop="submitFiles" borderBottom required>
 				<u-upload :capture="['camera']" :fileList="submitFiles" @afterRead="afterReadSubmitPicture()"
@@ -37,7 +37,7 @@
 		<view class="w-form-btn-content">
 			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="success" text="安全" @click="submit">
 			</u-button>
-			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="error" text="隐患" @click="submit">
+			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="error" text="隐患" @click="risk">
 			</u-button>
 			<u-button v-if="isHandleVisible()" :disabled="isHandleDisabled()" type="primary" text="处理" @click="handle">
 			</u-button>

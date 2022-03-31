@@ -3,13 +3,13 @@
 		<view class="w-form-wrap">
 			<u--form :labelWidth="65" :model="formModel" ref="form">
 				<u-form-item label="任务名称" prop="name" borderBottom>
-					{{formModel.name}}
+					{{formModel.name ? formModel.name : ''}}
 				</u-form-item>
 				<u-form-item label="任务内容" prop="content" borderBottom>
-					{{formModel.content}}
+					{{formModel.content ? formModel.content : ''}}
 				</u-form-item>
 				<u-form-item label="创建时间" prop="createdAt" borderBottom>
-					{{formModel.createdAt}}
+					{{formModel.createdAt ? formModel.createdAt : ''}}
 				</u-form-item>
 				<u-form-item label="完成时间" prop="finishedAt" borderBottom>
 					{{formModel.finishedAt ? formModel.finishedAt : ''}}

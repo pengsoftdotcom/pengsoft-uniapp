@@ -87,6 +87,16 @@ uni.convertToFile = file => {
 	})
 };
 
+uni.clearFormModel = formModel => {
+	if (formModel) {
+		for (let key in formModel) {
+			if (formModel[key] === null || formModel[key] === undefined) {
+				delete formModel[key];
+			}
+		}
+	}
+}
+
 uni.listModel = {
 	contentText: {
 		contentdown: '上拉加载更多',
