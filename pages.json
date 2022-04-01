@@ -76,7 +76,7 @@
 		}, {
 			"path": "pages/modules/ss/safety-check/list/list",
 			"style": {
-				"navigationBarTitleText": "安全检查",
+				"navigationBarTitleText": "工地检查",
 				"enablePullDownRefresh": true
 			}
 

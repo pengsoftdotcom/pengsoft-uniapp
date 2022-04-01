@@ -54,9 +54,9 @@
 		data() {
 			return {
 				titleObj: {
-					create: '新增安全检查',
-					update: '编辑安全检查',
-					detail: '安全检查详情',
+					create: '新增工地检查',
+					update: '编辑工地检查',
+					detail: '工地检查详情',
 				},
 				type: '',
 				formModel: {

@@ -73,7 +73,7 @@
 				titleObj: {
 					create: '新增安全培训',
 					update: '编辑安全培训',
-					detail: '安全检查培训',
+					detail: '安全培训详情',
 				},
 				type: '',
 				formModel: {
