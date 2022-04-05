@@ -101,26 +101,29 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/modules/ss/safety-training-participant/list/list",
+			"style": {
+				"navigationBarTitleText": "参与人",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/modules/ss/safety-training-participant/edit/edit",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/modules/statistics/cp/cp",
+			"style": {
+				"navigationBarTitleText": "工地统计",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	    ,{
-            "path" : "pages/modules/ss/safety-training-participant/list/list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "参与人",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/modules/ss/safety-training-participant/edit/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

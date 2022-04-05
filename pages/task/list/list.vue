@@ -8,7 +8,6 @@
 				</view>
 			</view>
 		</view>
-		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 	</view>
 </template>
 
@@ -27,37 +26,15 @@
 		onShow() {
 			this.getList();
 		},
-		onPullDownRefresh() {
-			this.pageData.page = 0;
-			this.getList();
-		},
-		onReachBottom() {
-			if (this.status !== 'noMore') {
-				this.pageData.page += 1;
-				this.getList();
-			}
-		},
 		methods: {
 			getList() {
-				this.status = 'more';
-				if (this.pageData.page !== 0) {
-					this.status = 'loading';
-				}
 				uni.request({
-					url: '/api/task/task/find-page',
+					url: '/api/task/task/find-all',
 					data: {
-						page: this.pageData.page,
-						size: this.pageData.size,
 						'status.code': 'created'
 					},
 					success: (res) => {
-						uni.stopPullDownRefresh();
-						this.pageData.total = res.data.totalElements;
-						if (res.data.last) {
-							this.status = 'noMore';
-						}
-						this.listData = this.pageData.page === 0 ? res.data.content :
-							this.listData.concat(res.data.content)
+						this.listData = res.data;
 					}
 				})
 			},

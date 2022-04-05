@@ -4,14 +4,16 @@
 			<image class="logo-img" :src="avatar"></image>
 			<view class="logo-title">
 				<text class="user-name">{{name}}</text>
+				<text class="post-name">{{postName}}</text>
+			</view>
+			<view class="logo-title">
+				<text class="organization-name">{{organizationName}}</text>
 			</view>
 		</view>
 		<uni-list class="center-list" v-for="(submenus , index) in menus" :key="index">
-			<uni-list-item v-for="(submenu,i) in submenus" :key="i" v-if="isMenuVisible(submenu)"
-			:title="submenu.title"
-			:link="!!submenu.url" :to="submenu.url"  
-			:show-extra-icon="!!submenu.icon" :extraIcon="{type:submenu.icon,color:'#999'}"
-			:show-badge="!!submenu.badge" :badge-text="submenu.badge">
+			<uni-list-item v-for="(submenu,i) in submenus" :key="i" v-if="isMenuVisible(submenu)" :title="submenu.title"
+				:link="!!submenu.url" :to="submenu.url" :show-extra-icon="!!submenu.icon"
+				:extraIcon="{type:submenu.icon,color:'#999'}" :show-badge="!!submenu.badge" :badge-text="submenu.badge">
 			</uni-list-item>
 		</uni-list>
 		<button class="unbind" type="warn" @click="unbind()">解除绑定</button>
@@ -24,6 +26,8 @@
 			return {
 				avatar: '../../static/uni-center/defaultAvatarUrl.png',
 				name: '',
+				postName: '',
+				organizationName: '',
 				menus: [
 					[{
 							title: '合同',
@@ -38,12 +42,7 @@
 							url: '/pages/modules/oa/payroll-detail/list/list',
 							badge: 0,
 							roles: ['worker']
-						}/* , {
-							title: '考勤',
-							icon: 'notification',
-							url: 'my-contract/my-contract',
-							roles: ['worker']
-						} */
+						}
 					]
 				]
 			}
@@ -84,6 +83,12 @@
 				if (userDetails.person.name) {
 					this.name = userDetails.person.name;
 				}
+			}
+			if (userDetails.primaryOrganization) {
+				this.organizationName = userDetails.primaryOrganization.name;
+			}
+			if (userDetails.primaryJob) {
+				this.postName = userDetails.primaryJob.post.name;
 			}
 		}
 	}
@@ -134,7 +139,18 @@
 	.user-name {
 		height: 100rpx;
 		line-height: 100rpx;
-		font-size: 38rpx;
+		font-size: 36rpx;
+		color: #FFFFFF;
+	}
+
+	.post-name {
+		margin-left: 20rpx;
+		font-size: 30rpx;
+		color: #FFFFFF;
+	}
+
+	.organization-name {
+		font-size: 30rpx;
 		color: #FFFFFF;
 	}
 
@@ -203,7 +219,7 @@
 		/* #endif */
 		background-color: #DD524D;
 	}
-	
+
 	.unbind {
 		position: fixed;
 		bottom: 0;

@@ -1,6 +1,10 @@
 <template>
 	<view>
-		<view class="w-list-wrap">
+		<view class="tabs">
+			<view v-for="(tab,index) in tabs" :key="index" class="tab" :class="{active: tab.active}"
+				@click="active(tab)">{{tab.name}}</view>
+		</view>
+		<view class="w-list-wrap" style="margin-top: 54px;">
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'update')">
 				<view class="w-list-item-title ellipsis-2">{{ item.code }} - {{ item.type.name }}</view>
 				<view class="w-list-item-body">
@@ -27,7 +31,31 @@
 <script>
 	export default {
 		data() {
-			return JSON.parse(JSON.stringify(uni.listModel));
+			return {
+				tabs: [{
+					name: '全部',
+					active: true
+				}, {
+					name: '安全',
+					status: 'safe',
+					active: false
+				}, {
+					name: '隐患',
+					status: 'risk',
+					active: false
+				}],
+				...JSON.parse(JSON.stringify(uni.listModel))
+			};
+		},
+		onLoad(option) {
+			const status = option.status;
+			if (status) {
+				this.filterData['status.code'] = status;
+				this.tabs.forEach(t => t.active = t.status === status);
+			}
+			this.filterData['type.code'] = option.type;
+			this.filterData['startTime'] = option.startTime;
+			this.filterData['endTime'] = option.endTime;
 		},
 		onShow() {
 			this.getList();
@@ -43,6 +71,16 @@
 			}
 		},
 		methods: {
+			active(tab) {
+				this.tabs.forEach(t => t.active = false);
+				tab.active = true;
+				if (tab.status) {
+					this.filterData['status.code'] = tab.status;
+				} else {
+					delete this.filterData['status.code'];
+				}
+				this.getList();
+			},
 			getList() {
 				this.status = 'more';
 				if (this.pageData.page !== 0) {
@@ -52,7 +90,8 @@
 					url: '/api/ss/safety-check/find-page',
 					data: {
 						page: this.pageData.page,
-						size: this.pageData.size
+						size: this.pageData.size,
+						...this.filterData
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
@@ -75,5 +114,31 @@
 </script>
 
 <style>
+	.tabs {
+		position: fixed;
+		width: 100%;
+		display: flex;
+		top: 0;
+		z-index: 99;
+		background-color: #FFFFFF;
+	}
 
+	.tabs>.tab {
+		flex-grow: 1;
+		text-align: center;
+		color: #3C9CFF;
+		border: 1px solid #3C9CFF;
+		border-right: 0;
+		height: 40px;
+		line-height: 40px;
+	}
+
+	.tabs>.tab :first {
+		border-left: 0;
+	}
+
+	.tabs>.active {
+		background-color: #3C9CFF;
+		color: #FFFFFF !important;
+	}
 </style>

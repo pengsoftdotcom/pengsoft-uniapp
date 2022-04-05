@@ -23,13 +23,13 @@
 						children: [{
 							name: '工地检查',
 							icon: 'shop-filled',
-							url: '/pages/modules/ss/safety-check/list/list',
-							role: ['bu_manager', 'supervision_engineer', 'security_officer'],
+							page: '/pages/modules/ss/safety-check/list/list',
+							roles: ['bu_manager', 'supervision_engineer', 'security_officer']
 						}, {
 							name: '安全培训',
 							icon: 'shop-filled',
-							url: '/pages/modules/ss/safety-training/list/list',
-							role: ['bu_manager', 'security_officer', 'worker'],
+							page: '/pages/modules/ss/safety-training/list/list',
+							roles: ['bu_manager', 'security_officer', 'worker']
 						}]
 					},
 					{
@@ -37,15 +37,23 @@
 						children: [{
 							name: '合同',
 							icon: 'shop-filled',
-							url: '/pages/modules/oa/contract/list/list',
-							role: ['bu_manager', 'cashier'],
+							page: '/pages/modules/oa/contract/list/list',
+							roles: ['bu_manager', 'cashier'],
 						}, {
 							name: '工资',
 							icon: 'shop-filled',
-							url: '/pages/modules/oa/payroll-record/list/list',
-							role: ['bu_manager', 'cashier'],
+							page: '/pages/modules/oa/payroll-record/list/list',
+							roles: ['bu_manager', 'cashier']
 						}]
-					},
+					}, {
+						name: '统计分析',
+						children: [{
+							name: '工地统计',
+							icon: 'shop-filled',
+							page: '/pages/modules/statistics/cp/cp',
+							roles: ['ru_manager', 'bu_manager']
+						}]
+					}
 				],
 				time: '',
 			}
@@ -57,15 +65,15 @@
 			isMenuVisible(menu) {
 				let roles = [];
 				if (menu.children) {
-					menu.children.forEach(child => child.role.forEach(role => roles.push(role)));
+					menu.children.forEach(child => child.roles.forEach(role => roles.push(role)));
 				} else {
-					roles = menu.role;
+					roles = menu.roles;
 				}
 				return uni.hasAnyRole(roles);
 			},
 			handleClickMenu(item) {
 				uni.navigateTo({
-					url: item.url
+					url: item.page
 				})
 			}
 		}
