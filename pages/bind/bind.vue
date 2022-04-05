@@ -82,12 +82,12 @@
 				});
 			},
 			afterSignedIn() {
-				// uni.switchTab({
-				// 	url: "/pages/task/list/list"
-				// });
-				uni.navigateTo({
-					url: '/pages/modules/statistics/cp/cp'
-				})
+				uni.switchTab({
+					url: "/pages/task/list/list"
+				});
+				// uni.navigateTo({
+				// 	url: '/pages/modules/statistics/cp/cp'
+				// })
 			},
 			bind() {
 				this.$refs.form
