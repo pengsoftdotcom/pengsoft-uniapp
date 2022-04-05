@@ -5,28 +5,67 @@
 				@click="active(tab)">{{tab.name}}</view>
 		</view>
 		<view class="w-list-wrap" style="margin-top: 54px;">
-			<view v-for="(item, index) in listData" :key="index" class="w-list-item">
-				<view class="w-list-item-title ellipsis-2" style="margin-right: 0;">{{ item.name }}</view>
-				<view class="w-list-item-body">
-					<view class="statistics">
-						<view @click="toSafetyCheckList('', '')">已检查 {{item.check.count}} 天</view>
-						<view>
-							<view>质量检查</view>
-							<view>安全检查</view>
-						</view>
-						<view>
-							<view>安全</view>
-							<view>隐患</view>
-							<view>安全</view>
-							<view>隐患</view>
-						</view>
-						<view>
-							<view class="safe" @click="toSafetyCheckList('quality', 'safe')">{{item.check.quality.safe}}</view>
-							<view class="risk" @click="toSafetyCheckList('quality', 'risk')">{{item.check.quality.risk}}</view>
-							<view class="safe" @click="toSafetyCheckList('safety', 'safe')">{{item.check.safety.safe}}</view>
-							<view class="risk" @click="toSafetyCheckList('safety', 'risk')">{{item.check.safety.risk}}</view>
+			<view v-for="(item, index) in listData" :key="index" class="w-list-item cp-item">
+				<view class="cp-title">
+					<view class="cp-name" style="margin-right: 0;">
+						<view class="ellipsis-2">
+							{{ item.name }}
 						</view>
 					</view>
+					<view class="cp-count" @click="toSafetyCheckList('', '')">
+						<view class="cp-count-title">
+							已检查
+						</view>
+						<view class="cp-count-num">
+							{{item.check.count}}
+							<view class="cp-count-unit">
+								天
+							</view>
+						</view>
+
+					</view>
+				</view>
+				<view class="cp-body">
+					<view class="cp-check">
+						<view class="cp-check-type">
+							质量检查
+						</view>
+						<view class="cp-check-content">
+							<view class="cp-check-num" @click="toSafetyCheckList('quality', 'safe')">
+								安全
+								<view class="safe">
+									{{item.check.quality.safe}}
+								</view>
+							</view>
+							<view class="cp-check-num" @click="toSafetyCheckList('quality', 'risk')">
+								隐患
+								<view class="risk">
+									{{item.check.quality.risk}}
+								</view>
+							</view>
+						</view>
+					</view>
+
+					<view class="cp-check">
+						<view class="cp-check-type">
+							安全检查
+						</view>
+						<view class="cp-check-content">
+							<view class="cp-check-num" @click="toSafetyCheckList('safety', 'safe')">
+								 安全
+								 <view class="safe">
+									{{item.check.safety.safe}}
+								 </view>
+							</view>
+							<view class="cp-check-num" @click="toSafetyCheckList('safety', 'risk')">
+								隐患
+								<view class="risk">
+									{{item.check.safety.risk}}
+								</view>
+							</view>
+						</view>
+					</view>
+
 				</view>
 			</view>
 		</view>
