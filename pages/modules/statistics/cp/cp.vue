@@ -52,10 +52,10 @@
 						</view>
 						<view class="cp-check-content">
 							<view class="cp-check-num" @click="toSafetyCheckList('safety', 'safe')">
-								 安全
-								 <view class="safe">
+								安全
+								<view class="safe">
 									{{item.check.safety.safe}}
-								 </view>
+								</view>
 							</view>
 							<view class="cp-check-num" @click="toSafetyCheckList('safety', 'risk')">
 								隐患
@@ -166,8 +166,10 @@
 						const projectIds = content.map(project => project.id);
 						this.listData = this.pageData.page === 0 ? content : this.listData.concat(content);
 						const tab = this.tabs.find(tab => tab.active);
-						this.getCheckDays(projectIds, tab.startTime, tab.endTime);
-						this.statistic(projectIds, tab.startTime, tab.endTime);
+						if (projectIds && projectIds.length > 0) {
+							this.getCheckDays(projectIds, tab.startTime, tab.endTime);
+							this.statistic(projectIds, tab.startTime, tab.endTime);
+						}
 					}
 				});
 			},
