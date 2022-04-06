@@ -53,10 +53,19 @@
 				this.filterData['status.code'] = status;
 				this.tabs.forEach(t => t.active = t.status === status);
 			}
-			this.filterData['type.code'] = option.type;
-			this.filterData['startTime'] = option.startTime;
-			this.filterData['endTime'] = option.endTime;
-			
+			const type = option.type;
+			if (type) {
+				this.filterData['type.code'] = type;
+			}
+			const startTime = option.startTime;
+			if (startTime) {
+				this.filterData['startTime'] = option.startTime;
+			}
+			const endTime = option.endTime;
+			if (endTime) {
+				this.filterData['endTime'] = option.endTime;
+			}
+
 		},
 		onShow() {
 			this.getList();
