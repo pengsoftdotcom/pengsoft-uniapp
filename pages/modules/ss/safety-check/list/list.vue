@@ -56,6 +56,7 @@
 			this.filterData['type.code'] = option.type;
 			this.filterData['startTime'] = option.startTime;
 			this.filterData['endTime'] = option.endTime;
+			
 		},
 		onShow() {
 			this.getList();
@@ -72,7 +73,7 @@
 		},
 		methods: {
 			isCreateVisible() {
-				return uni.hasAnyRole('supervision_engineer', 'security_officer');
+				return uni.hasAnyRole(['supervision_engineer', 'security_officer']);
 			},
 			active(tab) {
 				this.tabs.forEach(t => t.active = false);

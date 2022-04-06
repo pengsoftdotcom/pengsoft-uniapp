@@ -48,7 +48,7 @@
 				formVisible: false,
 				buttonText: "获取验证码",
 				buttonDisabled: false,
-				totalSeconds: 6, // 验证码生成间隔秒数
+				totalSeconds: 60, // 验证码生成间隔秒数
 			};
 		},
 		onLoad: function(option) {

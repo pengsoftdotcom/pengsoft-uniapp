@@ -46,7 +46,7 @@
 		},
 		methods: {
 			isCreateVisible() {
-				return uni.hasAnyRole(['security_officer', 'supervision_engineer']);
+				return uni.hasAnyRole('security_officer');
 			},
 			getStatusCode(item) {
 				if (item.endedAt) {
