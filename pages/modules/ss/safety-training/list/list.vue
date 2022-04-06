@@ -20,8 +20,7 @@
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 
-		<button v-if="isCreateVisible()" class="w-fab-btn"
-			@click="edit('', 'create')">
+		<button v-if="isCreateVisible()" class="w-fab-btn" @click="edit('', 'create')">
 			<u-icon color="#fff" name="plus"></u-icon>
 		</button>
 	</view>
@@ -47,7 +46,7 @@
 		},
 		methods: {
 			isCreateVisible() {
-				return uni.hasAnyRole(['bu_manager', 'security_officer', 'supervision_engineer']);
+				return uni.hasAnyRole(['security_officer', 'supervision_engineer']);
 			},
 			getStatusCode(item) {
 				if (item.endedAt) {

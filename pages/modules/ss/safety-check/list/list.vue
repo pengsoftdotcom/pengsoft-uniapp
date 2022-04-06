@@ -22,7 +22,7 @@
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 
-		<button class="w-fab-btn" @click="edit('', 'create')">
+		<button v-if="isCreateVisible()" class="w-fab-btn" @click="edit('', 'create')">
 			<u-icon color="#fff" name="plus"></u-icon>
 		</button>
 	</view>
@@ -71,6 +71,9 @@
 			}
 		},
 		methods: {
+			isCreateVisible() {
+				return uni.hasAnyRole('supervision_engineer', 'security_officer');
+			},
 			active(tab) {
 				this.tabs.forEach(t => t.active = false);
 				tab.active = true;

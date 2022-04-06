@@ -24,12 +24,12 @@
 							name: '工地检查',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-check/list/list',
-							roles: ['bu_manager', 'supervision_engineer', 'security_officer']
+							roles: ['ru_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
 						}, {
 							name: '安全培训',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-training/list/list',
-							roles: ['bu_manager', 'security_officer', 'worker']
+							roles: ['ru_manager', 'bu_manager', 'security_officer', 'worker']
 						}]
 					},
 					{
