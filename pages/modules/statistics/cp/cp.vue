@@ -100,9 +100,9 @@
 				}, {
 					name: '日',
 					startTime: startDay.getFullYear() + '-' + this.format(startDay.getMonth() + 1) + '-' + this
-						.format(startDay.getDate() + 1) + ' 00:00:01',
+						.format(startDay.getDate()) + ' 00:00:01',
 					endTime: endDay.getFullYear() + '-' + this.format(endDay.getMonth() + 1) + '-' + this.format(
-						endDay.getDate() + 1) + ' 00:00:01',
+						endDay.getDate()) + ' 00:00:01',
 					active: false
 				}],
 				...JSON.parse(JSON.stringify(uni.listModel))

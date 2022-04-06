@@ -33,6 +33,7 @@
 			}
 		},
 		onLoad(option) {
+			console.log(1)
 			this.filterData['training.id'] = option['training.id'];
 		},
 		onShow() {
@@ -73,9 +74,11 @@
 				})
 			},
 			edit(item) {
-				uni.navigateTo({
-					url: `../edit/edit?id=${item.id}`
-				})
+				if (uni.hasAnyRole('worker') || item.status) {
+					uni.navigateTo({
+						url: `../edit/edit?id=${item.id}`
+					})
+				}
 			}
 		}
 	}

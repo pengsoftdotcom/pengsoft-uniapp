@@ -73,7 +73,7 @@ uni.upload = (file, locked) => {
 };
 
 uni.download = file => {
-	return new Promise((resolve, reject) => uni.request({
+	return new Promise((resolve) => uni.request({
 		url: `/api/system/asset/download?id=${file.id}`,
 		success: res => resolve(res.data)
 	}))

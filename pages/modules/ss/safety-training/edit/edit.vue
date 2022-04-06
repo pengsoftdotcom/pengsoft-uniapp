@@ -50,17 +50,14 @@
 			<u-button size="small" v-if="isButtonVisible('submit')" :disabled="isSubmitDisabled()" type="primary"
 				text="提交" @click="saveAndSubmit">
 			</u-button> -->
-			<u-button size="small" v-if="isButtonVisible('save_and_submit')" :disabled="isSubmitAndSaveDisabled()"
+			<u-button size="small" v-if="isButtonVisible()" :disabled="isSaveAndSubmitDisabled()"
 				type="primary" text="提交" @click="saveAndSubmit">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('start')" :disabled="isStartDisabled()" type="success"
+			<u-button size="small" v-if="isButtonVisible()" :disabled="isStartDisabled()" type="success"
 				text="开始" @click="start">
 			</u-button>
-			<u-button size="small" v-if="isButtonVisible('end')" :disabled="isEndDisabled()" type="error" text="结束"
+			<u-button size="small" v-if="isButtonVisible()" :disabled="isEndDisabled()" type="error" text="结束"
 				@click="end">
-			</u-button>
-			<u-button size="small" v-if="isButtonVisible('confirm')" :disabled="isConfirmDisabled()" type="primary"
-				text="确认" @click="confirm">
 			</u-button>
 		</view>
 	</view>
@@ -269,16 +266,16 @@
 					icon: 'none'
 				}));
 			},
-			isButtonVisible(operation) {
-				return uni.hasAnyAuthority(`ss::safety_training::${operation}`);
+			isButtonVisible() {
+				return uni.hasAnyRole('security_officer');
 			},
-			isSaveDisabled() {
-				return this.formModel.allWorkers || this.formModel.id;
-			},
-			isSubmitDisabled() {
-				return !this.formModel.id || this.formModel.submittedAt;
-			},
-			isSubmitAndSaveDisabled() {
+			// isSaveDisabled() {
+			// 	return this.formModel.allWorkers || this.formModel.id;
+			// },
+			// isSubmitDisabled() {
+			// 	return !this.formModel.id || this.formModel.submittedAt;
+			// },
+			isSaveAndSubmitDisabled() {
 				return !this.formModel.allWorkers || this.formModel.submittedAt;
 			},
 			isStartDisabled() {
@@ -287,12 +284,9 @@
 			isEndDisabled() {
 				return !this.formModel.startedAt || this.formModel.endedAt;
 			},
-			isConfirmDisabled() {
-				return !this.formModel.submittedAt || this.formModel.confirmedAt;
-			},
 			editParticipant() {
 				uni.navigateTo({
-					url: `../../safety-training-participant/list/list?training.id=${this.formModel.id}`
+					url: `/pages/modules/ss/safety-training-participant/list/list?training.id=${this.formModel.id}`
 				})
 			},
 			async afterReadPicture(event) {

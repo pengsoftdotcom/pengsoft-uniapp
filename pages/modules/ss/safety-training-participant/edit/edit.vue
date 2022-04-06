@@ -3,13 +3,13 @@
 		<u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
 			<u-form-item label="请假理由" prop="reason" borderBottom>
 				<u--textarea v-if="!isDisabled()" v-model="formModel.reason"></u--textarea>
-				{{isDisabled() ? formModel.reason ? formModel.reason : '' : ''}}
+				<text v-else>{{formModel.reason ? formModel.reason : ''}}</text>
 			</u-form-item>
 		</u--form>
 		<view class="w-form-btn-content">
-			<u-button :disabled="isDisabled()" type="success" text="参与" @click="participate">
+			<u-button v-if="isVisible()" :disabled="isDisabled()" type="success" text="参与" @click="participate">
 			</u-button>
-			<u-button :disabled="isDisabled()" type="warning" text="请假" @click="leave">
+			<u-button v-if="isVisible()" :disabled="isDisabled()" type="warning" text="请假" @click="leave">
 			</u-button>
 		</view>
 	</view>
@@ -51,8 +51,12 @@
 			});
 		},
 		methods: {
+			isVisible() {
+				return uni.hasAnyRole('worker');
+			},
 			isDisabled() {
-				return this.type === 'detail' || this.formModel.confirmedAt || (this.formModel.training && this.formModel.training.endedAt);
+				return this.type === 'detail' || !!this.formModel.confirmedAt || !!(this.formModel.training && this
+					.formModel.training.endedAt);
 			},
 			participate() {
 				this.formModel['status.id'] = this.statusArr.find(status => status.code === 'participate').id;
