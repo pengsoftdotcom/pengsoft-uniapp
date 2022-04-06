@@ -165,7 +165,7 @@
 						}));
 						const projectIds = content.map(project => project.id);
 						this.listData = this.pageData.page === 0 ? content : this.listData.concat(content);
-						const tab = this.tabs.find(tab => tab.active);
+						const tab = this.tabs.find(t => t.active);
 						if (projectIds && projectIds.length > 0) {
 							this.getCheckDays(projectIds, tab.startTime, tab.endTime);
 							this.statistic(projectIds, tab.startTime, tab.endTime);
@@ -221,7 +221,7 @@
 				});
 			},
 			toSafetyCheckList(type, status) {
-				const tab = this.tabs.find(tab => tab.active);
+				const tab = this.tabs.find(t => t.active);
 				uni.navigateTo({
 					url: `/pages/modules/ss/safety-check/list/list?type=${type}&status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
 				})
