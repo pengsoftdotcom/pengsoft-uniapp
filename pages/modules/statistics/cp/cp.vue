@@ -22,7 +22,14 @@
 								天
 							</view>
 						</view>
-
+					</view>
+				</view>
+				<u-tabs :list="item.units" :itemStyle="	{ height: '44px', flexGrow: 1 }" @change="change"></u-tabs>
+				<view>
+					<view>负责人</view>
+					<view>{{item.manager.person.name}}</view>
+					<view>
+						<u-icon name="phone" @click="makePhoneCall(item.manager.person.mobile)"></u-icon>
 					</view>
 				</view>
 				<view class="cp-body">
@@ -87,10 +94,12 @@
 			endDay.setDate(endDay.getDate() + 1);
 			return {
 				tabs: [{
-					name: '年',
-					startTime: year.getFullYear() + '-01-01 00:00:01',
-					endTime: year.getFullYear() + '-12-31 00:00:01',
-					active: true
+					name: '日',
+					startTime: startDay.getFullYear() + '-' + this.format(startDay.getMonth() + 1) + '-' + this
+						.format(startDay.getDate()) + ' 00:00:01',
+					endTime: endDay.getFullYear() + '-' + this.format(endDay.getMonth() + 1) + '-' + this.format(
+						endDay.getDate()) + ' 00:00:01',
+					active: false
 				}, {
 					name: '月',
 					startTime: startMonth.getFullYear() + '-' + this.format(startMonth.getMonth() + 1) +
@@ -98,18 +107,16 @@
 					endTime: endMonth.getFullYear() + '-' + this.format(endMonth.getMonth() + 1) + '-01 00:00:01',
 					active: false
 				}, {
-					name: '日',
-					startTime: startDay.getFullYear() + '-' + this.format(startDay.getMonth() + 1) + '-' + this
-						.format(startDay.getDate()) + ' 00:00:01',
-					endTime: endDay.getFullYear() + '-' + this.format(endDay.getMonth() + 1) + '-' + this.format(
-						endDay.getDate()) + ' 00:00:01',
-					active: false
+					name: '年',
+					startTime: year.getFullYear() + '-01-01 00:00:01',
+					endTime: (year.getFullYear() + 1) + '-01-01 00:00:01',
+					active: true
 				}],
 				...JSON.parse(JSON.stringify(uni.listModel))
 			}
 		},
 		onShow() {
-			this.getList();
+			this.active(this.tabs[0]);
 		},
 		onPullDownRefresh() {
 			this.pageData.page = 0;
@@ -132,6 +139,20 @@
 				}
 				this.getList();
 			},
+			change(unit) {
+				const project = this.listData.find(project => project.id === unit.project);
+				project.manager = project[unit.manager];
+			},
+			makePhoneCall(phoneNumber) {
+				if (phoneNumber) {
+					uni.makePhoneCall({
+						phoneNumber,
+						success() {
+							alert(1);
+						}
+					});
+				}
+			},
 			getList() {
 				this.status = 'more';
 				if (this.pageData.page !== 0) {
@@ -151,6 +172,24 @@
 							this.status = 'noMore';
 						}
 						const content = res.data.content.map(project => Object.assign(project, {
+							manager: project.ruManager,
+							units: [{
+								name: '监管单位',
+								project: project.id,
+								manager: 'ruManager'
+							}, {
+								name: '建设单位',
+								project: project.id,
+								manager: 'ownerManager'
+							}, {
+								name: '监理单位',
+								project: project.id,
+								manager: 'suManager'
+							}, {
+								name: '施工单位',
+								project: project.id,
+								manager: 'suManager'
+							}],
 							check: {
 								count: 0,
 								safety: {

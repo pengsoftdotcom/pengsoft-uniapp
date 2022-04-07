@@ -1,7 +1,7 @@
 import App from './App'
 
-const URL_PREFIX = 'https://api.pengsoft.com';
-// const URL_PREFIX = 'http://localhost:8080';
+// const URL_PREFIX = 'https://api.pengsoft.com';
+const URL_PREFIX = 'http://localhost:8080';
 
 uni.isAuthenticated = () => {
 	const cache = uni.getStorageSync("pengsoft")
@@ -23,11 +23,10 @@ uni.getUserDetails = () => {
 uni.hasAnyRole = (roleCode) => {
 	const cache = uni.getStorageSync("pengsoft");
 	return cache.userDetails.roles.some(role => {
-		if (Array.isArray(roleCode)) {
-			return roleCode.some(code => code === role.code);
-		} else {
-			return role.code === roleCode;
+		if (!Array.isArray(roleCode)) {
+			roleCode = roleCode.split(',').map(code => code.trim());
 		}
+		return roleCode.some(code => code === role.code);
 	});
 };
 
@@ -35,11 +34,10 @@ uni.hasAnyRole = (roleCode) => {
 uni.hasAnyAuthority = (authorityCode) => {
 	const cache = uni.getStorageSync("pengsoft");
 	return cache.userDetails.authorities.some(authority => {
-		if (Array.isArray(authorityCode)) {
-			return authorityCode.some(code => code === authority);
-		} else {
-			return authority === authorityCode;
+		if (!Array.isArray(authorityCode)) {
+			authorityCode = roleCode.split(',').map(code => code.trim());
 		}
+		return authorityCode.some(code => code === authority);
 	});
 };
 

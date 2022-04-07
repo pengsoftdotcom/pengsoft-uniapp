@@ -82,12 +82,20 @@
 				});
 			},
 			afterSignedIn() {
-				uni.switchTab({
-					url: "/pages/task/list/list"
-				});
-				// uni.navigateTo({
-				// 	url: '/pages/modules/statistics/cp/cp'
-				// })
+				if (uni.hasAnyRole('ru_manager')) {
+					uni.switchTab({
+						url: "/pages/workbench/workbench",
+						success() {
+							uni.navigateTo({
+								url: '/pages/modules/statistics/cp/cp'
+							})
+						}
+					})
+				} else {
+					uni.switchTab({
+						url: "/pages/task/list/list"
+					});
+				}
 			},
 			bind() {
 				this.$refs.form

@@ -60,13 +60,14 @@
 			},
 			participate() {
 				this.formModel['status.id'] = this.statusArr.find(status => status.code === 'participate').id;
+				delete this.formModel['reason'];
 				this.confirm();
 			},
 			leave() {
-				this.$refs.form.validate().then(res => {
+				this.$refs.form.validate().then(() => {
 					this.formModel['status.id'] = this.statusArr.find(status => status.code === 'leave').id;
 					this.confirm();
-				}).catch(errors => uni.showToast({
+				}).catch(() => uni.showToast({
 					title: '请完成填写后提交',
 					icon: 'none'
 				}));
