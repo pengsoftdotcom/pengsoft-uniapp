@@ -12,62 +12,74 @@
 							{{ item.name }}
 						</view>
 					</view>
-					<view class="cp-count" @click="toSafetyCheckList('', '')">
-						<view class="cp-count-title">
+				</view>
+				<view class="cp-managers-content">
+					<view class="cp-manager" v-for="(manager, $index) in item.units" :key="$index"
+						@click="makePhoneCall(item.manager.person.mobile)">
+						<view class="cp-manager-label">{{manager.name}}</view>
+						<view class="cp-manager-name">
+							{{item.manager.person.name}}
+							<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
+						</view>
+					</view>
+				</view>
+				<view class="cp-body">
+					
+					<view class="cp-body-label" @click="toSafetyCheckList('', '')">
+						<view class="item-title">
 							已检查
 						</view>
-						<view class="cp-count-num">
+						<view class="item-content info">
 							{{item.check.count}}
-							<view class="cp-count-unit">
+							<view class="item-unit">
 								天
 							</view>
 						</view>
 					</view>
-				</view>
-				<u-tabs :list="item.units" :itemStyle="	{ height: '44px', flexGrow: 1 }" @change="change"></u-tabs>
-				<view>
-					<view>负责人</view>
-					<view>{{item.manager.person.name}}</view>
-					<view>
-						<u-icon name="phone" @click="makePhoneCall(item.manager.person.mobile)"></u-icon>
-					</view>
-				</view>
-				<view class="cp-body">
-					<view class="cp-check">
-						<view class="cp-check-type">
+
+					<view class="cp-body-item">
+						<view class="item-title">
 							质量检查
 						</view>
-						<view class="cp-check-content">
-							<view class="cp-check-num" @click="toSafetyCheckList('quality', 'safe')">
-								安全
-								<view class="safe">
+						<view class="item-container">
+							<view class="item-content" @click="toSafetyCheckList('quality', 'safe')">
+								<view class="success">
 									{{item.check.quality.safe}}
 								</view>
+								<view class="item-unit">
+									安全
+								</view>
 							</view>
-							<view class="cp-check-num" @click="toSafetyCheckList('quality', 'risk')">
-								隐患
-								<view class="risk">
+							<view class="item-content" @click="toSafetyCheckList('quality', 'risk')">
+								<view class="danger">
 									{{item.check.quality.risk}}
+								</view>
+								<view class="item-unit">
+									隐患
 								</view>
 							</view>
 						</view>
 					</view>
-
-					<view class="cp-check">
-						<view class="cp-check-type">
+					
+					<view class="cp-body-item">
+						<view class="item-title">
 							安全检查
 						</view>
-						<view class="cp-check-content">
-							<view class="cp-check-num" @click="toSafetyCheckList('safety', 'safe')">
-								安全
-								<view class="safe">
+						<view class="item-container">
+							<view class="item-content" @click="toSafetyCheckList('safety', 'safe')">
+								<view class="success">
 									{{item.check.safety.safe}}
 								</view>
+								<view class="item-unit">
+									安全
+								</view>
 							</view>
-							<view class="cp-check-num" @click="toSafetyCheckList('safety', 'risk')">
-								隐患
-								<view class="risk">
+							<view class="item-content" @click="toSafetyCheckList('safety', 'risk')">
+								<view class="danger">
 									{{item.check.safety.risk}}
+								</view>
+								<view class="item-unit">
+									隐患
 								</view>
 							</view>
 						</view>
