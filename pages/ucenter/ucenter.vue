@@ -49,7 +49,7 @@
 		},
 		methods: {
 			isMenuVisible(menu) {
-				return uni.hasAnyRole(menu.roles);
+				return uni.hasAnyRole(...menu.roles);
 			},
 			unbind() {
 				uni.showModal({

@@ -20,25 +20,15 @@ uni.getUserDetails = () => {
 	return cache.userDetails;
 };
 
-uni.hasAnyRole = (roleCode) => {
+uni.hasAnyRole = (...roles) => {
 	const cache = uni.getStorageSync("pengsoft");
-	return cache.userDetails.roles.some(role => {
-		if (!Array.isArray(roleCode)) {
-			roleCode = roleCode.split(',').map(code => code.trim());
-		}
-		return roleCode.some(code => code === role.code);
-	});
+	return cache.userDetails.roles.some(role => roles.some(code => code === role.code));
 };
 
 
-uni.hasAnyAuthority = (authorityCode) => {
+uni.hasAnyAuthority = (...authorities) => {
 	const cache = uni.getStorageSync("pengsoft");
-	return cache.userDetails.authorities.some(authority => {
-		if (!Array.isArray(authorityCode)) {
-			authorityCode = roleCode.split(',').map(code => code.trim());
-		}
-		return authorityCode.some(code => code === authority);
-	});
+	return cache.userDetails.authorities.some(authority => authorities.some(code => code === authority));
 };
 
 uni.getDictionaryItem = (code, callback) => {
@@ -167,10 +157,14 @@ const failure = (args) => {
 			})
 			break;
 		case 422:
-			uni.showToast({
-				title: '请完成填写后提交',
-				icon: 'none'
-			});
+			for (let key in args.data) {
+				for (let error of args.data[key]) {
+					uni.showToast({
+						title: error,
+						icon: 'none'
+					});
+				}
+			}
 			break;
 		default:
 			if (args.data) {

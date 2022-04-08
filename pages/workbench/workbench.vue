@@ -21,10 +21,10 @@
 				menus: [{
 						name: '工地安全',
 						children: [{
-							name: '工地检查',
+							name: '安全检查',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-check/list/list',
-							roles: ['ru_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
+							roles: ['ru_manager', 'su_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
 						}, {
 							name: '安全培训',
 							icon: 'shop-filled',
@@ -38,12 +38,12 @@
 							name: '合同',
 							icon: 'shop-filled',
 							page: '/pages/modules/oa/contract/list/list',
-							roles: ['bu_manager', 'cashier'],
+							roles: ['ru_manager', 'bu_manager', 'cashier'],
 						}, {
 							name: '工资',
 							icon: 'shop-filled',
 							page: '/pages/modules/oa/payroll-record/list/list',
-							roles: ['bu_manager', 'cashier']
+							roles: ['ru_manager', 'bu_manager', 'cashier']
 						}]
 					}, {
 						name: '统计分析',
@@ -69,7 +69,7 @@
 				} else {
 					roles = menu.roles;
 				}
-				return uni.hasAnyRole(roles);
+				return uni.hasAnyRole(...roles);
 			},
 			handleClickMenu(item) {
 				uni.navigateTo({

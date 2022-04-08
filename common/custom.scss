@@ -180,6 +180,13 @@
 				color: #2979ff;
 				font-size: 16px;
 				flex: auto;
+				justify-content: right;
+				
+				text {
+					flex: 1;
+					text-align: center;
+				}
+				
 			}
 		}
 	}
@@ -257,6 +264,19 @@
 						color: #999;
 						margin-left: 4px;
 					}
+					
+					.success {
+						color: #4cd964;
+					}
+					.warning {
+						color: #f0ad4e;
+					}
+					.danger {
+						color: #dd524d;
+					}
+					.info {
+						color: #2979ff;
+					}
 				}
 			}
 			
@@ -264,17 +284,4 @@
 	}
 	
 	
-}
-
-.success {
-	color: #4cd964 !important;
-}
-.warning {
-	color: #f0ad4e !important;
-}
-.danger {
-	color: #dd524d !important;
-}
-.info {
-	color: #2979ff !important;
 }

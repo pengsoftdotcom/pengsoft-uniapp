@@ -6,13 +6,17 @@
 		</view>
 		<view class="w-list-wrap" style="margin-top: 54px;">
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'update')">
-				<view class="w-list-item-title ellipsis-2">{{ item.code }} - {{ item.type.name }}</view>
+				<view class="w-list-item-title ellipsis-2">{{ item.code }} - {{ item.checker.person.name }}</view>
 				<view class="w-list-item-body">
-					<view style="display: flex;">
-						<text style="flex:auto">{{ item.checker.person.name }}</text>
-						<text style="flex:none">{{ item.submittedAt }}</text>
-					</view>
 					<view>{{ item.project.name }}</view>
+					<view style="margin-top: 5px;">于 <text class="time">{{ item.submittedAt }}</text> 提交</view>
+					<view v-if="item.status.code === 'risk'">
+						<text v-if="item.handledAt">
+							于 <text class="time">{{ item.handledAt }}</text> 处理
+						</text>
+						<text v-else>尚未处理</text>
+					</view>
+					<view v-else>无需处理</view>
 				</view>
 				<view class="w-list-item-status" :class="item.status.code ==='safe' ? 'success' : 'warning'">
 					{{item.status.name}}
@@ -21,7 +25,6 @@
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
-
 		<button v-if="isCreateVisible()" class="w-fab-btn" @click="edit('', 'create')">
 			<u-icon color="#fff" name="plus"></u-icon>
 		</button>
@@ -59,13 +62,12 @@
 			}
 			const startTime = option.startTime;
 			if (startTime) {
-				this.filterData['startTime'] = option.startTime;
+				this.filterData['startTime'] = startTime;
 			}
 			const endTime = option.endTime;
 			if (endTime) {
-				this.filterData['endTime'] = option.endTime;
+				this.filterData['endTime'] = endTime;
 			}
-
 		},
 		onShow() {
 			this.getList();
@@ -153,5 +155,11 @@
 	.tabs>.active {
 		background-color: #3C9CFF;
 		color: #FFFFFF !important;
+	}
+	
+	.time {
+		font-family: Courier, monospace;
+		font-size: 14px;
+		margin: 0 2px;
 	}
 </style>

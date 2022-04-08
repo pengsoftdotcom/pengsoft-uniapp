@@ -14,17 +14,41 @@
 					</view>
 				</view>
 				<view class="cp-managers-content">
-					<view class="cp-manager" v-for="(manager, $index) in item.units" :key="$index"
-						@click="makePhoneCall(item.manager.person.mobile)">
-						<view class="cp-manager-label">{{manager.name}}</view>
+					<view class="cp-manager">
+						<view class="cp-manager-label">监管单位</view>
 						<view class="cp-manager-name">
-							{{item.manager.person.name}}
-							<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
+							<text>{{item.ruManager.person.name}}</text>
+							<u-icon size="20" color="#2979ff" name="phone-fill"
+								@click="makePhoneCall(item.ruManager.person.mobile)"></u-icon>
+						</view>
+					</view>
+					<view class="cp-manager">
+						<view class="cp-manager-label">建设单位</view>
+						<view class="cp-manager-name">
+							<text>{{item.ownerManager.person.name}}</text>
+							<u-icon size="20" color="#2979ff" name="phone-fill"
+								@click="makePhoneCall(item.ownerManager.person.mobile)"></u-icon>
+						</view>
+					</view>
+					<view class="cp-manager">
+						<view class="cp-manager-label">监理单位</view>
+						<view class="cp-manager-name">
+							<text>{{item.suManager.person.name}}</text>
+							<u-icon size="20" color="#2979ff" name="phone-fill"
+								@click="makePhoneCall(item.suManager.person.mobile)"></u-icon>
+						</view>
+					</view>
+					<view class="cp-manager">
+						<view class="cp-manager-label">施工单位</view>
+						<view class="cp-manager-name">
+							<text>{{item.buManager.person.name}}</text>
+							<u-icon size="20" color="#2979ff" name="phone-fill"
+								@click="makePhoneCall(item.buManager.person.mobile)"></u-icon>
 						</view>
 					</view>
 				</view>
 				<view class="cp-body">
-					
+
 					<view class="cp-body-label" @click="toSafetyCheckList('', '')">
 						<view class="item-title">
 							已检查
@@ -60,7 +84,7 @@
 							</view>
 						</view>
 					</view>
-					
+
 					<view class="cp-body-item">
 						<view class="item-title">
 							安全检查
