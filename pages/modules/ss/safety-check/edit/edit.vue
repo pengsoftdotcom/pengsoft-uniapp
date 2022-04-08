@@ -7,14 +7,14 @@
 			<u-form-item label="检查编码" prop="code" borderBottom>
 				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
-			<u-form-item label="检查类型" prop="type.id" borderBottom>
+			<!-- <u-form-item label="检查类型" prop="type.id" borderBottom>
 				<u-radio-group v-if="!formModel.submittedAt" v-model="formModel.type.id" @change="setType()" :disabled="isSubmitDisabled()">
 					<u-radio :customStyle="{marginRight: '16px'}" v-for="(item, index) in typeArr" :key="index"
 						:label="item.name" :name="item.id">
 					</u-radio>
 				</u-radio-group>
 				<text v-else>{{formModel.type.name}}</text>
-			</u-form-item>
+			</u-form-item> -->
 			<u-form-item label="检查人" prop="checker.person.name" borderBottom>
 				{{formModel.checker.person.name ? formModel.checker.person.name : ''}}
 			</u-form-item>
@@ -55,9 +55,9 @@
 		data() {
 			return {
 				titleObj: {
-					create: '新增工地检查',
-					update: '编辑工地检查',
-					detail: '工地检查详情',
+					create: '新增安全检查',
+					update: '编辑安全检查',
+					detail: '安全检查详情',
 				},
 				type: '',
 				formModel: {

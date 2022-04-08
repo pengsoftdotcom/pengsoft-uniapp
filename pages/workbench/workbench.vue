@@ -51,7 +51,7 @@
 							name: '工地统计',
 							icon: 'shop-filled',
 							page: '/pages/modules/statistics/cp/cp',
-							roles: ['ru_manager', 'bu_manager']
+							roles: ['ru_manager', 'su_manager', 'bu_manager']
 						}]
 					}
 				],
