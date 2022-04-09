@@ -51,7 +51,7 @@
 
 					<view class="cp-body-label" @click="toSafetyCheckList('', '')">
 						<view class="item-title">
-							已检查
+							安全已检查
 						</view>
 						<view class="item-content info">
 							{{item.check.count}}
@@ -63,23 +63,12 @@
 
 					<view class="cp-body-item">
 						<view class="item-title">
-							质量检查
+							安全
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toSafetyCheckList('quality', 'safe')">
+							<view class="item-content" @click="toSafetyCheckList('safe')">
 								<view class="success">
-									{{item.check.quality.safe}}
-								</view>
-								<view class="item-unit">
-									安全
-								</view>
-							</view>
-							<view class="item-content" @click="toSafetyCheckList('quality', 'risk')">
-								<view class="danger">
-									{{item.check.quality.risk}}
-								</view>
-								<view class="item-unit">
-									隐患
+									{{item.check.safe}}
 								</view>
 							</view>
 						</view>
@@ -87,23 +76,23 @@
 
 					<view class="cp-body-item">
 						<view class="item-title">
-							安全检查
+							隐患
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toSafetyCheckList('safety', 'safe')">
+							<view class="item-content" @click="toSafetyCheckList('risk', true)">
 								<view class="success">
-									{{item.check.safety.safe}}
+									{{item.check.risk.handled}}
 								</view>
 								<view class="item-unit">
-									安全
+									已处理
 								</view>
 							</view>
-							<view class="item-content" @click="toSafetyCheckList('safety', 'risk')">
+							<view class="item-content" @click="toSafetyCheckList('risk', false)">
 								<view class="danger">
-									{{item.check.safety.risk}}
+									{{item.check.risk.unhandled}}
 								</view>
 								<view class="item-unit">
-									隐患
+									未处理
 								</view>
 							</view>
 						</view>
@@ -208,33 +197,12 @@
 							this.status = 'noMore';
 						}
 						const content = res.data.content.map(project => Object.assign(project, {
-							manager: project.ruManager,
-							units: [{
-								name: '监管单位',
-								project: project.id,
-								manager: 'ruManager'
-							}, {
-								name: '建设单位',
-								project: project.id,
-								manager: 'ownerManager'
-							}, {
-								name: '监理单位',
-								project: project.id,
-								manager: 'suManager'
-							}, {
-								name: '施工单位',
-								project: project.id,
-								manager: 'suManager'
-							}],
 							check: {
 								count: 0,
-								safety: {
-									safe: 0,
-									risk: 0
-								},
-								quality: {
-									safe: 0,
-									risk: 0
+								safe: 0,
+								risk: {
+									handled: 0,
+									unhandled: 0
 								}
 							}
 						}));
@@ -278,27 +246,25 @@
 					success: (res) => {
 						this.listData.forEach(project => res.data.forEach(data => {
 							if (project.id === data.project) {
-								if (data.type === 'safety' && data.status === 'safe') {
-									project.check.safety.safe = data.count;
+								if (data.status === 'safe') {
+									project.check.safe = data.count;
 								}
-								if (data.type === 'safety' && data.status === 'risk') {
-									project.check.safety.risk = data.count;
-								}
-								if (data.type === 'quality' && data.status === 'safe') {
-									project.check.quality.safe = data.count;
-								}
-								if (data.type === 'quality' && data.status === 'risk') {
-									project.check.quality.risk = data.count;
+								if (data.status === 'risk') {
+									if (data.handled) {
+										project.check.risk.handled = data.count;
+									} else {
+										project.check.risk.unhandled = data.count;
+									}
 								}
 							}
 						}));
 					}
 				});
 			},
-			toSafetyCheckList(type, status) {
+			toSafetyCheckList(status, handled) {
 				const tab = this.tabs.find(t => t.active);
 				uni.navigateTo({
-					url: `/pages/modules/ss/safety-check/list/list?type=${type}&status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+					url: `/pages/modules/ss/safety-check/list/list?status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
 				})
 			},
 			format(number) {

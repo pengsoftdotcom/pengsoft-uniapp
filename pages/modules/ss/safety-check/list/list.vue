@@ -56,9 +56,9 @@
 				this.filterData['status.code'] = status;
 				this.tabs.forEach(t => t.active = t.status === status);
 			}
-			const type = option.type;
-			if (type) {
-				this.filterData['type.code'] = type;
+			const handled = option.handled;
+			if (handled) {
+				this.filterData['handled'] = handled;
 			}
 			const startTime = option.startTime;
 			if (startTime) {
