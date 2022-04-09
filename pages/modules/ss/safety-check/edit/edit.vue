@@ -7,14 +7,6 @@
 			<u-form-item label="检查编码" prop="code" borderBottom>
 				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
-			<!-- <u-form-item label="检查类型" prop="type.id" borderBottom>
-				<u-radio-group v-if="!formModel.submittedAt" v-model="formModel.type.id" @change="setType()" :disabled="isSubmitDisabled()">
-					<u-radio :customStyle="{marginRight: '16px'}" v-for="(item, index) in typeArr" :key="index"
-						:label="item.name" :name="item.id">
-					</u-radio>
-				</u-radio-group>
-				<text v-else>{{formModel.type.name}}</text>
-			</u-form-item> -->
 			<u-form-item label="检查人" prop="checker.person.name" borderBottom>
 				{{formModel.checker.person.name ? formModel.checker.person.name : ''}}
 			</u-form-item>
@@ -109,7 +101,6 @@
 			}
 		},
 		onLoad(option) {
-			uni.getDictionaryItem('safety_check_type', data => this.typeArr = data);
 			uni.getDictionaryItem('safety_check_status', data => this.statusArr = data);
 			this.formModel.id = option.id;
 			this.type = option.type;
