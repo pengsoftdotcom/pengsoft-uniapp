@@ -48,19 +48,17 @@
 					</view>
 				</view>
 				<view class="cp-body">
-
 					<view class="cp-body-label" @click="toSafetyCheckList('', '')">
 						<view class="item-title">
-							安全已检查
+							安全检查
 						</view>
 						<view class="item-content info">
-							{{item.check.count}}
+							{{item.check.days}}
 							<view class="item-unit">
 								天
 							</view>
 						</view>
 					</view>
-
 					<view class="cp-body-item">
 						<view class="item-title">
 							安全
@@ -73,7 +71,6 @@
 							</view>
 						</view>
 					</view>
-
 					<view class="cp-body-item">
 						<view class="item-title">
 							隐患
@@ -97,7 +94,145 @@
 							</view>
 						</view>
 					</view>
-
+				</view>
+				<view class="cp-body">
+					<view class="cp-body-label" @click="toSafetyTrainingList()">
+						<view class="item-title">
+							安全培训
+						</view>
+						<view class="item-content info">
+							{{item.training.days}}
+							<view class="item-unit">
+								天
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							场次
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toTrainingCheckList()">
+								<view class="success">
+									{{item.training.total}}
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="cp-body">
+					<view class="cp-body-label" @click="toSafetyTrainingList('', '')">
+						<view class="item-title">
+							合　　同
+						</view>
+						<view class="item-content info">
+							{{item.contract.total}}
+							<view class="item-unit">
+								份
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							未上传
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toContractList('not_uploaded')">
+								<view class="danger">
+									{{item.contract.not_uploaded}}
+								</view>
+								<view class="item-unit">
+									份
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							未确认
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toContractList('unconfirmed')">
+								<view class="warning">
+									{{item.contract.unconfirmed}}
+								</view>
+								<view class="item-unit">
+									份
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							已确认
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toContractList('confirmed')">
+								<view class="success">
+									{{item.contract.confirmed}}
+								</view>
+								<view class="item-unit">
+									份
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view v-if="oaVisible" class="cp-body">
+					<view class="cp-body-label" @click="toSafetyTrainingList('', '')">
+						<view class="item-title">
+							工　　资
+						</view>
+						<view class="item-content" style="line-height: 33px; font-size: 16px;">
+							<!-- <view class="danger">已欠发</view> -->
+							<view class="success">已发放</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							应发
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toContractList('not_uploaded')">
+								<view class="info">
+									{{item.salary.total}}
+								</view>
+								<view class="item-unit">
+									月
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							已发
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toContractList('not_uploaded')">
+								<view class="success">
+									{{item.salary.paid}}
+								</view>
+								<view class="item-unit">
+									月
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item">
+						<view class="item-title">
+							未发
+						</view>
+						<view class="item-container">
+							<view class="item-content" @click="toContractList('not_uploaded')">
+								<view class="danger">
+									{{item.salary.unpaid}}
+								</view>
+								<view class="item-unit">
+									月
+								</view>
+							</view>
+						</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -137,11 +272,13 @@
 					endTime: (year.getFullYear() + 1) + '-01-01 00:00:01',
 					active: true
 				}],
+				oaVisible: false,
 				...JSON.parse(JSON.stringify(uni.listModel))
 			}
 		},
 		onShow() {
-			this.active(this.tabs[0]);
+			const tab = uni.getStorageSync('cp_active') || this.tabs[0];
+			this.active(tab);
 		},
 		onPullDownRefresh() {
 			this.pageData.page = 0;
@@ -155,13 +292,24 @@
 		},
 		methods: {
 			active(tab) {
-				this.tabs.forEach(t => t.active = false);
-				tab.active = true;
+				this.tabs.forEach(t => {
+					if (t.name === tab.name) {
+						t.active = true;
+					} else {
+						t.active = false;
+					}
+				});
 				if (tab.status) {
 					this.filterData['status.code'] = tab.status;
 				} else {
 					delete this.filterData['status.code'];
 				}
+				// if (tab.name === '月' || tab.name === '年') {
+				// 	this.$set(this.$data, 'oaVisible', true);
+				// } else {
+				// 	this.$set(this.$data, 'oaVisible', false);
+				// }
+				uni.setStorageSync('cp_active', tab);
 				this.getList();
 			},
 			change(unit) {
@@ -171,10 +319,7 @@
 			makePhoneCall(phoneNumber) {
 				if (phoneNumber) {
 					uni.makePhoneCall({
-						phoneNumber,
-						success() {
-							alert(1);
-						}
+						phoneNumber
 					});
 				}
 			},
@@ -196,31 +341,48 @@
 						if (res.data.last) {
 							this.status = 'noMore';
 						}
-						const content = res.data.content.map(project => Object.assign(project, {
+						const projects = res.data.content.map(project => Object.assign(project, {
 							check: {
-								count: 0,
+								total: 0,
+								days: 0,
 								safe: 0,
 								risk: {
 									handled: 0,
 									unhandled: 0
 								}
+							},
+							training: {
+								total: 0,
+								days: 0
+							},
+							contract: {
+								total: 0,
+								not_uploaded: 0,
+								unconfirmed: 0,
+								confirmed: 0
+							},
+							salary: {
+								total: 0,
+								paid: 0,
+								unpaid: 0
 							}
 						}));
-						const projectIds = content.map(project => project.id);
-						this.listData = this.pageData.page === 0 ? content : this.listData.concat(content);
+						this.listData = this.pageData.page === 0 ? projects : this.listData.concat(projects);
 						const tab = this.tabs.find(t => t.active);
-						if (projectIds && projectIds.length > 0) {
-							this.getCheckDays(projectIds, tab.startTime, tab.endTime);
-							this.statistic(projectIds, tab.startTime, tab.endTime);
+						if (projects && projects.length > 0) {
+							const projectIds = projects.map(project => project.id);
+							this.statisticCheck(projectIds, tab.startTime, tab.endTime);
+							this.statisticTraining(projectIds, tab.startTime, tab.endTime);
+							this.statisticContract(projects);
 						}
 					}
 				});
 			},
-			getCheckDays(projectIds, startTime, endTime) {
-				let url = '/api/ss/safety-check/get-days?';
-				projectIds.forEach(id => url += 'project.id=' + id + '&');
+			statisticCheck(projectIds, startTime, endTime) {
+				let query = '?';
+				projectIds.forEach(id => query += 'project.id=' + id + '&');
 				uni.request({
-					url,
+					url: '/api/ss/safety-check/get-checked-days' + query,
 					data: {
 						startTime,
 						endTime
@@ -228,17 +390,13 @@
 					success: (res) => {
 						this.listData.forEach(project => res.data.forEach(data => {
 							if (project.id === data.project) {
-								project.check.count = data.count;
+								project.check.days = data.count;
 							}
 						}));
 					}
 				});
-			},
-			statistic(projectIds, startTime, endTime) {
-				let url = '/api/ss/safety-check/statistic?';
-				projectIds.forEach(id => url += 'project.id=' + id + '&');
 				uni.request({
-					url,
+					url: '/api/ss/safety-check/statistic' + query,
 					data: {
 						startTime,
 						endTime
@@ -265,6 +423,71 @@
 				const tab = this.tabs.find(t => t.active);
 				uni.navigateTo({
 					url: `/pages/modules/ss/safety-check/list/list?status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+				})
+			},
+			statisticTraining(projectIds, startTime, endTime) {
+				let query = '?';
+				projectIds.forEach(id => query += 'project.id=' + id + '&');
+				uni.request({
+					url: '/api/ss/safety-training/get-trained-days' + query,
+					data: {
+						startTime,
+						endTime
+					},
+					success: (res) => {
+						this.listData.forEach(project => res.data.forEach(data => {
+							if (project.id === data.project) {
+								project.training.days = data.count;
+							}
+						}));
+					}
+				});
+				uni.request({
+					url: '/api/ss/safety-training/statistic' + query,
+					data: {
+						startTime,
+						endTime
+					},
+					success: (res) => {
+						this.listData.forEach(project => res.data.forEach(data => {
+							if (project.id === data.project) {
+								project.training.total = data.count;
+							}
+						}));
+					}
+				});
+			},
+			toSafetyTrainingList() {
+				const tab = this.tabs.find(t => t.active);
+				uni.navigateTo({
+					url: `/pages/modules/ss/safety-training/list/list?startTime=${tab.startTime}&endTime=${tab.endTime}`
+				})
+			},
+			statisticContract(projects) {
+				let url = '/api/oa/contract/statistic-by-department?';
+				projects.forEach(project => url += 'department.id=' + project.buManager.job.department.id + '&');
+				uni.request({
+					url,
+					success: (res) => this.listData.forEach(project => {
+						res.data.forEach(data => {
+							if (project.buManager.job.department.id === data.department) {
+								project.contract[data.status] = data.count;
+							}
+						});
+						project.contract.total = project.contract.not_uploaded + project.contract.unconfirmed + project.contract.confirmed;
+					})
+				});
+			},
+			toContractList(status) {
+				const tab = this.tabs.find(t => t.active);
+				uni.navigateTo({
+					url: `/pages/modules/oa/contract/list/list?status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+				})
+			},
+			toPayrollRecordList(status) {
+				const tab = this.tabs.find(t => t.active);
+				uni.navigateTo({
+					url: `/pages/modules/oa/payroll-record/list/list?status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
 				})
 			},
 			format(number) {

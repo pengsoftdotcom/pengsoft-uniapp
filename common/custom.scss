@@ -195,6 +195,25 @@
 		position: relative;
 		width: 100%;
 		display: flex;
+		border-bottom: 1px solid #ddd;
+		
+		
+		.success {
+			color: #4cd964;
+		}
+		.warning {
+			color: #f0ad4e;
+		}
+		.danger {
+			color: #dd524d;
+		}
+		.info {
+			color: #2979ff;
+		}
+		
+		:last-of-type {
+			border-bottom: none;
+		}
 		
 		.cp-body-label {
 			flex: none;
@@ -217,6 +236,7 @@
 				color: #2979ff;
 				display: flex;
 				align-items: baseline;
+				height: 33px;
 				
 				.item-unit {
 					font-size: 8px;
@@ -263,19 +283,6 @@
 						font-size: 8px;
 						color: #999;
 						margin-left: 4px;
-					}
-					
-					.success {
-						color: #4cd964;
-					}
-					.warning {
-						color: #f0ad4e;
-					}
-					.danger {
-						color: #dd524d;
-					}
-					.info {
-						color: #2979ff;
 					}
 				}
 			}
