@@ -48,7 +48,7 @@
 					</view>
 				</view>
 				<view class="cp-body">
-					<view class="cp-body-label" @click="toSafetyCheckList('', '')">
+					<view class="cp-body-label" @click="toSafetyCheckList(item.id, '', '')">
 						<view class="item-title">
 							安全检查
 						</view>
@@ -64,7 +64,7 @@
 							安全
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toSafetyCheckList('safe')">
+							<view class="item-content" @click="toSafetyCheckList(item.id, 'safe', '')">
 								<view class="success">
 									{{item.check.safe}}
 								</view>
@@ -76,7 +76,7 @@
 							隐患
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toSafetyCheckList('risk', true)">
+							<view class="item-content" @click="toSafetyCheckList(item.id, 'risk', true)">
 								<view class="success">
 									{{item.check.risk.handled}}
 								</view>
@@ -84,7 +84,7 @@
 									已处理
 								</view>
 							</view>
-							<view class="item-content" @click="toSafetyCheckList('risk', false)">
+							<view class="item-content" @click="toSafetyCheckList(item.id, 'risk', false)">
 								<view class="danger">
 									{{item.check.risk.unhandled}}
 								</view>
@@ -96,7 +96,7 @@
 					</view>
 				</view>
 				<view class="cp-body">
-					<view class="cp-body-label" @click="toSafetyTrainingList()">
+					<view class="cp-body-label" @click="toSafetyTrainingList(item.id)">
 						<view class="item-title">
 							安全培训
 						</view>
@@ -112,7 +112,7 @@
 							场次
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toTrainingCheckList()">
+							<view class="item-content" @click="toSafetyTrainingList(item.id)">
 								<view class="success">
 									{{item.training.total}}
 								</view>
@@ -121,7 +121,7 @@
 					</view>
 				</view>
 				<view class="cp-body">
-					<view class="cp-body-label" @click="toSafetyTrainingList('', '')">
+					<view class="cp-body-label" @click="toContractList(item.id, '')">
 						<view class="item-title">
 							合　　同
 						</view>
@@ -137,7 +137,7 @@
 							未上传
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList('not_uploaded')">
+							<view class="item-content" @click="toContractList(item.id, 'not_uploaded')">
 								<view class="danger">
 									{{item.contract.not_uploaded}}
 								</view>
@@ -152,7 +152,7 @@
 							未确认
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList('unconfirmed')">
+							<view class="item-content" @click="toContractList(item.id, 'unconfirmed')">
 								<view class="warning">
 									{{item.contract.unconfirmed}}
 								</view>
@@ -167,7 +167,7 @@
 							已确认
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList('confirmed')">
+							<view class="item-content" @click="toContractList(item.id, 'confirmed')">
 								<view class="success">
 									{{item.contract.confirmed}}
 								</view>
@@ -179,7 +179,7 @@
 					</view>
 				</view>
 				<view v-if="oaVisible" class="cp-body">
-					<view class="cp-body-label" @click="toSafetyTrainingList('', '')">
+					<view class="cp-body-label" @click="toPayrollRecordList(item.id)">
 						<view class="item-title">
 							工　　资
 						</view>
@@ -193,7 +193,7 @@
 							应发
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList('not_uploaded')">
+							<view class="item-content" @click="toPayrollRecordList(item.id)">
 								<view class="info">
 									{{item.salary.total}}
 								</view>
@@ -208,7 +208,7 @@
 							已发
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList('not_uploaded')">
+							<view class="item-content" @click="toPayrollRecordList(item.id)">
 								<view class="success">
 									{{item.salary.paid}}
 								</view>
@@ -223,7 +223,7 @@
 							未发
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList('not_uploaded')">
+							<view class="item-content" @click="toPayrollRecordList(item.id)">
 								<view class="danger">
 									{{item.salary.unpaid}}
 								</view>
@@ -419,10 +419,10 @@
 					}
 				});
 			},
-			toSafetyCheckList(status, handled) {
+			toSafetyCheckList(project, status, handled) {
 				const tab = this.tabs.find(t => t.active);
 				uni.navigateTo({
-					url: `/pages/modules/ss/safety-check/list/list?status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+					url: `/pages/modules/ss/safety-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
 				})
 			},
 			statisticTraining(projectIds, startTime, endTime) {
@@ -457,10 +457,10 @@
 					}
 				});
 			},
-			toSafetyTrainingList() {
+			toSafetyTrainingList(project) {
 				const tab = this.tabs.find(t => t.active);
 				uni.navigateTo({
-					url: `/pages/modules/ss/safety-training/list/list?startTime=${tab.startTime}&endTime=${tab.endTime}`
+					url: `/pages/modules/ss/safety-training/list/list?project=${project}&startTime=${tab.startTime}&endTime=${tab.endTime}`
 				})
 			},
 			statisticContract(projects) {
@@ -478,13 +478,12 @@
 					})
 				});
 			},
-			toContractList(status) {
-				const tab = this.tabs.find(t => t.active);
+			toContractList(project, status) {
 				uni.navigateTo({
-					url: `/pages/modules/oa/contract/list/list?status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+					url: `/pages/modules/oa/contract/list/list?project=${project}&status=${status}`
 				})
 			},
-			toPayrollRecordList(status) {
+			toPayrollRecordList(project, status) {
 				const tab = this.tabs.find(t => t.active);
 				uni.navigateTo({
 					url: `/pages/modules/oa/payroll-record/list/list?status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`

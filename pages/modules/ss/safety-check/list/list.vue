@@ -51,6 +51,10 @@
 			};
 		},
 		onLoad(option) {
+			const project = option.project;
+			if (project) {
+				this.filterData['project.id'] = project;
+			}
 			const status = option.status;
 			if (status) {
 				this.filterData['status.code'] = status;
@@ -156,7 +160,7 @@
 		background-color: #3C9CFF;
 		color: #FFFFFF !important;
 	}
-	
+
 	.time {
 		font-family: Courier, monospace;
 		font-size: 14px;

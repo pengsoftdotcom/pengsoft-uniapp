@@ -31,6 +31,20 @@
 		data() {
 			return JSON.parse(JSON.stringify(uni.listModel));
 		},
+		onLoad(option) {
+			const project = option.project;
+			if (project) {
+				this.filterData['project.id'] = project;
+			}
+			const startTime = option.startTime;
+			if (startTime) {
+				this.filterData['startTime'] = startTime;
+			}
+			const endTime = option.endTime;
+			if (endTime) {
+				this.filterData['endTime'] = endTime;
+			}
+		},
 		onShow() {
 			this.getList();
 		},
@@ -76,6 +90,7 @@
 					data: {
 						page: this.pageData.page,
 						size: this.pageData.size,
+						...this.filterData
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();

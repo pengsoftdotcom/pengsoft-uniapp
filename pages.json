@@ -34,7 +34,7 @@
 		}, {
 			"path": "pages/modules/oa/contract/list/list",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "合同",
 				"enablePullDownRefresh": false
 			}
 

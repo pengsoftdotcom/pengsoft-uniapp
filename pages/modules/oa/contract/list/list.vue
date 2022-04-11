@@ -10,7 +10,8 @@
 					</view>
 					<view>{{ item.project.name }}</view>
 				</view>
-				<view class="w-list-item-status" :class="item.status.code === 'not_uploaded' ? 'danger' : item.status.code === 'unconfirmed' ? 'warning' : 'success'">
+				<view class="w-list-item-status"
+					:class="item.status.code === 'not_uploaded' ? 'danger' : item.status.code === 'unconfirmed' ? 'warning' : 'success'">
 					{{item.status.name}}
 				</view>
 			</view>
@@ -23,6 +24,16 @@
 	export default {
 		data() {
 			return JSON.parse(JSON.stringify(uni.listModel));
+		},
+		onLoad(option) {
+			const status = option.status;
+			if (status) {
+				this.filterData['status.code'] = status;
+			}
+			const project = option.project;
+			if (project) {
+				this.filterData['project.id'] = project;
+			}
 		},
 		onShow() {
 			this.getList();
@@ -51,7 +62,8 @@
 					url: `/api/oa/contract/${operation}`,
 					data: {
 						page: this.pageData.page,
-						size: this.pageData.size
+						size: this.pageData.size,
+						...this.filterData
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
