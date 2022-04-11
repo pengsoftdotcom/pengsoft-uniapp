@@ -118,7 +118,7 @@
 		}, {
 			"path": "pages/modules/statistics/cp/cp",
 			"style": {
-				"navigationBarTitleText": "工地统计",
+				"navigationBarTitleText": "工地看板",
 				"enablePullDownRefresh": false
 			}
 

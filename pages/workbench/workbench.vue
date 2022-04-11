@@ -48,7 +48,7 @@
 					}, {
 						name: '统计分析',
 						children: [{
-							name: '工地统计',
+							name: '工地看板',
 							icon: 'shop-filled',
 							page: '/pages/modules/statistics/cp/cp',
 							roles: ['ru_manager', 'su_manager', 'bu_manager']
