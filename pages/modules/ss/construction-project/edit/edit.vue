@@ -12,16 +12,14 @@
 					{{formModel.shortName}}
 				</u-form-item>
 			</u--form>
-			<u-tabs :list="tabs" @click="activate"></u-tabs>
+			<u-tabs :list="tabs" @change="tabChange"></u-tabs>
 			<view v-if="showUnit">
 				<u-row>
 					<u-col span="3">单位名称</u-col>
 					<u-col span="9">{{formModel[unit].name}}</u-col>
 				</u-row>
 				<u-row>
-					<u-col span="3">
-						<view style="letter-spacing: 7px;">负责人</view>
-					</u-col>
+					<u-col span="3">{{formModel[manager].job.name}}</u-col>
 					<u-col span="8">{{formModel[manager].person.name}}</u-col>
 					<u-col span="1">
 						<u-icon size="20" color="#2979ff" name="phone-fill"
@@ -34,8 +32,10 @@
 					<u-row v-for="staff in staffs" :key="staff.id">
 						<u-col span="3">{{staff.job.name}}</u-col>
 						<u-col span="2">{{staff.person.name}}</u-col>
-						<u-col :span="manager === 'buManager' ? 3 : 6">已检查 {{staff.checkingDays ? staff.checkingDays : 0}} 天</u-col>
-						<u-col span="3" v-if="manager === 'buManager'">已培训 {{staff.trainingDays ? staff.trainingDays : 0}} 天</u-col>
+						<u-col :span="manager === 'buManager' ? 3 : 6">已检查
+							{{staff.checkingDays ? staff.checkingDays : 0}} 天</u-col>
+						<u-col span="3" v-if="manager === 'buManager'">已培训
+							{{staff.trainingDays ? staff.trainingDays : 0}} 天</u-col>
 						<u-col span="1">
 							<u-icon size="20" color="#2979ff" name="phone-fill"
 								@click="makePhoneCall(staff.person.mobile)"></u-icon>
@@ -63,26 +63,26 @@
 										code: 'statistics'
 									}, */
 					{
-						name: '监管单位',
-						unit: 'regulatoryUnit',
-						manager: 'ruManager'
-					}, {
-						unit: 'owner',
-						name: '建设单位',
-						manager: 'ownerManager'
+						unit: 'buildingUnit',
+						name: '施工单位',
+						manager: 'buManager'
 					}, {
 						unit: 'supervisionUnit',
 						name: '监理单位',
 						manager: 'suManager'
 					}, {
-						unit: 'buildingUnit',
-						name: '施工单位',
-						manager: 'buManager'
+						unit: 'owner',
+						name: '建设单位',
+						manager: 'ownerManager'
+					}, {
+						name: '监管单位',
+						unit: 'regulatoryUnit',
+						manager: 'ruManager'
 					}
 				],
 				unit: {},
-				manager: 'ruManager',
-				durations: ['日', '月', '年'],
+				manager: 'buManager',
+				durations: ['月', '年'],
 				current: 0,
 				staffs: [],
 				formModel: {
@@ -95,13 +95,12 @@
 			if (option.id) {
 				this.formModel.id = option.id;
 			}
-			this.activate(this.tabs[0]);
 		},
 		onShow() {
 			this.findOne();
 		},
 		methods: {
-			activate(tab) {
+			tabChange(tab) {
 				this.showStatistics = !!tab.code;
 				if (this.showStatistics) {
 
@@ -141,9 +140,7 @@
 					success: res => {
 						this.loading = false;
 						this.formModel = res.data;
-						if (this.formModel.pictures) {
-							this.pictures = this.formModel.pictures.map(file => uni.convertToFile(file));
-						}
+						this.tabChange(this.tabs.find(tab => tab.manager === 'buManager'));
 					}
 				})
 			},
@@ -165,10 +162,6 @@
 				let startTime = '';
 				let endTime = '';
 				switch (this.durations[this.current]) {
-					case '日':
-						startTime = uni.atStartOfCurrentDay();
-						endTime = uni.atStartOfNextDay();
-						break;
 					case '月':
 						startTime = uni.atStartOfCurrentMonth();
 						endTime = uni.atStartOfNextMonth();
@@ -218,7 +211,7 @@
 						this.timestamp = new Date().getTime();
 					}
 				});
-				
+
 			},
 			statistics() {
 
