@@ -12,36 +12,51 @@
 					{{formModel.shortName}}
 				</u-form-item>
 			</u--form>
-			<u-tabs :list="tabs" @change="tabChange"></u-tabs>
-			<view v-if="showUnit">
-				<u-row>
-					<u-col span="3">单位名称</u-col>
-					<u-col span="9">{{formModel[unit].name}}</u-col>
-				</u-row>
-				<u-row>
-					<u-col span="3">{{formModel[manager].job.name}}</u-col>
-					<u-col span="8">{{formModel[manager].person.name}}</u-col>
-					<u-col span="1">
-						<u-icon size="20" color="#2979ff" name="phone-fill"
-							@click="makePhoneCall(formModel[manager].person.mobile)"></u-icon>
-					</u-col>
-				</u-row>
-				<view v-if="isDutyPerformanceVisible()">
-					<u-row v-for="staff in staffs" :key="staff.id">
-						<u-col span="3">{{staff.job.name}}</u-col>
-						<u-col span="2">{{staff.person.name}}</u-col>
-						<u-col :span="manager === 'buManager' ? 3 : 6">已检查
-							{{staff.checkingDays ? staff.checkingDays : 0}} 天
-						</u-col>
-						<u-col span="3" v-if="manager === 'buManager'">已培训
-							{{staff.trainingDays ? staff.trainingDays : 0}} 天
-						</u-col>
-						<u-col span="1">
-							<u-icon size="20" color="#2979ff" name="phone-fill"
-								@click="makePhoneCall(staff.person.mobile)"></u-icon>
-						</u-col>
-					</u-row>
+			<view class="corp-tabs">
+				<u-tabs :list="tabs" @change="tabChange"></u-tabs>
+			</view>
+			<view v-if="showUnit" class="corp-card">
+				<view class="corp-name">
+					{{formModel[unit].name}}
 				</view>
+
+				<view class="staff-content" @click="makePhoneCall(formModel[manager].person.mobile)">
+					<view class="staff-job">
+						{{formModel[manager].job.name}}
+					</view>
+					<view class="staff-main">
+						<view class="staff-name">
+							{{formModel[manager].person.name}}
+
+						</view>
+					</view>
+					<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
+				</view>
+
+				<view v-if="isDutyPerformanceVisible()">
+					<view v-for="staff in staffs" :key="staff.id" class="staff-content"
+						@click="makePhoneCall(formModel[manager].person.mobile)">
+						<view class="staff-job">
+							{{staff.job.name}}
+						</view>
+						<view class="staff-main">
+							<view class="staff-name">
+								{{staff.person.name}}
+							</view>
+							<text class="staff-work">
+								<text :span="manager === 'buManager' ? 3 : 6">
+									已检查 {{staff.checkingDays ? staff.checkingDays : 0}} 天
+								</text>
+								<text span="3" v-if="manager === 'buManager'">
+									已培训 {{staff.trainingDays ? staff.trainingDays : 0}} 天
+								</text>
+							</text>
+						</view>
+						<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
+
+					</view>
+				</view>
+
 			</view>
 			<view v-if="showStatistics">
 
@@ -208,6 +223,52 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
+	.corp-tabs {
+		margin-bottom: 5px;
+	}
 
+	.corp-card {
+		border: 1px solid #ddd;
+		border-radius: 4px;
+
+		.corp-name {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.staff-content {
+			display: flex;
+			padding: 10px;
+			align-items: center;
+			border-bottom: 1px solid #ddd;
+
+			.staff-job {
+				width: 50px;
+				flex: none;
+				font-size: 12px;
+				color: #666;
+				text-align: right;
+			}
+
+			.staff-main {
+				flex: auto;
+				display: flex;
+				align-items: center;
+				
+				.staff-name {
+					font-size: 14px;
+					padding: 0 8px;
+					flex: none;
+				}
+				.staff-work {
+					flex: auto;
+					font-size: 12px;
+				}
+			}
+			.u-icon {
+				margin-left:8px;
+			}
+		}
+	}
 </style>

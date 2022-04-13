@@ -1,40 +1,21 @@
 <template>
 	<view class="w-list-wrap">
-		<u-row justify="space-between" gutter="10">
-			<u-col span="4">
-				<view class="cell">
-					<view>项目总数</view>
-					<u-avatar :text="total" size="60" bgColor="#3c9cff" @click="query('')"></u-avatar>
-				</view>
-			</u-col>
-			<u-col span="4">
-				<view class="cell">
-					<view>在建项目</view>
-					<u-avatar :text="building" size="60" bgColor="#f9ae3d" @click="query('building')"></u-avatar>
-				</view>
-			</u-col>
-			<u-col span="4">
-				<view class="cell">
-					<view>建成项目</view>
-					<u-avatar :text="complete" size="60" bgColor="#5ac725" @click="query('complete')"></u-avatar>
-				</view>
-			</u-col>
-		</u-row>
+		<u-tabs :list="list" @click="query()" :scrollable="false" :activeStyle="activeStyle"
+			:inactiveStyle="inactiveStyle">
+		</u-tabs>
+
 		<view class="w-list-wrap">
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id)">
 				<view class="w-list-item-title ellipsis-2">{{item.shortName}} 【{{item.code}}】</view>
+				<view class="w-list-item-status" :class="item.status.code === 'building' ? 'info' : 'success'">
+					<view>{{item.status.name}}</view>
+				</view>
 				<view class="w-list-item-body">
 					<view>
-						<view>项目状态：</view>
-						<view>{{item.status.name}}</view>
+						<view>开工时间：{{item.startedAt}}</view>
 					</view>
 					<view>
-						<view>开工时间：</view>
-						<view>{{item.startedAt}}</view>
-					</view>
-					<view>
-						<view>完工时间：</view>
-						<view>{{item.completedAt}}</view>
+						<view>完工时间：{{item.completedAt}}</view>
 					</view>
 				</view>
 			</view>
@@ -47,14 +28,50 @@
 	export default {
 		data() {
 			return {
+				activeStyle: {
+					color: '#303133',
+					fontWeight: 'bold',
+					transform: 'scale(1.05)'
+				},
+				inactiveStyle: {
+					color: '#606266',
+					transform: 'scale(1)'
+				},
 				total: 0,
 				building: 0,
 				complete: 0,
 				...JSON.parse(JSON.stringify(uni.listModel))
 			}
 		},
+		computed: {
+			list() {
+				return [{
+						name: '项目总数',
+						code: '',
+						badge: {
+							value: this.total
+						}
+					},
+					{
+						name: '在建项目',
+						code: 'building',
+						badge: {
+							value: this.building
+						}
+					},
+					{
+						name: '建成项目',
+						code: 'complete',
+						badge: {
+							value: this.complete
+						}
+					},
+				]
+			}
+		},
 		onShow() {
 			this.statisticByStatus();
+			this.getList();
 		},
 		onPullDownRefresh() {
 			this.pageData.page = 0;
@@ -76,8 +93,8 @@
 					}
 				})
 			},
-			query(code) {
-				this.filterData['status.code'] = code;
+			query(item) {
+				this.filterData['status.code'] = item.code;
 				this.getList();
 			},
 			getList() {
@@ -112,7 +129,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.cell {
 		border-radius: 4px;
 		background-color: #EFEFEF;
