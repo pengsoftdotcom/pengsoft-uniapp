@@ -82,12 +82,13 @@
 				});
 			},
 			afterSignedIn() {
-				if (uni.hasAnyRole('ru_manager')) {
+				if (uni.hasAnyRole('ru_manager', 'owner_manager')) {
 					uni.switchTab({
 						url: "/pages/workbench/workbench",
 						success() {
 							uni.navigateTo({
-								url: '/pages/modules/statistics/cp/cp'
+								// url: '../modules/statistics/cp/cp'
+								url: '/pages/modules/ss/construction-project/list/list'
 							})
 						}
 					})

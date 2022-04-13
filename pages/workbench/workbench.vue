@@ -24,12 +24,14 @@
 							name: '安全检查',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-check/list/list',
-							roles: ['ru_manager', 'su_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
+							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager',
+								'supervision_engineer', 'security_officer'
+							]
 						}, {
 							name: '安全培训',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-training/list/list',
-							roles: ['ru_manager', 'bu_manager', 'security_officer', 'worker']
+							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'security_officer', 'worker']
 						}]
 					},
 					{
@@ -38,12 +40,12 @@
 							name: '合同',
 							icon: 'shop-filled',
 							page: '/pages/modules/oa/contract/list/list',
-							roles: ['ru_manager', 'bu_manager', 'cashier'],
+							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'cashier'],
 						}, {
 							name: '工资',
 							icon: 'shop-filled',
 							page: '/pages/modules/oa/payroll-record/list/list',
-							roles: ['ru_manager', 'bu_manager', 'cashier']
+							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'cashier']
 						}]
 					}, {
 						name: '统计分析',
@@ -51,7 +53,12 @@
 							name: '工地看板',
 							icon: 'shop-filled',
 							page: '/pages/modules/statistics/cp/cp',
-							roles: ['ru_manager', 'su_manager', 'bu_manager']
+							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager']
+						}, {
+							name: '项目看板',
+							icon: 'shop-filled',
+							page: '/pages/modules/ss/construction-project/list/list',
+							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager']
 						}]
 					}
 				],

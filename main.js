@@ -3,6 +3,36 @@ import App from './App'
 const URL_PREFIX = 'https://api.pengsoft.com';
 // const URL_PREFIX = 'http://localhost:8080';
 
+const year = new Date();
+
+const startMonth = new Date();
+const endMonth = new Date();
+endMonth.setMonth(endMonth.getMonth() + 1);
+
+const startDay = new Date();
+const endDay = new Date();
+endDay.setDate(endDay.getDate() + 1);
+
+uni.format = (number) =>{
+	if (number < 10) {
+		return '0' + number;
+	} else {
+		return number;
+	}
+}
+
+uni.atStartOfCurrentDay = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay.getDate()) + ' 00:00:01'
+
+uni.atStartOfNextDay = () => endDay.getFullYear() + '-' + uni.format(endDay.getMonth() + 1) + '-' + uni.format(endDay.getDate()) + ' 00:00:01'
+
+uni.atStartOfCurrentMonth = () => startMonth.getFullYear() + '-' + uni.format(startMonth.getMonth() + 1) + '-01 00:00:01'
+
+uni.atStartOfNextMonth = () => endMonth.getFullYear() + '-' + uni.format(endMonth.getMonth() + 1) + '-01 00:00:01'
+
+uni.atStartOfCurrentYear = () => year.getFullYear() + '-01-01 00:00:01'
+
+uni.atStartOfNextYear = () => (year.getFullYear() + 1) + '-01-01 00:00:01'
+
 uni.isAuthenticated = () => {
 	const cache = uni.getStorageSync("pengsoft")
 	const accessToken = cache.accessToken;

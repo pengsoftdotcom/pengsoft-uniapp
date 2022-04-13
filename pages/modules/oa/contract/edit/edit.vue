@@ -73,7 +73,6 @@
 				if (uni.hasAnyRole('worker')) {
 					operation = 'find-one-of-mine';
 				}
-				console.log(operation);
 				uni.request({
 					url: `/api/oa/contract/${operation}`,
 					data: {

@@ -59,12 +59,12 @@
 							</view>
 						</view>
 					</view>
-					<view class="cp-body-item">
+					<view class="cp-body-item" @click="toSafetyCheckList(item.id, 'safe', '')">
 						<view class="item-title">
 							安全
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toSafetyCheckList(item.id, 'safe', '')">
+							<view class="item-content">
 								<view class="success">
 									{{item.check.safe}}
 								</view>
@@ -107,12 +107,12 @@
 							</view>
 						</view>
 					</view>
-					<view class="cp-body-item">
+					<view class="cp-body-item" @click="toSafetyTrainingList(item.id)">
 						<view class="item-title">
 							场次
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toSafetyTrainingList(item.id)">
+							<view class="item-content">
 								<view class="success">
 									{{item.training.total}}
 								</view>
@@ -132,12 +132,12 @@
 							</view>
 						</view>
 					</view>
-					<view class="cp-body-item">
+					<view class="cp-body-item" @click="toContractList(item.id, 'not_uploaded')">
 						<view class="item-title">
 							未上传
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList(item.id, 'not_uploaded')">
+							<view class="item-content">
 								<view class="danger">
 									{{item.contract.not_uploaded}}
 								</view>
@@ -147,12 +147,12 @@
 							</view>
 						</view>
 					</view>
-					<view class="cp-body-item">
+					<view class="cp-body-item" @click="toContractList(item.id, 'unconfirmed')">
 						<view class="item-title">
 							未确认
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList(item.id, 'unconfirmed')">
+							<view class="item-content">
 								<view class="warning">
 									{{item.contract.unconfirmed}}
 								</view>
@@ -162,12 +162,12 @@
 							</view>
 						</view>
 					</view>
-					<view class="cp-body-item">
+					<view class="cp-body-item" @click="toContractList(item.id, 'confirmed')">
 						<view class="item-title">
 							已确认
 						</view>
 						<view class="item-container">
-							<view class="item-content" @click="toContractList(item.id, 'confirmed')">
+							<view class="item-content">
 								<view class="success">
 									{{item.contract.confirmed}}
 								</view>
@@ -184,8 +184,9 @@
 							工　　资
 						</view>
 						<view class="item-content" style="line-height: 33px; font-size: 16px;">
+							<view class="info">未发放</view>
+							<!-- <view class="success">已发放</view> -->
 							<!-- <view class="danger">已欠发</view> -->
-							<view class="success">已发放</view>
 						</view>
 					</view>
 					<view class="cp-body-item">
@@ -243,33 +244,21 @@
 <script>
 	export default {
 		data() {
-			const year = new Date();
-
-			const startMonth = new Date();
-			const endMonth = new Date();
-			endMonth.setMonth(endMonth.getMonth() + 1);
-
-			const startDay = new Date();
-			const endDay = new Date();
-			endDay.setDate(endDay.getDate() + 1);
 			return {
 				tabs: [{
 					name: '日',
-					startTime: startDay.getFullYear() + '-' + this.format(startDay.getMonth() + 1) + '-' + this
-						.format(startDay.getDate()) + ' 00:00:01',
-					endTime: endDay.getFullYear() + '-' + this.format(endDay.getMonth() + 1) + '-' + this.format(
-						endDay.getDate()) + ' 00:00:01',
+					startTime: uni.atStartOfCurrentDay(),
+					endTime: uni.atStartOfNextDay(),
 					active: false
 				}, {
 					name: '月',
-					startTime: startMonth.getFullYear() + '-' + this.format(startMonth.getMonth() + 1) +
-						'-01 00:00:01',
-					endTime: endMonth.getFullYear() + '-' + this.format(endMonth.getMonth() + 1) + '-01 00:00:01',
+					startTime: uni.atStartOfCurrentMonth(),
+					endTime: uni.atStartOfNextMonth(),
 					active: false
 				}, {
 					name: '年',
-					startTime: year.getFullYear() + '-01-01 00:00:01',
-					endTime: (year.getFullYear() + 1) + '-01-01 00:00:01',
+					startTime: uni.atStartOfCurrentYear(),
+					endTime: uni.atStartOfNextYear(),
 					active: true
 				}],
 				oaVisible: false,
@@ -304,11 +293,11 @@
 				} else {
 					delete this.filterData['status.code'];
 				}
-				// if (tab.name === '月' || tab.name === '年') {
-				// 	this.$set(this.$data, 'oaVisible', true);
-				// } else {
-				// 	this.$set(this.$data, 'oaVisible', false);
-				// }
+				if (tab.name === '月' || tab.name === '年') {
+					this.$set(this.$data, 'oaVisible', true);
+				} else {
+					this.$set(this.$data, 'oaVisible', false);
+				}
 				uni.setStorageSync('cp_active', tab);
 				this.getList();
 			},
@@ -474,7 +463,8 @@
 								project.contract[data.status] = data.count;
 							}
 						});
-						project.contract.total = project.contract.not_uploaded + project.contract.unconfirmed + project.contract.confirmed;
+						project.contract.total = project.contract.not_uploaded + project.contract
+							.unconfirmed + project.contract.confirmed;
 					})
 				});
 			},
@@ -488,13 +478,6 @@
 				uni.navigateTo({
 					url: `/pages/modules/oa/payroll-record/list/list?status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
 				})
-			},
-			format(number) {
-				if (number < 10) {
-					return '0' + number;
-				} else {
-					return number;
-				}
 			}
 		}
 	}
