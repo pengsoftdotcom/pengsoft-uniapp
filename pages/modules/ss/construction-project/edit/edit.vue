@@ -27,15 +27,15 @@
 					</u-col>
 				</u-row>
 				<view v-if="isDutyPerformanceVisible()">
-					<u-subsection mode="subsection" :list="durations" :current="current" @change="sectionChange">
-					</u-subsection>
 					<u-row v-for="staff in staffs" :key="staff.id">
 						<u-col span="3">{{staff.job.name}}</u-col>
 						<u-col span="2">{{staff.person.name}}</u-col>
 						<u-col :span="manager === 'buManager' ? 3 : 6">已检查
-							{{staff.checkingDays ? staff.checkingDays : 0}} 天</u-col>
+							{{staff.checkingDays ? staff.checkingDays : 0}} 天
+						</u-col>
 						<u-col span="3" v-if="manager === 'buManager'">已培训
-							{{staff.trainingDays ? staff.trainingDays : 0}} 天</u-col>
+							{{staff.trainingDays ? staff.trainingDays : 0}} 天
+						</u-col>
 						<u-col span="1">
 							<u-icon size="20" color="#2979ff" name="phone-fill"
 								@click="makePhoneCall(staff.person.mobile)"></u-icon>
@@ -82,8 +82,6 @@
 				],
 				unit: {},
 				manager: 'buManager',
-				durations: ['月', '年'],
-				current: 0,
 				staffs: [],
 				formModel: {
 					id: ''
@@ -159,18 +157,8 @@
 				})
 			},
 			getDutyPerformance() {
-				let startTime = '';
-				let endTime = '';
-				switch (this.durations[this.current]) {
-					case '月':
-						startTime = uni.atStartOfCurrentMonth();
-						endTime = uni.atStartOfNextMonth();
-						break;
-					default:
-						startTime = uni.atStartOfCurrentYear();
-						endTime = uni.atStartOfNextYear();
-						break;
-				}
+				const startTime = uni.atStartOfCurrentMonth();
+				const endTime = uni.atStartOfNextMonth();
 				uni.request({
 					url: '/api/ss/safety-check/statistic-by-checker',
 					data: {
