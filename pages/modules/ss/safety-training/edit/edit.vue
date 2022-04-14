@@ -1,7 +1,7 @@
 <template>
 	<view class="w-form-wrap">
 		<u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
-			<u-form-item label="工程项目" prop="project.name" borderBottom>
+			<u-form-item label="项　　目" prop="project.name" borderBottom>
 				{{formModel.project.name ? formModel.project.name : ''}}
 			</u-form-item>
 			<u-form-item label="培训编码" prop="code" borderBottom>
@@ -10,7 +10,7 @@
 			<u-form-item label="培训主题" prop="subject" borderBottom>
 				<u--input v-model="formModel.subject" border="surround"></u--input>
 			</u-form-item>
-			<u-form-item label="培训人" prop="trainer.person.name" borderBottom>
+			<u-form-item label="培 训 人" prop="trainer.person.name" borderBottom>
 				{{formModel.trainer.person.name ? formModel.trainer.person.name : ''}}
 			</u-form-item>
 			<u-form-item label="全员参加" prop="allWorkers" borderBottom>

@@ -1,13 +1,13 @@
 <template>
 	<view class="w-form-wrap">
 		<u--form :labelWidth="80" :model="formModel" ref="form">
-			<u-form-item label="工程项目" prop="project.name" borderBottom>
+			<u-form-item label="项　　目" prop="project.name" borderBottom>
 				{{formModel.project.name ? formModel.project.name : ''}}
 			</u-form-item>
 			<u-form-item label="检查编码" prop="code" borderBottom>
 				{{formModel.code ? formModel.code : ''}}
 			</u-form-item>
-			<u-form-item label="检查人" prop="checker.person.name" borderBottom>
+			<u-form-item label="检 查 人" prop="checker.person.name" borderBottom>
 				{{formModel.checker.person.name ? formModel.checker.person.name : ''}}
 			</u-form-item>
 			<u-form-item label="检查图片" prop="submitFiles" borderBottom>
