@@ -19,38 +19,37 @@
 		data() {
 			return {
 				menus: [{
-						name: '工地安全',
+						name: '施工监管',
 						children: [{
 							name: '安全检查',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-check/list/list',
-							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager',
-								'supervision_engineer', 'security_officer'
+							roles: ['su_manager', 'bu_manager', 'supervision_engineer', 'security_officer'
 							]
 						}, {
 							name: '安全培训',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-training/list/list',
-							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'security_officer', 'worker']
+							roles: ['bu_manager', 'security_officer', 'worker']
 						}]
 					},
 					{
-						name: '保障支付',
+						name: '薪酬监管',
 						children: [{
-							name: '合同',
+							name: '劳务合同',
 							icon: 'shop-filled',
 							page: '/pages/modules/oa/contract/list/list',
-							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'cashier'],
+							roles: ['bu_manager', 'cashier'],
 						}, {
-							name: '工资',
+							name: '薪酬发放',
 							icon: 'shop-filled',
 							page: '/pages/modules/oa/payroll-record/list/list',
-							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'cashier']
+							roles: ['bu_manager', 'cashier']
 						}]
 					}, {
-						name: '统计分析',
+						name: '统计汇总',
 						children: [{
-							name: '工地看板',
+							name: '巡查统计',
 							icon: 'shop-filled',
 							page: '/pages/modules/statistics/cp/cp',
 							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager']

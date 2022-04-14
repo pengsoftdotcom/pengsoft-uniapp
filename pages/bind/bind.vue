@@ -87,8 +87,7 @@
 						url: "/pages/workbench/workbench",
 						success() {
 							uni.navigateTo({
-								// url: '../modules/statistics/cp/cp'
-								url: '/pages/modules/ss/construction-project/list/list'
+								url: '/pages/workbench/workbench'
 							})
 						}
 					})

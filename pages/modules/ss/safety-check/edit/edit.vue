@@ -19,14 +19,14 @@
 			<u-form-item label="检查描述" prop="reason" borderBottom>
 				<u--textarea v-model="formModel.reason" :disabled="isSubmitDisabled()"></u--textarea>
 			</u-form-item>
-			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="处理图片"
+			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="整改图片"
 				prop="handleFiles" borderBottom>
 				<u-upload :capture="['camera']" :fileList="handleFiles" @afterRead="afterReadHandlePicture()"
 					@delete="deletePicture" :maxCount="6" :deletable="!isHandleDisabled()"
 					:disabled="isHandleDisabled()">
 				</u-upload>
 			</u-form-item>
-			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="处理结果" prop="result"
+			<u-form-item v-if="formModel.submittedAt && formModel.status.code === 'risk'" label="整改结果" prop="result"
 				borderBottom>
 				<u--textarea v-model="formModel.result" :disabled="isHandleDisabled()"></u--textarea>
 			</u-form-item>
@@ -36,7 +36,7 @@
 			</u-button>
 			<u-button v-if="isSubmitVisible()" :disabled="isSubmitDisabled()" type="error" text="隐患" @click="risk">
 			</u-button>
-			<u-button v-if="isHandleVisible()" :disabled="isHandleDisabled()" type="primary" text="处理" @click="handle">
+			<u-button v-if="isHandleVisible()" :disabled="isHandleDisabled()" type="primary" text="整改" @click="handle">
 			</u-button>
 		</view>
 	</view>
@@ -77,7 +77,7 @@
 					},
 					handleFiles: {
 						type: 'array',
-						message: '请上传处理图片',
+						message: '请上传整改图片',
 						validator: (rule, value, callback) => {
 							if (this.formModel.id && (!value || value.length === 0)) {
 								return false;
@@ -88,7 +88,7 @@
 					},
 					result: {
 						type: 'string',
-						message: '请填写处理结果',
+						message: '请填写整改结果',
 						validator: (rule, value, callback) => {
 							if (this.formModel.id && !value) {
 								return false;
@@ -134,7 +134,7 @@
 				})
 			},
 			isSubmitVisible() {
-				return !uni.hasAnyAuthority('ss::safety_check::handle') && uni.hasAnyAuthority('ss::safety_check::submit');
+				return uni.hasAnyAuthority('ss::safety_check::submit');
 			},
 			isSubmitDisabled() {
 				return this.formModel.submittedAt;
@@ -194,7 +194,7 @@
 							result: this.formModel.result
 						},
 						success: res => uni.showModal({
-							title: '处理成功',
+							title: '整改成功',
 							success: () => {
 								uni.navigateBack();
 							}

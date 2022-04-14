@@ -2,14 +2,17 @@
 	<view>
 		<view class="w-form-wrap">
 			<u--form :labelWidth="80" :model="formModel" ref="form">
-				<u-form-item label="期数" prop="code" borderBottom>
-					{{formModel.code ? formModel.code : ''}}
+				<u-form-item label="年" prop="year" borderBottom>
+					{{formModel.year}}
+				</u-form-item>
+				<u-form-item label="月" prop="month" borderBottom>
+					{{formModel.month}}
 				</u-form-item>
 				<u-form-item label="支付人数" prop="paidCount" borderBottom>
-					{{formModel.paidCount ? formModel.paidCount : ''}}
+					{{formModel.paidCount}}
 				</u-form-item>
 				<u-form-item label="确认人数" prop="confirmedCount" borderBottom>
-					{{formModel.confirmedCount ? formModel.confirmedCount : ''}}
+					{{formModel.confirmedCount}}
 				</u-form-item>
 			</u--form>
 			<view class="w-form-btn-content">
@@ -29,6 +32,7 @@
 					detail: '发薪记录详情',
 				},
 				type: '',
+				project: '',
 				formModel: {
 					id: ''
 				},
@@ -39,13 +43,16 @@
 		onLoad(option) {
 			this.formModel.id = option.id;
 			this.type = option.type;
+			const project = option.project;
+			if (project) {
+				this.project = project;
+			}
 			this.findOne();
 		},
 		onReady() {
 			uni.setNavigationBarTitle({
 				title: this.titleObj[this.type]
 			})
-			this.$refs.form.setRules(this.rules);
 		},
 		methods: {
 			isDisabled() {
@@ -56,18 +63,18 @@
 				if (uni.hasAnyRole('worker')) {
 					operation = 'find-one-of-mine';
 				}
-				console.log(operation);
 				uni.request({
 					url: `/api/oa/payroll-record/${operation}`,
 					data: {
-						id: this.formModel.id
+						id: this.formModel.id,
+						'project.id': this.project
 					},
 					success: res => this.formModel = res.data
 				})
 			},
 			payrollDetail() {
 				uni.navigateTo({
-					url: `../../payroll-detail/list/list?payroll.id=${this.formModel.id}`
+					url: `../../payroll-detail/list/list?project=${this.project}&payroll.id=${this.formModel.id}`
 				})
 			}
 		}

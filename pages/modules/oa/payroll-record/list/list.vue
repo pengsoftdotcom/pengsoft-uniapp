@@ -2,12 +2,15 @@
 	<view>
 		<view class="w-list-wrap">
 			<view v-for="(item, index) in listData" :key="index" class="w-list-item" @click="edit(item.id, 'detail')">
-				<view class="w-list-item-title ellipsis-2">{{ item.code }}</view>
+				<view class="w-list-item-title ellipsis-2">{{ item.year }}年{{ item.month }}月</view>
 				<view class="w-list-item-body">
 					<view style="display: flex;">
 						<text style="flex:auto">支付人数: {{ item.paidCount }}</text>
 						<text style="flex:none">确认人数: {{ item.confirmedCount }}</text>
 					</view>
+				</view>
+				<view class="w-list-item-status" :class="statusData[item.status.code]">
+					{{item.status.name}}
 				</view>
 			</view>
 		</view>
@@ -18,7 +21,32 @@
 <script>
 	export default {
 		data() {
-			return JSON.parse(JSON.stringify(uni.listModel));
+			return {
+				statusData: {
+					paid: 'success',
+					unpaid: 'warning',
+					arrears: 'danger'
+				},
+				...JSON.parse(JSON.stringify(uni.listModel))
+			};
+		},
+		onLoad(option) {
+			const status = option.status;
+			if (status) {
+				this.filterData['status.code'] = status;
+			}
+			const startTime = option.startTime;
+			if (startTime) {
+				this.filterData['startTime'] = startTime;
+			}
+			const endTime = option.endTime;
+			if (endTime) {
+				this.filterData['endTime'] = endTime;
+			}
+			const project = option.project;
+			if (project) {
+				this.filterData['project.id'] = project;
+			}
 		},
 		onShow() {
 			this.getList();
@@ -47,7 +75,8 @@
 					url: `/api/oa/payroll-record/${operation}`,
 					data: {
 						page: this.pageData.page,
-						size: this.pageData.size
+						size: this.pageData.size,
+						...this.filterData
 					},
 					success: (res) => {
 						uni.stopPullDownRefresh();
@@ -62,7 +91,7 @@
 			},
 			edit(id, type) {
 				uni.navigateTo({
-					url: `../edit/edit?id=${id}&type=${type}`
+					url: `../edit/edit?project=${this.filterData['project.id']}&id=${id}&type=${type}`
 				})
 			}
 		}

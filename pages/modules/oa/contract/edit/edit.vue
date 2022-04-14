@@ -36,6 +36,7 @@
 					detail: '合同详情',
 				},
 				type: '',
+				project: '',
 				formModel: {
 					id: ''
 				},
@@ -56,6 +57,9 @@
 			uni.getDictionaryItem('contract_status', data => this.statusArr = data);
 			this.formModel.id = option.id;
 			this.type = option.type;
+			if (option.project) {
+				this.project = option.project;
+			}
 			this.findOne();
 		},
 		onReady() {
@@ -76,7 +80,8 @@
 				uni.request({
 					url: `/api/oa/contract/${operation}`,
 					data: {
-						id: this.formModel.id
+						id: this.formModel.id,
+						'project.id': this.project
 					},
 					success: res => {
 						this.formModel = res.data;

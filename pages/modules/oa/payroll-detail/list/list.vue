@@ -24,6 +24,10 @@
 			if (option['payroll.id']) {
 				this.filterData['payroll.id'] = option['payroll.id'];
 			}
+			const project = option.project;
+			if (project) {
+				this.filterData['project.id'] = project;
+			}
 		},
 		onShow() {
 			this.getList();
@@ -68,7 +72,7 @@
 			},
 			edit(id, type) {
 				uni.navigateTo({
-					url: `../edit/edit?id=${id}&type=${type}`
+					url: `../edit/edit?project=${this.filterData['project.id']}&id=${id}&type=${type}`
 				})
 			}
 		}

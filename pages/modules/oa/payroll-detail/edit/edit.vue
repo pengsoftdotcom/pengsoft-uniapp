@@ -32,6 +32,7 @@
 					detail: '发薪明细',
 				},
 				type: '',
+				project: '',
 				formModel: {
 					id: ''
 				},
@@ -40,6 +41,9 @@
 		onLoad(option) {
 			this.formModel.id = option.id;
 			this.type = option.type;
+			if (option.project) {
+				this.project = option.project;
+			}
 			this.findOne();
 		},
 		onReady() {
@@ -53,11 +57,11 @@
 				if (uni.hasAnyRole('worker')) {
 					operation = 'find-one-of-mine';
 				}
-				console.log(operation);
 				uni.request({
 					url: `/api/oa/payroll-detail/${operation}`,
 					data: {
-						id: this.formModel.id
+						id: this.formModel.id,
+						'project.id': this.project
 					},
 					success: res => this.formModel = res.data
 				})

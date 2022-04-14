@@ -44,11 +44,9 @@
 								{{staff.person.name}}
 							</view>
 							<text class="staff-work">
-								<text :span="manager === 'buManager' ? 3 : 6">
-									已检查 {{staff.checkingDays ? staff.checkingDays : 0}} 天
-								</text>
-								<text span="3" v-if="manager === 'buManager'">
-									已培训 {{staff.trainingDays ? staff.trainingDays : 0}} 天
+								应检 <text class="info">28</text> 天，已检<text class="success">{{staff.checkingDays ? staff.checkingDays : 0}}</text>天
+								<text v-if="manager === 'buManager'">
+									，已培训<text class="success">{{staff.trainingDays ? staff.trainingDays : 0}}</text>天
 								</text>
 							</text>
 						</view>
@@ -255,19 +253,21 @@
 				flex: auto;
 				display: flex;
 				align-items: center;
-				
+
 				.staff-name {
 					font-size: 14px;
 					padding: 0 8px;
 					flex: none;
 				}
+
 				.staff-work {
 					flex: auto;
 					font-size: 12px;
 				}
 			}
+
 			.u-icon {
-				margin-left:8px;
+				margin-left: 8px;
 			}
 		}
 	}

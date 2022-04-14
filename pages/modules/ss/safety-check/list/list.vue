@@ -12,16 +12,16 @@
 					<view style="margin-top: 5px;">于 <text class="time">{{ item.submittedAt }}</text> 提交</view>
 					<view v-if="item.status.code === 'risk'">
 						<text v-if="item.handledAt">
-							于 <text class="time">{{ item.handledAt }}</text> 处理
+							于 <text class="time">{{ item.handledAt }}</text> 整改
 						</text>
-						<text v-else>尚未处理</text>
+						<text v-else>尚未整改</text>
 					</view>
-					<view v-else>无需处理</view>
+					<view v-else>无需整改</view>
 				</view>
 				<view class="w-list-item-status" :class="item.status.code ==='safe' ? 'success' : 'warning'">
 					{{item.status.name}}
 				</view>
-				<view class="w-list-item-angle" v-if="item.handledAt">已处理</view>
+				<view class="w-list-item-angle" v-if="item.handledAt">已整改</view>
 			</view>
 		</view>
 		<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
@@ -88,7 +88,7 @@
 		},
 		methods: {
 			isCreateVisible() {
-				return uni.hasAnyRole('supervision_engineer', 'security_officer');
+				return uni.hasAnyAuthority('ss::safety_check::save');
 			},
 			active(tab) {
 				this.tabs.forEach(t => t.active = false);

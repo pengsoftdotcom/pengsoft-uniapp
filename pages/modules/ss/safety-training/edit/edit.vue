@@ -315,7 +315,6 @@
 
 			},
 			handleStartTimeConfirm(e) {
-				console.log(e)
 				this.estShow = false;
 				this.formModel.estimatedStartTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM:ss')
 			},

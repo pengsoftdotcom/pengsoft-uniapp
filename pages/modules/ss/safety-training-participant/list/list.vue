@@ -33,7 +33,6 @@
 			}
 		},
 		onLoad(option) {
-			console.log(1)
 			this.filterData['training.id'] = option['training.id'];
 		},
 		onShow() {
