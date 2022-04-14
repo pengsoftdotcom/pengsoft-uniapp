@@ -47,6 +47,7 @@
 					status: 'risk',
 					active: false
 				}],
+				handled: undefined,
 				...JSON.parse(JSON.stringify(uni.listModel))
 			};
 		},
@@ -62,7 +63,10 @@
 			}
 			const handled = option.handled;
 			if (handled) {
-				this.filterData['handled'] = handled;
+				this.handled = handled;
+				if (status === 'risk') {
+					this.filterData['handled'] = handled;
+				}
 			}
 			const startTime = option.startTime;
 			if (startTime) {
@@ -95,9 +99,16 @@
 				tab.active = true;
 				if (tab.status) {
 					this.filterData['status.code'] = tab.status;
+					if (tab.status === 'risk' && this.handled !== undefined) {
+						this.filterData['handled'] = this.handled;
+					} else {
+						delete this.filterData['handled'];
+					}
 				} else {
 					delete this.filterData['status.code'];
+					delete this.filterData['handled'];
 				}
+				this.pageData.page = 0;
 				this.getList();
 			},
 			getList() {

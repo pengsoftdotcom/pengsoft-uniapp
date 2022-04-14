@@ -12,10 +12,10 @@
 				</view>
 				<view class="w-list-item-body">
 					<view>
-						<view>开工时间：{{item.startedAt}}</view>
+						<view>开工时间：{{item.startedAt ? item.startedAt : ''}}</view>
 					</view>
 					<view>
-						<view>完工时间：{{item.completedAt}}</view>
+						<view>完工时间：{{item.completedAt ? item.completedAt : ''}}</view>
 					</view>
 				</view>
 			</view>
