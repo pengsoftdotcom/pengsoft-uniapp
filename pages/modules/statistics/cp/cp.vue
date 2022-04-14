@@ -51,7 +51,7 @@
 					<view class="cp-body-label" @click="toSafetyCheckList(item.id, '', '')">
 						<view class="item-title"> 安全检查 </view>
 						<view class="item-content info">
-							{{ item.check.days }}
+							{{ item.safetyCheck.days }}
 							<view class="item-unit"> 天 </view>
 						</view>
 					</view>
@@ -60,23 +60,59 @@
 						<view class="item-container">
 							<view class="item-content">
 								<view class="success">
-									{{ item.check.safe }}
+									{{ item.safetyCheck.safe }}
 								</view>
 							</view>
 						</view>
 					</view>
-					<view class="cp-body-item">
+					<view class="cp-body-item" style="width: 50%;">
 						<view class="item-title"> 隐患 </view>
 						<view class="item-container">
 							<view class="item-content" @click="toSafetyCheckList(item.id, 'risk', true)">
 								<view class="success">
-									{{ item.check.risk.handled }}
+									{{ item.safetyCheck.risk.handled }}
 								</view>
 								<view class="item-unit"> 已整改 </view>
 							</view>
 							<view class="item-content" @click="toSafetyCheckList(item.id, 'risk', false)">
 								<view class="danger">
-									{{ item.check.risk.unhandled }}
+									{{ item.safetyCheck.risk.unhandled }}
+								</view>
+								<view class="item-unit"> 未整改 </view>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="cp-body">
+					<view class="cp-body-label" @click="toQualityCheckList(item.id, '', '')">
+						<view class="item-title"> 质量检查 </view>
+						<view class="item-content info">
+							{{ item.qualityCheck.days }}
+							<view class="item-unit"> 天 </view>
+						</view>
+					</view>
+					<view class="cp-body-item" @click="toQualityCheckList(item.id, 'safe', '')">
+						<view class="item-title"> 安全 </view>
+						<view class="item-container">
+							<view class="item-content">
+								<view class="success">
+									{{ item.qualityCheck.safe }}
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="cp-body-item" style="width: 50%;">
+						<view class="item-title"> 隐患 </view>
+						<view class="item-container">
+							<view class="item-content" @click="toQualityCheckList(item.id, 'risk', true)">
+								<view class="success">
+									{{ item.qualityCheck.risk.handled }}
+								</view>
+								<view class="item-unit"> 已整改 </view>
+							</view>
+							<view class="item-content" @click="toQualityCheckList(item.id, 'risk', false)">
+								<view class="danger">
+									{{ item.qualityCheck.risk.unhandled }}
 								</view>
 								<view class="item-unit"> 未整改 </view>
 							</view>
@@ -87,7 +123,7 @@
 					<view class="cp-body-label" @click="toSafetyTrainingList(item.id)">
 						<view class="item-title"> 安全培训 </view>
 						<view class="item-content info">
-							{{ item.training.days }}
+							{{ item.safetyTraining.days }}
 							<view class="item-unit"> 天 </view>
 						</view>
 					</view>
@@ -96,7 +132,7 @@
 						<view class="item-container">
 							<view class="item-content">
 								<view class="success">
-									{{ item.training.total }}
+									{{ item.safetyTraining.total }}
 								</view>
 							</view>
 						</view>
@@ -106,7 +142,7 @@
 						<view class="item-container">
 							<view class="item-content">
 								<view class="success">
-									{{ item.training.participate }}
+									{{ item.safetyTraining.participate }}
 								</view>
 								<view class="item-unit"> 人次 </view>
 							</view>
@@ -117,7 +153,7 @@
 						<view class="item-container">
 							<view class="item-content">
 								<view class="warning">
-									{{ item.training.leave }}
+									{{ item.safetyTraining.leave }}
 								</view>
 								<view class="item-unit"> 人次 </view>
 							</view>
@@ -311,7 +347,7 @@
 						}
 						const projects = res.data.content.map((project) =>
 							Object.assign(project, {
-								check: {
+								safetyCheck: {
 									total: 0,
 									days: 0,
 									safe: 0,
@@ -320,7 +356,16 @@
 										unhandled: 0,
 									},
 								},
-								training: {
+								qualityCheck: {
+									total: 0,
+									days: 0,
+									safe: 0,
+									risk: {
+										handled: 0,
+										unhandled: 0,
+									},
+								},
+								safetyTraining: {
 									total: 0,
 									days: 0,
 									participate: 0,
@@ -346,8 +391,9 @@
 							this.listData.concat(projects);
 						const tab = this.tabs.find((t) => t.active);
 						if (projects && projects.length > 0) {
-							this.statisticCheck(projects, tab.startTime, tab.endTime);
-							this.statisticTraining(projects, tab.startTime, tab.endTime);
+							this.statisticSafetyCheck(projects, tab.startTime, tab.endTime);
+							this.statisticQualityCheck(projects, tab.startTime, tab.endTime);
+							this.statisticSafetyTraining(projects, tab.startTime, tab.endTime);
 							if (this.hasAuthority) {
 								this.statisticContract(projects);
 								if (this.visible) {
@@ -358,7 +404,7 @@
 					},
 				});
 			},
-			statisticCheck(projects, startTime, endTime) {
+			statisticSafetyCheck(projects, startTime, endTime) {
 				const projectIds = projects.map((project) => project.id).join(",");
 				uni.request({
 					url: "/api/ss/safety-check/get-checked-days",
@@ -371,7 +417,7 @@
 						this.listData.forEach((project) =>
 							res.data.forEach((data) => {
 								if (project.id === data.project) {
-									project.check.days = data.count;
+									project.safetyCheck.days = data.count;
 								}
 							})
 						);
@@ -389,13 +435,13 @@
 							res.data.forEach((data) => {
 								if (project.id === data.project) {
 									if (data.status === "safe") {
-										project.check.safe = data.count;
+										project.safetyCheck.safe = data.count;
 									}
 									if (data.status === "risk") {
 										if (data.handled) {
-											project.check.risk.handled = data.count;
+											project.safetyCheck.risk.handled = data.count;
 										} else {
-											project.check.risk.unhandled = data.count;
+											project.safetyCheck.risk.unhandled = data.count;
 										}
 									}
 								}
@@ -410,7 +456,59 @@
 					url: `/pages/modules/ss/safety-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`,
 				});
 			},
-			statisticTraining(projects, startTime, endTime) {
+			statisticQualityCheck(projects, startTime, endTime) {
+				const projectIds = projects.map((project) => project.id).join(",");
+				uni.request({
+					url: "/api/ss/quality-check/get-checked-days",
+					data: {
+						"project.id": projectIds,
+						startTime,
+						endTime,
+					},
+					success: (res) => {
+						this.listData.forEach((project) =>
+							res.data.forEach((data) => {
+								if (project.id === data.project) {
+									project.qualityCheck.days = data.count;
+								}
+							})
+						);
+					},
+				});
+				uni.request({
+					url: "/api/ss/quality-check/statistic",
+					data: {
+						"project.id": projectIds,
+						startTime,
+						endTime,
+					},
+					success: (res) => {
+						this.listData.forEach((project) =>
+							res.data.forEach((data) => {
+								if (project.id === data.project) {
+									if (data.status === "safe") {
+										project.qualityCheck.safe = data.count;
+									}
+									if (data.status === "risk") {
+										if (data.handled) {
+											project.qualityCheck.risk.handled = data.count;
+										} else {
+											project.qualityCheck.risk.unhandled = data.count;
+										}
+									}
+								}
+							})
+						);
+					},
+				});
+			},
+			toQualityCheckList(project, status, handled) {
+				const tab = this.tabs.find((t) => t.active);
+				uni.navigateTo({
+					url: `/pages/modules/ss/quality-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`,
+				});
+			},
+			statisticSafetyTraining(projects, startTime, endTime) {
 				const projectIds = projects.map((project) => project.id).join(",");
 				uni.request({
 					url: "/api/ss/safety-training/get-trained-days",
@@ -423,7 +521,7 @@
 						this.listData.forEach((project) =>
 							res.data.forEach((data) => {
 								if (project.id === data.project) {
-									project.training.days = data.count;
+									project.safetyTraining.days = data.count;
 								}
 							})
 						);
@@ -440,7 +538,7 @@
 						this.listData.forEach((project) =>
 							res.data.forEach((data) => {
 								if (project.id === data.project) {
-									project.training.total = data.count;
+									project.safetyTraining.total = data.count;
 								}
 							})
 						);
@@ -457,7 +555,7 @@
 						this.listData.forEach((project) =>
 							res.data.forEach((data) => {
 								if (project.id === data.project) {
-									project.training[data.status] = data.count;
+									project.safetyTraining[data.status] = data.count;
 								}
 							})
 						);

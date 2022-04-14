@@ -127,7 +127,11 @@
 		},
 		onLoad(option) {
 			this.formModel.id = option.id;
-			this.type = option.type;
+			if (this.formModel.id) {
+				this.type = 'detail';
+			} else {
+				this.type = 'create';
+			}
 			this.findOne();
 		},
 		onReady() {

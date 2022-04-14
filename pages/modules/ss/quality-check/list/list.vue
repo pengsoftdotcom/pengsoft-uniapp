@@ -92,7 +92,7 @@
 		},
 		methods: {
 			isCreateVisible() {
-				return uni.hasAnyAuthority('ss::safety_check::save');
+				return uni.hasAnyAuthority('ss::quality_check::save');
 			},
 			active(tab) {
 				this.tabs.forEach(t => t.active = false);
@@ -117,7 +117,7 @@
 					this.status = 'loading';
 				}
 				uni.request({
-					url: '/api/ss/safety-check/find-page',
+					url: '/api/ss/quality-check/find-page',
 					data: {
 						page: this.pageData.page,
 						size: this.pageData.size,

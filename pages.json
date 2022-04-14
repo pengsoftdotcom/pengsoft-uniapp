@@ -86,7 +86,18 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
+		}, {
+			"path": "pages/modules/ss/quality-check/list/list",
+			"style": {
+				"navigationBarTitleText": "质量检查",
+				"enablePullDownRefresh": true
+			}
+		}, {
+			"path": "pages/modules/ss/quality-check/edit/edit",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
 		}, {
 			"path": "pages/modules/oa/payroll-record/list/list",
 			"style": {
@@ -129,17 +140,15 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/modules/ss/construction-project/edit/edit",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	    ,{
-            "path" : "pages/modules/ss/construction-project/edit/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

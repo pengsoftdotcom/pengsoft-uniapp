@@ -15,7 +15,7 @@
 			<view class="corp-tabs">
 				<u-tabs :list="tabs" @change="tabChange"></u-tabs>
 			</view>
-			<view v-if="showUnit" class="corp-card">
+			<view class="corp-card">
 				<view class="corp-name">
 					{{formModel[unit].name}}
 				</view>
@@ -27,7 +27,6 @@
 					<view class="staff-main">
 						<view class="staff-name">
 							{{formModel[manager].person.name}}
-
 						</view>
 					</view>
 					<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
@@ -43,20 +42,25 @@
 							<view class="staff-name">
 								{{staff.person.name}}
 							</view>
-							<text class="staff-work">
-								应检 <text class="info">28</text> 天，已检<text class="success">{{staff.checkingDays ? staff.checkingDays : 0}}</text>天
-								<text v-if="manager === 'buManager'">
-									，已培训<text class="success">{{staff.trainingDays ? staff.trainingDays : 0}}</text>天
-								</text>
-							</text>
+							<view class="staff-work">
+								<view>
+									安全检查应检<text class="info">28</text>天，已检<text
+										class="success">{{staff.safetyCheckDays ? staff.safetyCheckDays : 0}}</text>天
+								</view>
+								<view>
+									质量检查已检<text
+										class="success">{{staff.qualityCheckDays ? staff.qualityCheckDays : 0}}</text>天
+								</view>
+								<view v-if="manager === 'buManager'">
+									安全培训已培训<text
+										class="success">{{staff.safetyTrainingDays ? staff.safetyTrainingDays : 0}}</text>天
+								</view>
+							</view>
 						</view>
 						<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
 
 					</view>
 				</view>
-
-			</view>
-			<view v-if="showStatistics">
 
 			</view>
 		</view>
@@ -68,31 +72,23 @@
 		data() {
 			return {
 				loading: true,
-				showUnit: false,
-				showStatistics: true,
-				tabs: [
-					/* {
-										name: '统计分析',
-										code: 'statistics'
-									}, */
-					{
-						unit: 'buildingUnit',
-						name: '施工单位',
-						manager: 'buManager'
-					}, {
-						unit: 'supervisionUnit',
-						name: '监理单位',
-						manager: 'suManager'
-					}, {
-						unit: 'owner',
-						name: '建设单位',
-						manager: 'ownerManager'
-					}, {
-						name: '监管单位',
-						unit: 'regulatoryUnit',
-						manager: 'ruManager'
-					}
-				],
+				tabs: [{
+					unit: 'buildingUnit',
+					name: '施工单位',
+					manager: 'buManager'
+				}, {
+					unit: 'supervisionUnit',
+					name: '监理单位',
+					manager: 'suManager'
+				}, {
+					unit: 'owner',
+					name: '建设单位',
+					manager: 'ownerManager'
+				}, {
+					name: '监管单位',
+					unit: 'regulatoryUnit',
+					manager: 'ruManager'
+				}],
 				unit: {},
 				manager: 'buManager',
 				staffs: [],
@@ -112,20 +108,12 @@
 		},
 		methods: {
 			tabChange(tab) {
-				this.showStatistics = !!tab.code;
-				if (this.showStatistics) {
-
-				}
-
-				this.showUnit = !this.showStatistics;
-				if (this.showUnit) {
-					this.unit = tab.unit;
-					this.manager = tab.manager;
-					if (this.isDutyPerformanceVisible()) {
-						const departmentId = this.formModel[this.manager].department.id;
-						const roleCode = this.manager === 'suManager' ? 'supervision_engineer' : 'security_officer';
-						this.findAllStaffs(departmentId, roleCode);
-					}
+				this.unit = tab.unit;
+				this.manager = tab.manager;
+				if (this.isDutyPerformanceVisible()) {
+					const departmentId = this.formModel[this.manager].department.id;
+					const roleCode = this.manager === 'suManager' ? 'supervision_engineer' : 'security_officer';
+					this.findAllStaffs(departmentId, roleCode);
 				}
 			},
 			makePhoneCall(phoneNumber) {
@@ -184,9 +172,29 @@
 						this.staffs.forEach(staff => {
 							const data = res.data.find(item => staff.id === item.checker);
 							if (data) {
-								staff.checkingDays = data.count;
+								staff.safetyCheckDays = data.count;
 							} else {
-								staff.checkingDays = 0;
+								staff.safetyCheckDays = 0;
+							}
+						});
+						this.timestamp = new Date().getTime();
+					}
+				});
+				uni.request({
+					url: '/api/ss/quality-check/statistic-by-checker',
+					data: {
+						'project.id': this.formModel.id,
+						'checker.id': this.staffs.map(staff => staff.id).join(','),
+						startTime,
+						endTime
+					},
+					success: res => {
+						this.staffs.forEach(staff => {
+							const data = res.data.find(item => staff.id === item.checker);
+							if (data) {
+								staff.qualityCheckDays = data.count;
+							} else {
+								staff.qualityCheckDays = 0;
 							}
 						});
 						this.timestamp = new Date().getTime();
@@ -204,9 +212,9 @@
 						this.staffs.forEach(staff => {
 							const data = res.data.find(item => staff.id === item.trainer);
 							if (data) {
-								staff.trainingDays = data.count;
+								staff.safetyTrainingDays = data.count;
 							} else {
-								staff.trainingDays = 0;
+								staff.safetyTrainingDays = 0;
 							}
 						});
 						this.timestamp = new Date().getTime();

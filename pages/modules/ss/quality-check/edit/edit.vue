@@ -47,9 +47,9 @@
 		data() {
 			return {
 				titleObj: {
-					create: '新增安全检查',
-					update: '编辑安全检查',
-					detail: '安全检查详情',
+					create: '新增质量检查',
+					update: '编辑质量检查',
+					detail: '质量检查详情',
 				},
 				type: '',
 				formModel: {
@@ -96,7 +96,7 @@
 			}
 		},
 		onLoad(option) {
-			uni.getDictionaryItem('safety_check_status', data => this.statusArr = data);
+			uni.getDictionaryItem('quality_check_status', data => this.statusArr = data);
 			this.formModel.id = option.id;
 			if (this.formModel.id) {
 				this.type = 'detail';
@@ -117,7 +117,7 @@
 			},
 			findOne() {
 				uni.request({
-					url: '/api/ss/safety-check/find-one-with-files',
+					url: '/api/ss/quality-check/find-one-with-files',
 					data: {
 						id: this.formModel.id
 					},
@@ -133,7 +133,7 @@
 				})
 			},
 			isSubmitVisible() {
-				return uni.hasAnyAuthority('ss::safety_check::submit');
+				return uni.hasAnyAuthority('ss::quality_check::submit');
 			},
 			isSubmitDisabled() {
 				return this.formModel.submittedAt;
@@ -149,7 +149,7 @@
 			submit() {
 				this.formModel.status = this.statusArr.find(status => status.id === this.formModel.status.id);
 				this.$refs.form.validate().then(res => {
-					let url = '/api/ss/safety-check/submit?';
+					let url = '/api/ss/quality-check/submit?';
 					if (this.submitFiles) {
 						this.submitFiles.forEach(file => url += 'asset.id=' + file.id + '&');
 						url = url.substring(0, url.length - 1);
@@ -175,14 +175,14 @@
 				}));
 			},
 			isHandleVisible() {
-				return uni.hasAnyAuthority('ss::safety_check::handle');
+				return uni.hasAnyAuthority('ss::quality_check::handle');
 			},
 			isHandleDisabled() {
 				return !this.formModel.submittedAt || this.formModel.handledAt || this.formModel.status.code === 'safe';
 			},
 			handle() {
 				this.$refs.form.validate().then(res => {
-					let url = '/api/ss/safety-check/handle?id=' + this.formModel.id;
+					let url = '/api/ss/quality-check/handle?id=' + this.formModel.id;
 					if (this.handleFiles) {
 						this.handleFiles.forEach(file => url += '&asset.id=' + file.id);
 					}
@@ -223,7 +223,7 @@
 			deletePicture(event) {
 				return new Promise(resolve => {
 					uni.request({
-						url: '/api/ss/safety-check/delete-file-by-asset',
+						url: '/api/ss/quality-check/delete-file-by-asset',
 						method: 'DELETE',
 						data: {
 							id: this.formModel.id,
