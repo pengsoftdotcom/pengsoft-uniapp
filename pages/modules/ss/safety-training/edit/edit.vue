@@ -1,8 +1,8 @@
 <template>
 	<view class="w-form-wrap">
 		<u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
-			<u-form-item label="项　　目" prop="project.name" borderBottom>
-				{{formModel.project.name ? formModel.project.name : ''}}
+			<u-form-item label="项　　目" prop="project.shortName" borderBottom>
+				{{formModel.project.shortName ? formModel.project.shortName : ''}}
 			</u-form-item>
 			<u-form-item label="培训编码" prop="code" borderBottom>
 				{{formModel.code ? formModel.code : ''}}
@@ -68,9 +68,9 @@
 		data() {
 			return {
 				titleObj: {
-					create: '新增安全培训',
-					update: '编辑安全培训',
-					detail: '安全培训详情',
+					create: '新增安全教育培训',
+					update: '编辑安全教育培训',
+					detail: '安全教育培训详情',
 				},
 				type: '',
 				formModel: {

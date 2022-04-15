@@ -20,46 +20,33 @@
 					{{formModel[unit].name}}
 				</view>
 
-				<view class="staff-content" @click="makePhoneCall(formModel[manager].person.mobile)">
+				<view v-for="staff in staffs" :key="staff.id" class="staff-content"
+					@click="makePhoneCall(formModel[manager].person.mobile)">
 					<view class="staff-job">
-						{{formModel[manager].job.name}}
+						{{staff.job.name}}
 					</view>
 					<view class="staff-main">
 						<view class="staff-name">
-							{{formModel[manager].person.name}}
+							{{staff.person.name}}
+						</view>
+						<view class="staff-work">
+							<view v-if="isSafetyCheckDaysVisible(staff)">
+								安全质量检查应检<text class="info">28</text>天，已检<text
+									class="success">{{staff.safetyCheckDays ? staff.safetyCheckDays : 0}}</text>天
+							</view>
+							<!--
+							<view>
+								质量检查已检<text
+									class="success">{{staff.qualityCheckDays ? staff.qualityCheckDays : 0}}</text>天
+							</view> 
+							-->
+							<view v-if="isSafetyTrainingDaysVisible(staff)">
+								安全教育培训已培训<text
+									class="success">{{staff.safetyTrainingDays ? staff.safetyTrainingDays : 0}}</text>天
+							</view>
 						</view>
 					</view>
 					<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
-				</view>
-
-				<view v-if="isDutyPerformanceVisible()">
-					<view v-for="staff in staffs" :key="staff.id" class="staff-content"
-						@click="makePhoneCall(formModel[manager].person.mobile)">
-						<view class="staff-job">
-							{{staff.job.name}}
-						</view>
-						<view class="staff-main">
-							<view class="staff-name">
-								{{staff.person.name}}
-							</view>
-							<view class="staff-work">
-								<view>
-									安全检查应检<text class="info">28</text>天，已检<text
-										class="success">{{staff.safetyCheckDays ? staff.safetyCheckDays : 0}}</text>天
-								</view>
-								<view>
-									质量检查已检<text
-										class="success">{{staff.qualityCheckDays ? staff.qualityCheckDays : 0}}</text>天
-								</view>
-								<view v-if="manager === 'buManager'">
-									安全培训已培训<text
-										class="success">{{staff.safetyTrainingDays ? staff.safetyTrainingDays : 0}}</text>天
-								</view>
-							</view>
-						</view>
-						<u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
-
-					</view>
 				</view>
 
 			</view>
@@ -107,14 +94,22 @@
 			this.findOne();
 		},
 		methods: {
+			isSafetyCheckDaysVisible(staff) {
+				return staff.job.name === '安全员' || staff.job.name === '监理';
+			},
+			isSafetyTrainingDaysVisible(staff) {
+				return staff.job.name === '安全员';
+			},
 			tabChange(tab) {
+				if (tab.index) {
+					tab = this.tabs[tab.index];
+				}
 				this.unit = tab.unit;
 				this.manager = tab.manager;
-				if (this.isDutyPerformanceVisible()) {
-					const departmentId = this.formModel[this.manager].department.id;
-					const roleCode = this.manager === 'suManager' ? 'supervision_engineer' : 'security_officer';
-					this.findAllStaffs(departmentId, roleCode);
-				}
+				const departmentId = this.formModel[this.manager].department.id;
+				const roleCode =
+					'ru_manager, owner_manager, su_manager, supervision_engineer, bu_manager, security_officer, cashier';
+				this.findAllStaffs(tab, departmentId, roleCode);
 			},
 			makePhoneCall(phoneNumber) {
 				if (phoneNumber) {
@@ -126,9 +121,6 @@
 			sectionChange(index) {
 				this.current = index;
 				this.getDutyPerformance();
-			},
-			isDutyPerformanceVisible() {
-				return this.manager === 'suManager' || this.manager === 'buManager'
 			},
 			findOne() {
 				uni.request({
@@ -143,83 +135,95 @@
 					}
 				})
 			},
-			findAllStaffs(departmentId, roleCode) {
-				this.staffs = [];
-				uni.request({
-					url: '/api/basedata/staff/find-all-by-department-and-role-codes',
-					data: {
-						'department.id': departmentId,
-						'role.code': roleCode
-					},
-					success: res => {
-						this.staffs = res.data;
-						this.getDutyPerformance();
-					}
-				})
+			findAllStaffs(tab, departmentId, roleCode) {
+				if (tab.staffs) {
+					this.staffs = tab.staffs;
+					this.getDutyPerformance();
+				} else {
+					uni.request({
+						url: '/api/basedata/staff/find-all-by-department-and-role-codes',
+						data: {
+							'department.id': departmentId,
+							'role.code': roleCode
+						},
+						success: res => {
+							this.staffs = res.data.filter(data => data.person.mobile !== '18508101366' && data
+								.person.mobile != '13908329221');
+							tab.staffs = this.staffs;
+							this.getDutyPerformance();
+						}
+					})
+				}
 			},
 			getDutyPerformance() {
 				const startTime = uni.atStartOfCurrentMonth();
 				const endTime = uni.atStartOfNextMonth();
-				uni.request({
-					url: '/api/ss/safety-check/statistic-by-checker',
-					data: {
-						'project.id': this.formModel.id,
-						'checker.id': this.staffs.map(staff => staff.id).join(','),
-						startTime,
-						endTime
-					},
-					success: res => {
-						this.staffs.forEach(staff => {
-							const data = res.data.find(item => staff.id === item.checker);
-							if (data) {
-								staff.safetyCheckDays = data.count;
-							} else {
-								staff.safetyCheckDays = 0;
-							}
-						});
-						this.timestamp = new Date().getTime();
-					}
-				});
-				uni.request({
-					url: '/api/ss/quality-check/statistic-by-checker',
-					data: {
-						'project.id': this.formModel.id,
-						'checker.id': this.staffs.map(staff => staff.id).join(','),
-						startTime,
-						endTime
-					},
-					success: res => {
-						this.staffs.forEach(staff => {
-							const data = res.data.find(item => staff.id === item.checker);
-							if (data) {
-								staff.qualityCheckDays = data.count;
-							} else {
-								staff.qualityCheckDays = 0;
-							}
-						});
-						this.timestamp = new Date().getTime();
-					}
-				});
-				uni.request({
-					url: '/api/ss/safety-training/statistic-by-trainer',
-					data: {
-						'project.id': this.formModel.id,
-						'trainer.id': this.staffs.map(staff => staff.id).join(','),
-						startTime,
-						endTime
-					},
-					success: res => {
-						this.staffs.forEach(staff => {
-							const data = res.data.find(item => staff.id === item.trainer);
-							if (data) {
-								staff.safetyTrainingDays = data.count;
-							} else {
-								staff.safetyTrainingDays = 0;
-							}
-						});
-						this.timestamp = new Date().getTime();
-					}
-				});
+				const checkerIds = this.staffs.filter(staff => this.isSafetyCheckDaysVisible(staff)).map(staff => staff.id).join(',');
+				if (checkerIds) {
+					uni.request({
+						url: '/api/ss/safety-check/statistic-by-checker',
+						data: {
+							'project.id': this.formModel.id,
+							'checker.id': checkerIds,
+							startTime,
+							endTime
+						},
+						success: res => {
+							this.staffs.forEach(staff => {
+								const data = res.data.find(item => staff.id === item.checker);
+								if (data) {
+									staff.safetyCheckDays = data.count;
+								} else {
+									staff.safetyCheckDays = 0;
+								}
+							});
+							this.timestamp = new Date().getTime();
+						}
+					});
+				}
+				// uni.request({
+				// 	url: '/api/ss/quality-check/statistic-by-checker',
+				// 	data: {
+				// 		'project.id': this.formModel.id,
+				// 		'checker.id': this.staffs.map(staff => staff.id).join(','),
+				// 		startTime,
+				// 		endTime
+				// 	},
+				// 	success: res => {
+				// 		this.staffs.forEach(staff => {
+				// 			const data = res.data.find(item => staff.id === item.checker);
+				// 			if (data) {
+				// 				staff.qualityCheckDays = data.count;
+				// 			} else {
+				// 				staff.qualityCheckDays = 0;
+				// 			}
+				// 		});
+				// 		this.timestamp = new Date().getTime();
+				// 	}
+				// });
+				const trainerIds = this.staffs.filter(staff => this.isSafetyTrainingDaysVisible(staff)).map(staff => staff.id).join(',');
+				if (trainerIds) {
+					uni.request({
+						url: '/api/ss/safety-training/statistic-by-trainer',
+						data: {
+							'project.id': this.formModel.id,
+							'trainer.id': trainerIds,
+							startTime,
+							endTime
+						},
+						success: res => {
+							this.staffs.forEach(staff => {
+								const data = res.data.find(item => staff.id === item.trainer);
+								if (data) {
+									staff.safetyTrainingDays = data.count;
+								} else {
+									staff.safetyTrainingDays = 0;
+								}
+							});
+							this.timestamp = new Date().getTime();
+						}
+					});
+				}
 
 			},
 			statistics() {
@@ -250,7 +254,7 @@
 			border-bottom: 1px solid #ddd;
 
 			.staff-job {
-				width: 50px;
+				width: 60px;
 				flex: none;
 				font-size: 12px;
 				color: #666;

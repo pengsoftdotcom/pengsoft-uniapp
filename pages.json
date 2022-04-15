@@ -62,21 +62,21 @@
 		}, {
 			"path": "pages/modules/ss/safety-training/list/list",
 			"style": {
-				"navigationBarTitleText": "安全培训",
+				"navigationBarTitleText": "安全教育培训",
 				"enablePullDownRefresh": true
 			}
 
 		}, {
 			"path": "pages/modules/ss/safety-training/edit/edit",
 			"style": {
-				"navigationBarTitleText": "安全培训详情",
+				"navigationBarTitleText": "安全教育培训详情",
 				"enablePullDownRefresh": false
 			}
 
 		}, {
 			"path": "pages/modules/ss/safety-check/list/list",
 			"style": {
-				"navigationBarTitleText": "安全检查",
+				"navigationBarTitleText": "安全质量检查",
 				"enablePullDownRefresh": true
 			}
 
@@ -143,7 +143,7 @@
 		}, {
 			"path": "pages/modules/ss/construction-project/edit/edit",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "项目看板",
 				"enablePullDownRefresh": false
 			}
 

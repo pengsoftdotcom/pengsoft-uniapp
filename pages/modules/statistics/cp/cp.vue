@@ -49,7 +49,7 @@
 				</view>
 				<view class="cp-body">
 					<view class="cp-body-label" @click="toSafetyCheckList(item.id, '', '')">
-						<view class="item-title"> 安全检查 </view>
+						<view class="item-title"> 安全质量检查 </view>
 						<view class="item-content info">
 							{{ item.safetyCheck.days }}
 							<view class="item-unit"> 天 </view>
@@ -83,7 +83,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="cp-body">
+				<!-- <view class="cp-body">
 					<view class="cp-body-label" @click="toQualityCheckList(item.id, '', '')">
 						<view class="item-title"> 质量检查 </view>
 						<view class="item-content info">
@@ -118,10 +118,10 @@
 							</view>
 						</view>
 					</view>
-				</view>
-				<view class="cp-body">
+				</view> -->
+				<view v-if="hasAuthority" class="cp-body">
 					<view class="cp-body-label" @click="toSafetyTrainingList(item.id)">
-						<view class="item-title"> 安全培训 </view>
+						<view class="item-title"> 安全教育培训 </view>
 						<view class="item-content info">
 							{{ item.safetyTraining.days }}
 							<view class="item-unit"> 天 </view>
@@ -392,9 +392,9 @@
 						const tab = this.tabs.find((t) => t.active);
 						if (projects && projects.length > 0) {
 							this.statisticSafetyCheck(projects, tab.startTime, tab.endTime);
-							this.statisticQualityCheck(projects, tab.startTime, tab.endTime);
-							this.statisticSafetyTraining(projects, tab.startTime, tab.endTime);
+							// this.statisticQualityCheck(projects, tab.startTime, tab.endTime);
 							if (this.hasAuthority) {
+								this.statisticSafetyTraining(projects, tab.startTime, tab.endTime);
 								this.statisticContract(projects);
 								if (this.visible) {
 									this.statisticSalary(projects, tab.startTime, tab.endTime);

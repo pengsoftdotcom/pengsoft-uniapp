@@ -21,17 +21,12 @@
 				menus: [{
 						name: '施工监管',
 						children: [{
-							name: '安全检查',
+							name: '安全质量检查',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-check/list/list',
 							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
 						}, {
-							name: '质量检查',
-							icon: 'shop-filled',
-							page: '/pages/modules/ss/quality-check/list/list',
-							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
-						}, {
-							name: '安全培训',
+							name: '安全教育培训',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-training/list/list',
 							roles: ['ru_manager', 'owner_manager', 'bu_manager', 'security_officer', 'worker']
