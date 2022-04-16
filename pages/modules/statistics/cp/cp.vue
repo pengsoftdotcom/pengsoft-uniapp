@@ -19,7 +19,7 @@
 						<view class="cp-manager-name">
 							<text>{{ item.ruManager.person.name }}</text>
 							<u-icon size="20" color="#2979ff" name="phone-fill"
-								@click="makePhoneCall(item.ruManager.person.mobile)"></u-icon>
+								@click="makePhoneCall(item.ruManager ? item.ruManager.person.mobile : '')"></u-icon>
 						</view>
 					</view>
 					<view class="cp-manager">
@@ -27,7 +27,7 @@
 						<view class="cp-manager-name">
 							<text>{{ item.ownerManager.person.name }}</text>
 							<u-icon size="20" color="#2979ff" name="phone-fill"
-								@click="makePhoneCall(item.ownerManager.person.mobile)"></u-icon>
+								@click="makePhoneCall(item.ownerManager ? item.ownerManager.person.mobile : '')"></u-icon>
 						</view>
 					</view>
 					<view class="cp-manager">
@@ -35,7 +35,7 @@
 						<view class="cp-manager-name">
 							<text>{{ item.suManager.person.name }}</text>
 							<u-icon size="20" color="#2979ff" name="phone-fill"
-								@click="makePhoneCall(item.suManager.person.mobile)"></u-icon>
+								@click="makePhoneCall(item.suManager ? item.suManager.person.mobile : '')"></u-icon>
 						</view>
 					</view>
 					<view class="cp-manager">
@@ -43,7 +43,7 @@
 						<view class="cp-manager-name">
 							<text>{{ item.buManager.person.name }}</text>
 							<u-icon size="20" color="#2979ff" name="phone-fill"
-								@click="makePhoneCall(item.buManager.person.mobile)"></u-icon>
+								@click="makePhoneCall(item.buManager ? item.buManager.person.mobile : '')"></u-icon>
 						</view>
 					</view>
 				</view>
