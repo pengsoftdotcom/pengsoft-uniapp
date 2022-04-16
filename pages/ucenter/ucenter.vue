@@ -14,7 +14,7 @@
 			<uni-list-item v-for="(submenu,i) in submenus" :key="i" v-if="isMenuVisible(submenu)" :title="submenu.title"
 				:link="!!submenu.url" :to="submenu.url" :show-extra-icon="!!submenu.icon"
 				:extraIcon="{type:submenu.icon,color:'#999'}" :show-badge="!!submenu.badge" :badge-text="submenu.badge"
-				:clickable="!!submenu.click" @click="submenu.click()">
+				:clickable="!!submenu.click" @click="submenu.click && submenu.click()">
 			</uni-list-item>
 		</uni-list>
 		<button class="unbind" type="warn" @click="unbind()">解除绑定</button>

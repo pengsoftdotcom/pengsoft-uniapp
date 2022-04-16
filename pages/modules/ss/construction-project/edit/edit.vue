@@ -17,7 +17,7 @@
 			</view>
 			<view class="corp-card">
 				<view class="corp-name">
-					{{formModel[unit].name}}
+					{{formModel[unit].name ? formModel[unit].name : ''}}
 				</view>
 
 				<view v-for="staff in staffs" :key="staff.id" class="staff-content"
