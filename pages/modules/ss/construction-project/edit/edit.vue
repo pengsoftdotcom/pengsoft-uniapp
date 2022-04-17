@@ -95,7 +95,7 @@
 		},
 		methods: {
 			isSafetyCheckDaysVisible(staff) {
-				return staff.job.name === '安全员' || staff.job.name === '监理';
+				return ['监理', '质检员', '安全员'].some(job => staff.job.name === job);
 			},
 			isSafetyTrainingDaysVisible(staff) {
 				return staff.job.name === '安全员';
@@ -106,10 +106,14 @@
 				}
 				this.unit = tab.unit;
 				this.manager = tab.manager;
-				const departmentId = this.formModel[this.manager].department.id;
-				const roleCode =
-					'ru_manager, owner_manager, su_manager, supervision_engineer, bu_manager, security_officer, cashier';
-				this.findAllStaffs(tab, departmentId, roleCode);
+				if (this.formModel[this.manager]) {
+					const departmentId = this.formModel[this.manager].department.id;
+					const roleCode =
+						'ru_manager, owner_manager, su_manager, supervision_engineer, bu_manager, quality_inspector, security_officer, cashier';
+					this.findAllStaffs(tab, departmentId, roleCode);
+				} else {
+					this.staffs = [];
+				}
 			},
 			makePhoneCall(phoneNumber) {
 				if (phoneNumber) {
@@ -147,8 +151,8 @@
 							'role.code': roleCode
 						},
 						success: res => {
-							this.staffs = res.data.filter(data => data.person.mobile !== '18508101366' && data
-								.person.mobile != '13908329221');
+							this.staffs = res.data.filter(data => ![ '18508101366', '13908329221'].some(
+								mobile => mobile === data.person.mobile));
 							tab.staffs = this.staffs;
 							this.getDutyPerformance();
 						}
@@ -158,7 +162,8 @@
 			getDutyPerformance() {
 				const startTime = uni.atStartOfCurrentMonth();
 				const endTime = uni.atStartOfNextMonth();
-				const checkerIds = this.staffs.filter(staff => this.isSafetyCheckDaysVisible(staff)).map(staff => staff.id).join(',');
+				const checkerIds = this.staffs.filter(staff => this.isSafetyCheckDaysVisible(staff)).map(staff => staff.id)
+					.join(',');
 				if (checkerIds) {
 					uni.request({
 						url: '/api/ss/safety-check/statistic-by-checker',
@@ -201,7 +206,8 @@
 				// 		this.timestamp = new Date().getTime();
 				// 	}
 				// });
-				const trainerIds = this.staffs.filter(staff => this.isSafetyTrainingDaysVisible(staff)).map(staff => staff.id).join(',');
+				const trainerIds = this.staffs.filter(staff => this.isSafetyTrainingDaysVisible(staff)).map(staff => staff
+					.id).join(',');
 				if (trainerIds) {
 					uni.request({
 						url: '/api/ss/safety-training/statistic-by-trainer',

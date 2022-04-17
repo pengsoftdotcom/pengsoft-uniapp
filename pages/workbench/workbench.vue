@@ -24,7 +24,7 @@
 							name: '安全质量检查',
 							icon: 'shop-filled',
 							page: '/pages/modules/ss/safety-check/list/list',
-							roles: ['ru_manager', 'owner_manager', 'su_manager', 'bu_manager', 'supervision_engineer', 'security_officer']
+							roles: ['ru_manager', 'owner_manager', 'su_manager', 'supervision_engineer', 'bu_manager', 'quality_inspector', 'security_officer']
 						}, {
 							name: '安全教育培训',
 							icon: 'shop-filled',
