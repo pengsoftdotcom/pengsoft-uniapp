@@ -1,12 +1,7 @@
-import uView from '@/uni_modules/uview-ui';
-// #ifndef VUE3
-import Vue, {
-    createSSRApp
-} from 'vue';
-import App from './App';
+import App from './App'
 
-const URL_PREFIX = 'https://api.pengsoft.com';
-// const URL_PREFIX = 'http://localhost:8080';
+// const URL_PREFIX = 'https://api.pengsoft.com';
+const URL_PREFIX = 'http://localhost:8080';
 
 const year = new Date();
 
@@ -217,7 +212,9 @@ const failure = (args) => {
 			break;
 	}
 };
-
+// #ifndef VUE3
+import Vue from 'vue'
+import uView from '@/uni_modules/uview-ui'
 
 Vue.config.productionTip = false
 App.mpType = 'app'
@@ -229,6 +226,12 @@ Vue.use(uView)
 // 如此配置即可
 // uni.$u.config.unit = 'rpx'
 app.$mount()
+// #endif
+
+// #ifdef VUE3
+import {
+	createSSRApp
+} from 'vue'
 export function createApp() {
 	const app = createSSRApp(App)
 	return {

@@ -93,6 +93,11 @@ export default {
         this.getProjects();
     },
     methods: {
+        makePhoneCall(mobile) {
+            uni.makePhoneCall({
+                phoneNumber: mobile
+            });
+        },
         getProjects() {
             uni.request({
                 url: '/api/ss/construction-project/find-all',
@@ -145,7 +150,6 @@ export default {
                     this.ec.option.series[0].data[0].value = this.unconfirmed;
                     this.ec.option.series[0].data[1].value = this.confirmed;
                     this.ec.option.series[0].data[2].value = this.not_uploaded;
-                    console.log(this.ec.option.series[0].data);
                 }
             });
         }
