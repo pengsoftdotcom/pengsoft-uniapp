@@ -1,4 +1,9 @@
-import App from './App'
+import uView from '@/uni_modules/uview-ui';
+// #ifndef VUE3
+import Vue, {
+    createSSRApp
+} from 'vue';
+import App from './App';
 
 const URL_PREFIX = 'https://api.pengsoft.com';
 // const URL_PREFIX = 'http://localhost:8080';
@@ -21,9 +26,11 @@ uni.format = (number) =>{
 	}
 }
 
-uni.atStartOfCurrentDay = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay.getDate()) + ' 00:00:01'
+uni.atStartOfToday = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay.getDate()) + ' 00:00:01'
 
-uni.atStartOfNextDay = () => endDay.getFullYear() + '-' + uni.format(endDay.getMonth() + 1) + '-' + uni.format(endDay.getDate()) + ' 00:00:01'
+uni.atEndOfToday = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay.getDate()) + ' 23:59:59'
+
+uni.atStartOfTomorrow = () => endDay.getFullYear() + '-' + uni.format(endDay.getMonth() + 1) + '-' + uni.format(endDay.getDate()) + ' 00:00:01'
 
 uni.atStartOfCurrentMonth = () => startMonth.getFullYear() + '-' + uni.format(startMonth.getMonth() + 1) + '-01 00:00:01'
 
@@ -210,9 +217,7 @@ const failure = (args) => {
 			break;
 	}
 };
-// #ifndef VUE3
-import Vue from 'vue'
-import uView from '@/uni_modules/uview-ui'
+
 
 Vue.config.productionTip = false
 App.mpType = 'app'
@@ -224,12 +229,6 @@ Vue.use(uView)
 // 如此配置即可
 // uni.$u.config.unit = 'rpx'
 app.$mount()
-// #endif
-
-// #ifdef VUE3
-import {
-	createSSRApp
-} from 'vue'
 export function createApp() {
 	const app = createSSRApp(App)
 	return {

@@ -83,6 +83,56 @@
 			opacity: 60%;
 		}
 	}
+
+    .corp-tabs {
+		margin-bottom: 5px;
+	}
+
+	.corp-card {
+		border: 1px solid #ddd;
+		border-radius: 4px;
+
+		.corp-name {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.staff-content {
+			display: flex;
+			padding: 10px;
+			align-items: center;
+			border-bottom: 1px solid #ddd;
+
+			.staff-job {
+				width: 60px;
+				flex: none;
+				font-size: 12px;
+				color: #666;
+				text-align: right;
+			}
+
+			.staff-main {
+				flex: auto;
+				display: flex;
+				align-items: center;
+
+				.staff-name {
+					font-size: 14px;
+					padding: 0 8px;
+					flex: none;
+				}
+
+				.staff-work {
+					flex: auto;
+					font-size: 12px;
+				}
+			}
+
+			.u-icon {
+				margin-left: 8px;
+			}
+		}
+	}
 }
 
 .ellipsis-1 {
@@ -302,6 +352,5 @@
 			
 		}
 	}
-	
-	
+    
 }
