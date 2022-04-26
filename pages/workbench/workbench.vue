@@ -68,7 +68,7 @@ export default {
                     name: '薪酬监管',
                     children: [
                         {
-                            name: '劳务合同',
+                            name: '用工合同',
                             icon: 'shop-filled',
                             page: '/module-oa/oa/contract/list/list',
                             roles: ['bu_manager', 'cashier']
@@ -96,7 +96,7 @@ export default {
                             ]
                         },
                         {
-                            name: '劳务合同',
+                            name: '用工合同',
                             icon: 'shop-filled',
                             page: '/module-statistics/statistics/contract/contract',
                             roles: ['ru_manager', 'owner_manager', 'bu_manager']
@@ -105,6 +105,18 @@ export default {
                             name: '工资支付',
                             icon: 'shop-filled',
                             page: '/module-statistics/statistics/payroll-record/payroll-record',
+                            roles: ['ru_manager', 'owner_manager', 'bu_manager']
+                        },
+                        {
+                            name: '施工考勤',
+                            icon: 'shop-filled',
+                            page: '/module-statistics/statistics/attendance-record/attendance-record',
+                            roles: ['ru_manager', 'owner_manager', 'bu_manager']
+                        },
+                        {
+                            name: '教育培训',
+                            icon: 'shop-filled',
+                            page: '/module-statistics/statistics/safety-training/safety-training',
                             roles: ['ru_manager', 'owner_manager', 'bu_manager']
                         },
                         {

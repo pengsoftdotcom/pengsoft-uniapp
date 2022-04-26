@@ -36,163 +36,177 @@
             }
         }
     ],
-	"subPackages": [
-		{
-			"root": "module-oa",
-			"pages": [
-				{
-				    "path": "oa/contract/list/list",
-				    "style": {
-				        "navigationBarTitleText": "合同",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "oa/contract/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "oa/payroll-detail/list/list",
-				    "style": {
-				        "navigationBarTitleText": "发薪明细",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "oa/payroll-detail/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "oa/payroll-record/list/list",
-				    "style": {
-				        "navigationBarTitleText": "发薪记录",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "oa/payroll-record/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "",
-				        "enablePullDownRefresh": false
-				    }
-				}
-			]
-		},
-		{
-			"root": "module-ss",
-			"pages": [
-				{
-				    "path": "ss/safety-check/list/list",
-				    "style": {
-				        "navigationBarTitleText": "安全质量检查",
-				        "enablePullDownRefresh": true
-				    }
-				},
-				{
-				    "path": "ss/safety-check/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "ss/quality-check/list/list",
-				    "style": {
-				        "navigationBarTitleText": "质量检查",
-				        "enablePullDownRefresh": true
-				    }
-				},
-				{
-				    "path": "ss/quality-check/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "ss/safety-training/list/list",
-				    "style": {
-				        "navigationBarTitleText": "安全教育培训",
-				        "enablePullDownRefresh": true
-				    }
-				},
-				{
-				    "path": "ss/safety-training/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "安全教育培训详情",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "ss/safety-training-participant/list/list",
-				    "style": {
-				        "navigationBarTitleText": "参与人",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "ss/safety-training-participant/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "",
-				        "enablePullDownRefresh": false
-				    }
-				}
-			]
-		},
-		{
-			"root": "module-statistics",
-			"pages": [
-				{
-				    "path": "statistics/construction-project/list/list",
-				    "style": {
-				        "navigationBarTitleText": "项目看板",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "statistics/construction-project/edit/edit",
-				    "style": {
-				        "navigationBarTitleText": "项目看板",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "statistics/cp/cp",
-				    "style": {
-				        "navigationBarTitleText": "工地看板",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "statistics/safety-check/safety-check",
-				    "style": {
-				        "navigationBarTitleText": "检查数据",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "statistics/contract/contract",
-				    "style": {
-				        "navigationBarTitleText": "劳务合同",
-				        "enablePullDownRefresh": false
-				    }
-				},
-				{
-				    "path": "statistics/payroll-record/payroll-record",
-				    "style": {
-				        "navigationBarTitleText": "工资支付",
-				        "enablePullDownRefresh": false
-				    }
-				}
-			]
-		}
-	],
+    "subPackages": [
+        {
+            "root": "module-oa",
+            "pages": [
+                {
+                    "path": "oa/contract/list/list",
+                    "style": {
+                        "navigationBarTitleText": "合同",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "oa/contract/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "oa/payroll-detail/list/list",
+                    "style": {
+                        "navigationBarTitleText": "发薪明细",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "oa/payroll-detail/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "oa/payroll-record/list/list",
+                    "style": {
+                        "navigationBarTitleText": "发薪记录",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "oa/payroll-record/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "",
+                        "enablePullDownRefresh": false
+                    }
+                }
+            ]
+        },
+        {
+            "root": "module-ss",
+            "pages": [
+                {
+                    "path": "ss/safety-check/list/list",
+                    "style": {
+                        "navigationBarTitleText": "安全质量检查",
+                        "enablePullDownRefresh": true
+                    }
+                },
+                {
+                    "path": "ss/safety-check/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "ss/quality-check/list/list",
+                    "style": {
+                        "navigationBarTitleText": "质量检查",
+                        "enablePullDownRefresh": true
+                    }
+                },
+                {
+                    "path": "ss/quality-check/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "ss/safety-training/list/list",
+                    "style": {
+                        "navigationBarTitleText": "安全教育培训",
+                        "enablePullDownRefresh": true
+                    }
+                },
+                {
+                    "path": "ss/safety-training/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "安全教育培训详情",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "ss/safety-training-participant/list/list",
+                    "style": {
+                        "navigationBarTitleText": "参与人",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "ss/safety-training-participant/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "",
+                        "enablePullDownRefresh": false
+                    }
+                }
+            ]
+        },
+        {
+            "root": "module-statistics",
+            "pages": [
+                {
+                    "path": "statistics/construction-project/list/list",
+                    "style": {
+                        "navigationBarTitleText": "项目看板",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/construction-project/edit/edit",
+                    "style": {
+                        "navigationBarTitleText": "项目看板",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/cp/cp",
+                    "style": {
+                        "navigationBarTitleText": "工地看板",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/safety-check/safety-check",
+                    "style": {
+                        "navigationBarTitleText": "检查数据",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/contract/contract",
+                    "style": {
+                        "navigationBarTitleText": "用工合同",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/payroll-record/payroll-record",
+                    "style": {
+                        "navigationBarTitleText": "工资支付",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/attendance-record/attendance-record",
+                    "style": {
+                        "navigationBarTitleText": "施工考勤",
+                        "enablePullDownRefresh": false
+                    }
+                },
+                {
+                    "path": "statistics/safety-training/safety-training",
+                    "style": {
+                        "navigationBarTitleText": "教育培训",
+                        "enablePullDownRefresh": false
+                    }
+                }
+            ]
+        }
+    ],
     "globalStyle": {
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "uni-app",

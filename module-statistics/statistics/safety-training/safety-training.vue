@@ -17,8 +17,9 @@
                         @click="minus"
                     ></u--image>
                     <view style="flex: 1; text-align: center">
-                        <text v-if="current === 0">{{ month }} 月</text>
-                        <text v-if="current === 1">{{ year }} 年</text>
+                        <text v-if="current === 0">{{ day }} 日</text>
+                        <text v-if="current === 1">{{ month }} 月</text>
+                        <text v-if="current === 2">{{ year }} 年</text>
                     </view>
                     <u--image
                         src="/static/right-arrow.png"
@@ -27,38 +28,25 @@
                         @click="plus"
                     ></u--image>
                 </view>
-                <view class="info">发放总数: {{ paid }}</view>
-                <view class="success">已确认数: {{ confirmed }}</view>
-                <view class="danger">未确认数: {{ unconfirmed }}</view>
+                <view class="info">应到人数: {{ total }}</view>
+                <view class="success">实到人数: {{ participate }}</view>
+                <view class="danger">未到人数: {{ leave }}</view>
             </view>
         </view>
         <view class="project-head">
             <view class="name">项目</view>
-            <view class="unconfirmed">数量</view>
-            <view class="cashier">发薪员</view>
+            <view class="number">人数</view>
             <view class="manager">项目经理</view>
         </view>
         <view v-for="project in listData" :key="project.id" class="project">
             <view class="name">
                 {{ project.shortName }}
-                (<text class="info">{{ project.paid }} </text>)
+                (<text class="info">{{ project.total }} </text>)
             </view>
-            <view class="unconfirmed">
-                <text class="success">{{ project.confirmed }}</text>
+            <view class="number">
+                <text class="success">{{ project.participate }}</text>
                 /
-                <text class="danger">{{ project.unconfirmed }}</text>
-            </view>
-            <view
-                class="cashier"
-                @click="makePhoneCall(project.cashier.mobile)"
-            >
-                <text>{{ project.cashier.name }}</text>
-                <u-icon
-                    size="20"
-                    color="#2979ff"
-                    name="phone-fill"
-                    top="2"
-                ></u-icon>
+                <text class="danger">{{ project.leave }}</text>
             </view>
             <view
                 class="manager"
@@ -84,13 +72,14 @@ export default {
     },
     data() {
         return {
-            modes: ['月', '年'],
+            modes: ['日', '月', '年'],
             current: 0,
+            day: new Date().getDate(),
             month: new Date().getMonth() + 1,
             year: new Date().getFullYear(),
-            paid: 0,
-            confirmed: 0,
-            unconfirmed: 0,
+            total: 0,
+            participate: 0,
+            leave: 0,
             ec: {
                 option: {
                     color: ['#dd524d', '#4cd964'],
@@ -103,8 +92,8 @@ export default {
                                 position: 'inside'
                             },
                             data: [
-                                { value: 0, name: '未确认' },
-                                { value: 0, name: '已确认' }
+                                { value: 0, name: '进场人数' },
+                                { value: 0, name: '报警人数' }
                             ]
                         }
                     ]
@@ -119,25 +108,28 @@ export default {
     methods: {
         change(current) {
             this.current = current;
-            this.getPayrollRecords();
         },
         minus() {
-            if (this.current === 0 && this.month > 1) {
+            if (this.current === 0 && this.day > 1) {
+                this.day--;
+            }
+            if (this.current === 1 && this.month > 1) {
                 this.month--;
             }
-            if (this.current === 1) {
+            if (this.current === 2) {
                 this.year--;
             }
-            this.getPayrollRecords();
         },
         plus() {
-            if (this.current === 0 && this.month < new Date().getMonth() + 1) {
+            if (this.current === 0 && this.day < new Date().getDate()) {
+                this.day++;
+            }
+            if (this.current === 1 && this.month < new Date().getMonth() + 1) {
                 this.month++;
             }
-            if (this.current === 1 && this.year < new Date().getFullYear()) {
+            if (this.current === 2 && this.year < new Date().getFullYear()) {
                 this.year++;
             }
-            this.getPayrollRecords();
         },
         getProjects() {
             uni.request({
@@ -145,51 +137,10 @@ export default {
                 success: (res) => {
                     this.listData = res.data;
                     this.listData.forEach((project) => {
-                        project.paid = 0;
-                        project.unconfirmed = 0;
+                        project.total = 0;
+                        project.participate = 0;
+                        project.leave = 0;
                     });
-                    this.getPayrollRecords();
-                }
-            });
-        },
-        getPayrollRecords() {
-            const data = {
-                'project.id': this.listData
-                    .map((project) => project.id)
-                    .join(',')
-            };
-            if (this.current === 0) {
-                data.month = this.month;
-                data.year = new Date().getFullYear();
-            } else {
-                data.year = this.year;
-            }
-            uni.request({
-                url: '/api/oa/payroll-record/find-all-with-cashier',
-                data,
-                success: (res) => {
-                    this.paid = 0;
-                    this.confirmed = 0;
-                    this.unconfirmed = 0;
-                    this.listData.forEach((project) => {
-                        project.paid = 0;
-                        project.unconfirmed = 0;
-                        res.data.forEach((record) => {
-                            this.paid += record.paidCount;
-                            this.confirmed += record.confirmedCount;
-                            if (project.buildingUnit.id === record.belongsTo) {
-                                project.paid += record.paidCount;
-                                project.confirmed = record.confirmedCount;
-                                project.unconfirmed +=
-                                    record.paidCount - record.confirmedCount;
-                                project.cashier = record.cashier;
-                            }
-                        });
-                    });
-                    this.unconfirmed = this.paid - this.confirmed;
-
-                    this.ec.option.series[0].data[0].value = this.unconfirmed;
-                    this.ec.option.series[0].data[1].value = this.confirmed;
                 }
             });
         }
@@ -225,7 +176,7 @@ export default {
     .name {
         flex: 1;
     }
-    .unconfirmed {
+    .number {
         width: 60px;
         text-align: center;
     }
@@ -250,7 +201,7 @@ export default {
     .name {
         flex: 1;
     }
-    .unconfirmed {
+    .number {
         width: 60px;
         text-align: center;
     }
