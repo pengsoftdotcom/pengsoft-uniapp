@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import UniEcCanvas from '@/components/uni-ec-canvas/uni-ec-canvas';
+import UniEcCanvas from '../../components/uni-ec-canvas/uni-ec-canvas';
 export default {
     components: {
         UniEcCanvas

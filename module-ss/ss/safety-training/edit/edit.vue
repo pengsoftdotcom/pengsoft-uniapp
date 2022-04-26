@@ -417,7 +417,7 @@ export default {
         },
         editParticipant() {
             uni.navigateTo({
-                url: `/pages/modules/ss/safety-training-participant/list/list?training.id=${this.formModel.id}`
+                url: `/ss/safety-training-participant/list/list?training.id=${this.formModel.id}`
             });
         },
         async afterReadPicture(event) {

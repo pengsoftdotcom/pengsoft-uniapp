@@ -544,7 +544,7 @@ export default {
         toSafetyCheckList(project, status, handled) {
             const tab = this.tabs.find((t) => t.active);
             uni.navigateTo({
-                url: `/pages/modules/ss/safety-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+                url: `/ss/safety-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
             });
         },
         statisticQualityCheck(projects, startTime, endTime) {
@@ -598,7 +598,7 @@ export default {
         toQualityCheckList(project, status, handled) {
             const tab = this.tabs.find((t) => t.active);
             uni.navigateTo({
-                url: `/pages/modules/ss/quality-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+                url: `/ss/quality-check/list/list?project=${project}&status=${status}&handled=${handled}&startTime=${tab.startTime}&endTime=${tab.endTime}`
             });
         },
         statisticSafetyTraining(projects, startTime, endTime) {
@@ -659,7 +659,7 @@ export default {
         toSafetyTrainingList(project) {
             const tab = this.tabs.find((t) => t.active);
             uni.navigateTo({
-                url: `/pages/modules/ss/safety-training/list/list?project=${project}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+                url: `/ss/safety-training/list/list?project=${project}&startTime=${tab.startTime}&endTime=${tab.endTime}`
             });
         },
         statisticContract(projects) {
@@ -689,7 +689,7 @@ export default {
         },
         toContractList(project, status) {
             uni.navigateTo({
-                url: `/pages/modules/oa/contract/list/list?project=${project}&status=${status}`
+                url: `/oa/contract/list/list?project=${project}&status=${status}`
             });
         },
         statisticSalary(projects, startTime, endTime) {
@@ -720,7 +720,7 @@ export default {
         toPayrollRecordList(project, status) {
             const tab = this.tabs.find((t) => t.active);
             uni.navigateTo({
-                url: `/pages/modules/oa/payroll-record/list/list?project=${project}&status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
+                url: `/oa/payroll-record/list/list?project=${project}&status=${status}&startTime=${tab.startTime}&endTime=${tab.endTime}`
             });
         }
     }

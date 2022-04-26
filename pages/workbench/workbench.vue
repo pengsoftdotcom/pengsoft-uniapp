@@ -39,7 +39,7 @@ export default {
                         {
                             name: '安全质量检查',
                             icon: 'shop-filled',
-                            page: '/pages/modules/ss/safety-check/list/list',
+                            page: '/module-ss/ss/safety-check/list/list',
                             roles: [
                                 'ru_manager',
                                 'owner_manager',
@@ -53,7 +53,7 @@ export default {
                         {
                             name: '安全教育培训',
                             icon: 'shop-filled',
-                            page: '/pages/modules/ss/safety-training/list/list',
+                            page: '/module-ss/ss/safety-training/list/list',
                             roles: [
                                 'ru_manager',
                                 'owner_manager',
@@ -70,13 +70,13 @@ export default {
                         {
                             name: '劳务合同',
                             icon: 'shop-filled',
-                            page: '/pages/modules/oa/contract/list/list',
+                            page: '/module-oa/oa/contract/list/list',
                             roles: ['bu_manager', 'cashier']
                         },
                         {
                             name: '薪酬发放',
                             icon: 'shop-filled',
-                            page: '/pages/modules/oa/payroll-record/list/list',
+                            page: '/module-oa/oa/payroll-record/list/list',
                             roles: ['bu_manager', 'cashier']
                         }
                     ]
@@ -87,7 +87,7 @@ export default {
                         {
                             name: '检查数据',
                             icon: 'shop-filled',
-                            page: '/pages/modules/statistics/safety-check/safety-check',
+                            page: '/module-statistics/statistics/safety-check/safety-check',
                             roles: [
                                 'ru_manager',
                                 'owner_manager',
@@ -98,19 +98,19 @@ export default {
                         {
                             name: '劳务合同',
                             icon: 'shop-filled',
-                            page: '/pages/modules/statistics/contract/contract',
+                            page: '/module-statistics/statistics/contract/contract',
                             roles: ['ru_manager', 'owner_manager', 'bu_manager']
                         },
                         {
                             name: '工资支付',
                             icon: 'shop-filled',
-                            page: '/pages/modules/statistics/payroll-record/payroll-record',
+                            page: '/module-statistics/statistics/payroll-record/payroll-record',
                             roles: ['ru_manager', 'owner_manager', 'bu_manager']
                         },
                         {
                             name: '项目看板',
                             icon: 'shop-filled',
-                            page: '/pages/modules/ss/construction-project/list/list',
+                            page: '/module-statistics/statistics/construction-project/list/list',
                             roles: [
                                 'ru_manager',
                                 'owner_manager',
