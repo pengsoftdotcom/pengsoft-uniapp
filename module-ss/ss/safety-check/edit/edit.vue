@@ -1,12 +1,27 @@
 <template>
     <view class="w-form-wrap">
         <u--form :labelWidth="80" :model="formModel" ref="form">
-            <u-form-item label="项　　目" prop="project.shortName" borderBottom>
-                {{
-                    formModel.project.shortName
-                        ? formModel.project.shortName
-                        : ''
-                }}
+            <u-form-item
+                label="项　　目"
+                prop="project"
+                borderBottom
+                @click="showProjectPicker"
+            >
+                <u-picker
+                    :show="projectPickerVisible"
+                    :columns="[projects]"
+                    keyName="shortName"
+                    @cancel="hideProjectPicker"
+                    @confirm="hideProjectPicker"
+                ></u-picker>
+                <u--input
+                    v-model="formModel.project.shortName"
+                    disabled
+                    disabledColor="#ffffff"
+                    placeholder="请选择"
+                    border="none"
+                    suffixIcon="arrow-right"
+                ></u--input>
             </u-form-item>
             <u-form-item label="检查编码" prop="code" borderBottom>
                 {{ formModel.code ? formModel.code : '' }}
@@ -29,15 +44,15 @@
                     @afterRead="afterReadSubmitPicture()"
                     @delete="deletePicture"
                     :maxCount="6"
-                    :deletable="!isSubmitDisabled()"
-                    :disabled="isSubmitDisabled()"
+                    :deletable="isSubmitVisible()"
+                    :disabled="!isSubmitVisible()"
                 >
                 </u-upload>
             </u-form-item>
             <u-form-item label="检查描述" prop="reason" borderBottom>
                 <u--textarea
                     v-model="formModel.reason"
-                    :disabled="isSubmitDisabled()"
+                    :disabled="!isSubmitVisible()"
                 ></u--textarea>
             </u-form-item>
             <u-form-item
@@ -52,8 +67,8 @@
                     @afterRead="afterReadHandlePicture()"
                     @delete="deletePicture"
                     :maxCount="6"
-                    :deletable="!isHandleDisabled()"
-                    :disabled="isHandleDisabled()"
+                    :deletable="isHandleVisible()"
+                    :disabled="!isHandleVisible()"
                 >
                 </u-upload>
             </u-form-item>
@@ -65,14 +80,13 @@
             >
                 <u--textarea
                     v-model="formModel.result"
-                    :disabled="isHandleDisabled()"
+                    :disabled="!isHandleVisible()"
                 ></u--textarea>
             </u-form-item>
         </u--form>
         <view class="w-form-btn-content">
             <u-button
                 v-if="isSubmitVisible()"
-                :disabled="isSubmitDisabled()"
                 type="success"
                 text="安全"
                 @click="submit"
@@ -80,7 +94,6 @@
             </u-button>
             <u-button
                 v-if="isSubmitVisible()"
-                :disabled="isSubmitDisabled()"
                 type="error"
                 text="隐患"
                 @click="risk"
@@ -88,7 +101,6 @@
             </u-button>
             <u-button
                 v-if="isHandleVisible()"
-                :disabled="isHandleDisabled()"
                 type="primary"
                 text="整改"
                 @click="handle"
@@ -116,6 +128,9 @@ export default {
             submitFiles: [],
             handleFiles: [],
             rules: {
+                project: [
+                    { type: 'object', required: true, message: '请选择项目' }
+                ],
                 submitFiles: {
                     type: 'array',
                     required: true,
@@ -125,20 +140,10 @@ export default {
                     type: 'string',
                     required: true,
                     message: '请填写描述'
-                },
-                handleFiles: {
-                    type: 'array',
-                    message: '请上传整改图片',
-                    validator: (rule, value, callback) =>
-                        this.formModel.id && (!value || value.length === 0)
-                },
-                result: {
-                    type: 'string',
-                    message: '请填写整改结果',
-                    validator: (rule, value, callback) =>
-                        this.formModel.id && !value
                 }
-            }
+            },
+            projects: [],
+            projectPickerVisible: false
         };
     },
     onLoad(option) {
@@ -161,6 +166,26 @@ export default {
         this.$refs.form.setRules(this.rules);
     },
     methods: {
+        showProjectPicker() {
+            this.projectPickerVisible = true;
+        },
+        hideProjectPicker(event) {
+            if (event) {
+                this.formModel.project = this.projects[event.indexs[0]];
+            }
+            this.projectPickerVisible = false;
+        },
+        getProjects() {
+            uni.request({
+                url: '/api/ss/construction-project/find-all',
+                success: (res) => {
+                    this.projects = res.data;
+                    if (this.projects.length > 0) {
+                        this.formModel.project = this.projects[0];
+                    }
+                }
+            });
+        },
         setType() {
             this.formModel.type = this.typeArr.find(
                 (type) => (type.id = this.formModel.type.id)
@@ -184,14 +209,15 @@ export default {
                             (file) => uni.convertToFile(file)
                         );
                     }
+                    this.getProjects();
                 }
             });
         },
         isSubmitVisible() {
-            return uni.hasAnyAuthority('ss::safety_check::submit');
-        },
-        isSubmitDisabled() {
-            return this.formModel.submittedAt;
+            return (
+                uni.hasAnyAuthority('ss::safety_check::submit') &&
+                !this.formModel.submittedAt
+            );
         },
         safe() {
             this.formModel.status = this.statusArr.find(
@@ -211,7 +237,7 @@ export default {
             );
             this.$refs.form
                 .validate()
-                .then((res) => {
+                .then(() => {
                     let url = '/api/ss/safety-check/submit?';
                     if (this.submitFiles) {
                         this.submitFiles.forEach(
@@ -226,7 +252,7 @@ export default {
                             'Content-Type': 'application/json'
                         },
                         data: this.formModel,
-                        success: (res) =>
+                        success: () =>
                             uni.showModal({
                                 title: '提交成功',
                                 success: () => {
@@ -235,7 +261,7 @@ export default {
                             })
                     });
                 })
-                .catch((errors) =>
+                .catch(() =>
                     uni.showToast({
                         title: '请完成填写后提交',
                         icon: 'none'
@@ -243,47 +269,50 @@ export default {
                 );
         },
         isHandleVisible() {
-            return uni.hasAnyAuthority('ss::safety_check::handle');
-        },
-        isHandleDisabled() {
             return (
-                !this.formModel.submittedAt ||
-                this.formModel.handledAt ||
-                this.formModel.status.code === 'safe'
+                uni.hasAnyAuthority('ss::safety_check::handle') &&
+                this.formModel.submittedAt &&
+                !this.formModel.handledAt &&
+                this.formModel.status.code !== 'safe' &&
+                this.formModel.project.buManager.job.id ===
+                    uni.getUserDetails().primaryJob.id
             );
         },
         handle() {
-            this.$refs.form
-                .validate()
-                .then((res) => {
-                    let url =
-                        '/api/ss/safety-check/handle?id=' + this.formModel.id;
-                    if (this.handleFiles) {
-                        this.handleFiles.forEach(
-                            (file) => (url += '&asset.id=' + file.id)
-                        );
-                    }
-                    uni.request({
-                        url,
-                        method: 'PUT',
-                        data: {
-                            result: this.formModel.result
-                        },
-                        success: (res) =>
-                            uni.showModal({
-                                title: '整改成功',
-                                success: () => {
-                                    uni.navigateBack();
-                                }
-                            })
-                    });
-                })
-                .catch((errors) =>
-                    uni.showToast({
-                        title: '请完成填写后提交',
-                        icon: 'none'
+            if (
+                !this.formModel.handleFiles ||
+                this.formModel.handleFiles.length === 0
+            ) {
+                uni.showToast({
+                    title: '请上传整改图片',
+                    icon: 'none'
+                });
+                return;
+            }
+            if (!this.formModel.result) {
+                uni.showToast({
+                    title: '请填写整改结果',
+                    icon: 'none'
+                });
+                return;
+            }
+            uni.request({
+                url: `/api/ss/safety-check/handle?id=${this.formModel.id}`,
+                method: 'PUT',
+                data: {
+                    'asset.id': this.handleFiles
+                        .map((file) => file.id)
+                        .join(','),
+                    result: this.formModel.result
+                },
+                success: () =>
+                    uni.showModal({
+                        title: '整改成功',
+                        success: () => {
+                            uni.navigateBack();
+                        }
                     })
-                );
+            });
         },
         async afterReadSubmitPicture(event) {
             const file = JSON.parse(await uni.upload(event.file, false))[0];
@@ -310,7 +339,7 @@ export default {
                         id: this.formModel.id,
                         'asset.id': event.file.id
                     },
-                    success: (res) => {
+                    success: () => {
                         this.submitFiles.splice(event.index, 1);
                         resolve();
                     }

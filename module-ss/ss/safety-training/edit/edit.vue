@@ -1,12 +1,27 @@
 <template>
     <view class="w-form-wrap">
         <u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
-            <u-form-item label="项　　目" prop="project.shortName" borderBottom>
-                {{
-                    formModel.project.shortName
-                        ? formModel.project.shortName
-                        : ''
-                }}
+            <u-form-item
+                label="项　　目"
+                prop="project"
+                borderBottom
+                @click="showProjectPicker"
+            >
+                <u-picker
+                    :show="projectPickerVisible"
+                    :columns="[projects]"
+                    keyName="shortName"
+                    @cancel="hideProjectPicker"
+                    @confirm="hideProjectPicker"
+                ></u-picker>
+                <u--input
+                    v-model="formModel.project.shortName"
+                    disabled
+                    disabledColor="#ffffff"
+                    placeholder="请选择"
+                    border="none"
+                    suffixIcon="arrow-right"
+                ></u--input>
             </u-form-item>
             <u-form-item label="培训编码" prop="code" borderBottom>
                 {{ formModel.code ? formModel.code : '' }}
@@ -181,6 +196,9 @@ export default {
             eetTime: Number(new Date()),
             files: [],
             rules: {
+                project: [
+                    { type: 'object', required: true, message: '请选择项目' }
+                ],
                 subject: {
                     type: 'string',
                     required: true,
@@ -200,14 +218,10 @@ export default {
                     type: 'string',
                     required: true,
                     message: '请填写培训地点'
-                },
-                files: {
-                    type: 'array',
-                    message: '请上传过程图片',
-                    validator: (rule, value, callback) =>
-                        this.formModel.id && (!value || value.length === 0)
                 }
-            }
+            },
+            projects: [],
+            projectPickerVisible: false
         };
     },
     onLoad(option) {
@@ -226,6 +240,37 @@ export default {
         this.$refs.form.setRules(this.rules);
     },
     methods: {
+        showProjectPicker() {
+            this.projectPickerVisible = true;
+        },
+        hideProjectPicker(event) {
+            if (event) {
+                this.formModel.project = this.projects[event.indexs[0]];
+                this.setAddress();
+            }
+            this.projectPickerVisible = false;
+        },
+        getProjects() {
+            uni.request({
+                url: '/api/ss/construction-project/find-all',
+                success: (res) => {
+                    this.projects = res.data;
+                    if (this.projects.length > 0) {
+                        this.formModel.project = this.projects[0];
+                        this.setAddress();
+                    }
+                }
+            });
+        },
+        setAddress() {
+            if (this.formModel.project.shortName.endsWith('项目')) {
+                this.formModel.address =
+                    this.formModel.project.shortName + '部';
+            } else {
+                this.formModel.address =
+                    this.formModel.project.shortName + '项目部';
+            }
+        },
         findOne() {
             uni.request({
                 url: '/api/ss/safety-training/find-one-with-files',
@@ -250,13 +295,14 @@ export default {
                             uni.convertToFile(file)
                         );
                     }
+                    this.getProjects();
                 }
             });
         },
         save() {
             this.$refs.form
                 .validate()
-                .then((res) => {
+                .then(() => {
                     uni.request({
                         url: '/api/ss/safety-training/save',
                         method: 'POST',
@@ -264,7 +310,7 @@ export default {
                             'Content-Type': 'application/json'
                         },
                         data: this.formModel,
-                        success: (res) =>
+                        success: () =>
                             uni.showModal({
                                 title: '保存成功',
                                 success: () => {
@@ -273,17 +319,18 @@ export default {
                             })
                     });
                 })
-                .catch((errors) =>
-                    uni.showToast({
-                        title: '请完成填写后提交',
-                        icon: 'none'
-                    })
-                );
+                .catch(() => this.verificationFailed());
+        },
+        verificationFailed() {
+            uni.showToast({
+                title: '请完成填写后提交',
+                icon: 'none'
+            });
         },
         saveAndSubmit() {
             this.$refs.form
                 .validate()
-                .then((res) => {
+                .then(() => {
                     uni.request({
                         url: '/api/ss/safety-training/save-and-submit',
                         method: 'POST',
@@ -291,16 +338,10 @@ export default {
                             'Content-Type': 'application/json'
                         },
                         data: this.formModel,
-                        success: (res) =>
-                            uni.showModal({
-                                title: '提交成功',
-                                success: () => {
-                                    uni.navigateBack();
-                                }
-                            })
+                        success: () => this.afterSubmit()
                     });
                 })
-                .catch((errors) =>
+                .catch(() =>
                     uni.showToast({
                         title: '请完成填写后提交',
                         icon: 'none'
@@ -314,19 +355,21 @@ export default {
                 data: {
                     id: this.formModel.id
                 },
-                success: (res) =>
-                    uni.showModal({
-                        title: '提交成功',
-                        success: () => {
-                            uni.navigateBack();
-                        }
-                    })
+                success: () => this.afterSubmit()
+            });
+        },
+        afterSubmit() {
+            uni.showModal({
+                title: '提交成功',
+                success: () => {
+                    uni.navigateBack();
+                }
             });
         },
         start() {
             this.$refs.form
                 .validate()
-                .then((res) => {
+                .then(() => {
                     uni.showModal({
                         title: '确定开始吗?',
                         success: (res) => {
@@ -337,7 +380,7 @@ export default {
                                     data: {
                                         id: this.formModel.id
                                     },
-                                    success: (res) =>
+                                    success: () =>
                                         uni.showModal({
                                             title: '开始成功',
                                             success: () => {
@@ -349,53 +392,45 @@ export default {
                         }
                     });
                 })
-                .catch((errors) =>
-                    uni.showToast({
-                        title: '请完成填写后提交',
-                        icon: 'none'
-                    })
-                );
+                .catch(() => this.verificationFailed());
         },
         end() {
-            this.$refs.form
-                .validate()
-                .then((res) => {
-                    uni.showModal({
-                        title: '确定结束吗?',
-                        success: (res) => {
-                            if (res.confirm) {
-                                let url =
-                                    '/api/ss/safety-training/end?id=' +
-                                    this.formModel.id;
-                                if (this.files) {
-                                    this.files.forEach(
-                                        (file) => (url += '&file.id=' + file.id)
-                                    );
-                                }
-                                uni.request({
-                                    url,
-                                    method: 'PUT',
-                                    data: {
-                                        result: this.formModel.result
-                                    },
-                                    success: (res) =>
-                                        uni.showModal({
-                                            title: '结束成功',
-                                            success: () => {
-                                                uni.navigateBack();
-                                            }
-                                        })
-                                });
-                            }
+            if (!this.formModel.files || this.formModel.files.length === 0) {
+                uni.showToast({
+                    title: '请上传培训过程图片',
+                    icon: 'none'
+                });
+                return;
+            }
+            uni.showModal({
+                title: '确定结束吗?',
+                success: (res) => {
+                    if (res.confirm) {
+                        let url =
+                            '/api/ss/safety-training/end?id=' +
+                            this.formModel.id;
+                        if (this.files) {
+                            this.files.forEach(
+                                (file) => (url += '&file.id=' + file.id)
+                            );
                         }
-                    });
-                })
-                .catch((errors) =>
-                    uni.showToast({
-                        title: '请完成填写后提交',
-                        icon: 'none'
-                    })
-                );
+                        uni.request({
+                            url,
+                            method: 'PUT',
+                            data: {
+                                result: this.formModel.result
+                            },
+                            success: () =>
+                                uni.showModal({
+                                    title: '结束成功',
+                                    success: () => {
+                                        uni.navigateBack();
+                                    }
+                                })
+                        });
+                    }
+                }
+            });
         },
         isButtonVisible() {
             return uni.hasAnyRole('security_officer', 'bu_manager');
@@ -437,7 +472,7 @@ export default {
                         id: this.formModel.id,
                         'asset.id': event.file.id
                     },
-                    success: (res) => {
+                    success: () => {
                         this.submitFiles.splice(event.index, 1);
                         resolve();
                     }

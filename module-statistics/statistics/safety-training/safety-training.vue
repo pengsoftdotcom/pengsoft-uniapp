@@ -10,23 +10,13 @@
             <uni-ec-canvas class="chart" :ec="ec"> </uni-ec-canvas>
             <view class="chart" style="line-height: 60upx">
                 <view>
-                    <u--image
-                        src="/static/left-arrow.png"
-                        width="16"
-                        height="16"
-                        @click="minus"
-                    ></u--image>
+                    <u-icon name="arrow-left" @click="minus"></u-icon>
                     <view style="flex: 1; text-align: center">
                         <text v-if="current === 0">{{ day }} 日</text>
                         <text v-if="current === 1">{{ month }} 月</text>
                         <text v-if="current === 2">{{ year }} 年</text>
                     </view>
-                    <u--image
-                        src="/static/right-arrow.png"
-                        width="16"
-                        height="16"
-                        @click="plus"
-                    ></u--image>
+                    <u-icon name="arrow-right" @click="plus"></u-icon>
                 </view>
                 <view class="info">应到人数: {{ total }}</view>
                 <view class="success">实到人数: {{ participate }}</view>
@@ -108,27 +98,34 @@ export default {
     methods: {
         change(current) {
             this.current = current;
+            this.statistic();
         },
         minus() {
             if (this.current === 0 && this.day > 1) {
                 this.day--;
+                this.statistic();
             }
             if (this.current === 1 && this.month > 1) {
                 this.month--;
+                this.statistic();
             }
             if (this.current === 2) {
                 this.year--;
+                this.statistic();
             }
         },
         plus() {
             if (this.current === 0 && this.day < new Date().getDate()) {
                 this.day++;
+                this.statistic();
             }
             if (this.current === 1 && this.month < new Date().getMonth() + 1) {
                 this.month++;
+                this.statistic();
             }
             if (this.current === 2 && this.year < new Date().getFullYear()) {
                 this.year++;
+                this.statistic();
             }
         },
         getProjects() {
@@ -141,6 +138,78 @@ export default {
                         project.participate = 0;
                         project.leave = 0;
                     });
+                    this.statistic();
+                }
+            });
+        },
+        statistic() {
+            let startTime = null;
+            let endTime = null;
+            switch (this.current) {
+                case 2:
+                    startTime = this.year + '-01-01 00:00:01';
+                    endTime = this.year + 1 + '-01-01 00:00:01';
+                    break;
+                case 1:
+                    startTime =
+                        this.year +
+                        '-' +
+                        uni.format(this.month) +
+                        '-01 00:00:01';
+                    endTime =
+                        this.year +
+                        '-' +
+                        uni.format(this.month + 1) +
+                        '-01 00:00:01';
+                    break;
+                default:
+                    startTime =
+                        this.year +
+                        '-' +
+                        uni.format(this.month) +
+                        '-' +
+                        uni.format(this.day) +
+                        ' 00:00:01';
+                    endTime =
+                        this.year +
+                        '-' +
+                        uni.format(this.month) +
+                        '-' +
+                        uni.format(this.day + 1) +
+                        ' 00:00:01';
+                    break;
+            }
+            this.total = 0;
+            this.participate = 0;
+            this.leave = 0;
+            uni.request({
+                url: '/api/ss/safety-training/statistic',
+                data: {
+                    'project.id': this.listData
+                        .map((project) => project.id)
+                        .join(','),
+                    startTime,
+                    endTime
+                },
+                success: (res) => {
+                    this.listData.forEach((project) => {
+                        project.total = 0;
+                        project.participate = 0;
+                        project.leave = 0;
+                        res.data.forEach((data) => {
+                            if (data.project === project.id) {
+                                project.total = data.count;
+                                project.participate = data.participate;
+                                project.leave = data.leave;
+                            }
+                        });
+                        this.total += project.total;
+                        this.participate += project.participate;
+                        this.leave += project.leave;
+                    });
+
+                    this.ec.option.series[0].data[0].value = this.participate;
+                    this.ec.option.series[0].data[1].value = this.leave;
                 }
             });
         }

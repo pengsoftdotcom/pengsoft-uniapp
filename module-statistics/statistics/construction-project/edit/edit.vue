@@ -1,70 +1,58 @@
 <template>
-    <view>
-        <view class="w-form-wrap">
-            <u--form v-if="!loading" :model="formModel" :labelWidth="80">
-                <u-form-item label="项目编码" prop="code" borderBottom>
-                    {{ formModel.code }}
-                </u-form-item>
-                <u-form-item label="项目名称" prop="code" borderBottom>
-                    {{ formModel.name }}
-                </u-form-item>
-                <u-form-item label="项目简称" prop="code" borderBottom>
-                    {{ formModel.shortName }}
-                </u-form-item>
-            </u--form>
-            <view class="corp-tabs">
-                <u-tabs :list="tabs" @change="tabChange"></u-tabs>
+    <view class="w-form-wrap">
+        <u--form v-if="!loading" :model="formModel" :labelWidth="80">
+            <u-form-item label="项目编码" prop="code" borderBottom>
+                {{ formModel.code }}
+            </u-form-item>
+            <u-form-item label="项目名称" prop="code" borderBottom>
+                {{ formModel.name }}
+            </u-form-item>
+            <u-form-item label="项目简称" prop="code" borderBottom>
+                {{ formModel.shortName }}
+            </u-form-item>
+        </u--form>
+        <view class="corp-tabs">
+            <u-tabs :list="tabs" @change="tabChange"></u-tabs>
+        </view>
+        <view class="corp-card">
+            <view class="corp-name">
+                {{ formModel[unit].name ? formModel[unit].name : '' }}
             </view>
-            <view class="corp-card">
-                <view class="corp-name">
-                    {{ formModel[unit].name ? formModel[unit].name : '' }}
-                </view>
 
-                <view
-                    v-for="staff in staffs"
-                    :key="staff.id"
-                    class="staff-content"
-                    @click="makePhoneCall(formModel[manager].person.mobile)"
-                >
-                    <view class="staff-job">
-                        {{ staff.job.name }}
-                    </view>
-                    <view class="staff-main">
-                        <view class="staff-name">
-                            {{ staff.person.name }}
-                        </view>
-                        <view class="staff-work">
-                            <view v-if="isSafetyCheckDaysVisible(staff)">
-                                安全质量检查应检<text class="info">28</text
-                                >天，已检<text class="success">{{
-                                    staff.safetyCheckDays
-                                        ? staff.safetyCheckDays
-                                        : 0
-                                }}</text
-                                >天
-                            </view>
-                            <!--
-							<view>
-								质量检查已检<text
-									class="success">{{staff.qualityCheckDays ? staff.qualityCheckDays : 0}}</text>天
-							</view> 
-							-->
-                            <view v-if="isSafetyTrainingDaysVisible(staff)">
-                                安全教育培训已培训<text class="success">{{
-                                    staff.safetyTrainingDays
-                                        ? staff.safetyTrainingDays
-                                        : 0
-                                }}</text
-                                >天
-                            </view>
-                        </view>
-                    </view>
-                    <u-icon
-                        size="20"
-                        color="#2979ff"
-                        name="phone-fill"
-                    ></u-icon>
+            <view
+                v-for="staff in staffs"
+                :key="staff.id"
+                class="staff-content"
+                @click="makePhoneCall(formModel[manager].person.mobile)"
+            >
+                <view class="staff-job">
+                    {{ staff.job.name }}
                 </view>
+                <view class="staff-main">
+                    <view class="staff-name">
+                        {{ staff.person.name }}
+                    </view>
+                    <view class="staff-work">
+                        <view v-if="isSafetyCheckDaysVisible(staff)">
+                            安全质量检查应检<text class="info">28</text
+                            >天，已检<text class="success">{{
+                                staff.safetyCheckDays
+                                    ? staff.safetyCheckDays
+                                    : 0
+                            }}</text
+                            >天
+                        </view>
+                        <view v-if="isSafetyTrainingDaysVisible(staff)">
+                            安全教育培训已培训<text class="success">{{
+                                staff.safetyTrainingDays
+                                    ? staff.safetyTrainingDays
+                                    : 0
+                            }}</text
+                            >天
+                        </view>
+                    </view>
+                </view>
+                <u-icon size="20" color="#2979ff" name="phone-fill"></u-icon>
             </view>
         </view>
     </view>
@@ -74,6 +62,8 @@
 export default {
     data() {
         return {
+            menus: ['基本信息', '统计信息'],
+            current: 0,
             loading: true,
             tabs: [
                 {
@@ -115,6 +105,9 @@ export default {
         this.findOne();
     },
     methods: {
+        change(current) {
+            this.current = current;
+        },
         isSafetyCheckDaysVisible(staff) {
             return ['监理', '质检员', '安全员'].some(
                 (job) => staff.job.name === job

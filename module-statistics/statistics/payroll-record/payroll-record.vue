@@ -10,22 +10,12 @@
             <uni-ec-canvas class="chart" :ec="ec"> </uni-ec-canvas>
             <view class="chart" style="line-height: 60upx">
                 <view>
-                    <u--image
-                        src="/static/left-arrow.png"
-                        width="16"
-                        height="16"
-                        @click="minus"
-                    ></u--image>
+                    <u-icon name="arrow-left" @click="minus"></u-icon>
                     <view style="flex: 1; text-align: center">
                         <text v-if="current === 0">{{ month }} 月</text>
                         <text v-if="current === 1">{{ year }} 年</text>
                     </view>
-                    <u--image
-                        src="/static/right-arrow.png"
-                        width="16"
-                        height="16"
-                        @click="plus"
-                    ></u--image>
+                    <u-icon name="arrow-right" @click="plus"></u-icon>
                 </view>
                 <view class="info">发放总数: {{ paid }}</view>
                 <view class="success">已确认数: {{ confirmed }}</view>
@@ -124,20 +114,22 @@ export default {
         minus() {
             if (this.current === 0 && this.month > 1) {
                 this.month--;
+                this.getPayrollRecords();
             }
             if (this.current === 1) {
                 this.year--;
+                this.getPayrollRecords();
             }
-            this.getPayrollRecords();
         },
         plus() {
             if (this.current === 0 && this.month < new Date().getMonth() + 1) {
                 this.month++;
+                this.getPayrollRecords();
             }
             if (this.current === 1 && this.year < new Date().getFullYear()) {
                 this.year++;
+                this.getPayrollRecords();
             }
-            this.getPayrollRecords();
         },
         getProjects() {
             uni.request({
