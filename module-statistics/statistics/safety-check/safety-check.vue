@@ -69,7 +69,6 @@ export default {
             );
         },
         monthSwitch(date) {
-            console.log(date);
             const startTime = new Date();
             startTime.setFullYear(date.year);
             if (startTime.getMonth() + 1 < date.month) {
@@ -86,7 +85,7 @@ export default {
                 '-' +
                 uni.format(startTime.getMonth() + 1) +
                 '-' +
-                startTime.getDate() +
+                uni.format(startTime.getDate()) +
                 ' 23:59:59';
             this.getWarningDates();
         },

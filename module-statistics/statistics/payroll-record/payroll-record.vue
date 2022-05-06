@@ -138,6 +138,7 @@ export default {
                     this.listData = res.data;
                     this.listData.forEach((project) => {
                         project.paid = 0;
+						project.confirmed = 0;
                         project.unconfirmed = 0;
                     });
                     this.getPayrollRecords();

@@ -139,8 +139,7 @@
 			</u-button> -->
             <u-button
                 size="small"
-                v-if="isButtonVisible()"
-                :disabled="isSaveAndSubmitDisabled()"
+                v-if="isSaveAndSubmitVisible()"
                 type="primary"
                 text="提交"
                 @click="saveAndSubmit"
@@ -148,8 +147,7 @@
             </u-button>
             <u-button
                 size="small"
-                v-if="isButtonVisible()"
-                :disabled="isStartDisabled()"
+                v-if="isStartVisible()"
                 type="success"
                 text="开始"
                 @click="start"
@@ -157,8 +155,7 @@
             </u-button>
             <u-button
                 size="small"
-                v-if="isButtonVisible()"
-                :disabled="isEndDisabled()"
+                v-if="isEndVisible()"
                 type="error"
                 text="结束"
                 @click="end"
@@ -288,7 +285,6 @@ export default {
                         this.eetTime = Date.parse(
                             this.formModel.estimatedEndTime
                         );
-                        console.log(this.eetTime);
                     }
                     if (this.formModel.files) {
                         this.files = this.formModel.files.map((file) =>
@@ -432,27 +428,38 @@ export default {
                 }
             });
         },
-        isButtonVisible() {
-            return uni.hasAnyRole('security_officer', 'bu_manager');
-        },
         // isSaveDisabled() {
         // 	return this.formModel.allWorkers || this.formModel.id;
         // },
         // isSubmitDisabled() {
         // 	return !this.formModel.id || this.formModel.submittedAt;
         // },
-        isSaveAndSubmitDisabled() {
-            return !this.formModel.allWorkers || this.formModel.submittedAt;
+        isSaveAndSubmitVisible() {
+            return this.formModel.allWorkers && !this.formModel.submittedAt;
         },
-        isStartDisabled() {
-            return !this.formModel.submittedAt || this.formModel.startedAt;
+        isStartVisible() {
+            return (
+                this.formModel.trainer &&
+                this.formModel.trainer.person &&
+                this.formModel.trainer.person.id ===
+                    uni.getUserDetails().person.id &&
+                this.formModel.submittedAt &&
+                !this.formModel.startedAt
+            );
         },
-        isEndDisabled() {
-            return !this.formModel.startedAt || this.formModel.endedAt;
+        isEndVisible() {
+            return (
+                this.formModel.trainer &&
+                this.formModel.trainer.person &&
+                this.formModel.trainer.person.id ===
+                    uni.getUserDetails().person.id &&
+                this.formModel.startedAt &&
+                !this.formModel.endedAt
+            );
         },
         editParticipant() {
             uni.navigateTo({
-                url: `/ss/safety-training-participant/list/list?training.id=${this.formModel.id}`
+                url: `../../safety-training-participant/list/list?training.id=${this.formModel.id}`
             });
         },
         async afterReadPicture(event) {

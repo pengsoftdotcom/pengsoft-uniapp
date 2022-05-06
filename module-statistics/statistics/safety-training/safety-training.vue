@@ -18,7 +18,8 @@
                     </view>
                     <u-icon name="arrow-right" @click="plus"></u-icon>
                 </view>
-                <view class="info">应到人数: {{ total }}</view>
+                <view class="info">培训场次: {{ total }}</view>
+                <view class="info">应到人数: {{ participate + leave }}</view>
                 <view class="success">实到人数: {{ participate }}</view>
                 <view class="danger">未到人数: {{ leave }}</view>
             </view>
@@ -228,6 +229,7 @@ export default {
 
         > view {
             padding: 0 0 0 50upx;
+            line-height: 28px;
         }
 
         > view:first-of-type {

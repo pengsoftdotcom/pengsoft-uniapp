@@ -57,6 +57,8 @@ export default {
                             roles: [
                                 'ru_manager',
                                 'owner_manager',
+                                'su_manager',
+                                'supervision_engineer',
                                 'bu_manager',
                                 'security_officer',
                                 'worker'
@@ -117,7 +119,12 @@ export default {
                             name: '教育培训',
                             icon: 'shop-filled',
                             page: '/module-statistics/statistics/safety-training/safety-training',
-                            roles: ['ru_manager', 'owner_manager', 'bu_manager']
+                            roles: [
+                                'ru_manager',
+                                'owner_manager',
+                                'su_manager',
+                                'bu_manager'
+                            ]
                         },
                         {
                             name: '项目看板',
