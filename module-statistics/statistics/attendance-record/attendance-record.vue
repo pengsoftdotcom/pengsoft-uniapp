@@ -92,10 +92,15 @@ export default {
             ...JSON.parse(JSON.stringify(uni.listModel))
         };
     },
-    onShow() {
+    onLoad() {
         this.getProjects();
     },
     methods: {
+        makePhoneCall(mobile) {
+            uni.makePhoneCall({
+                phoneNumber: mobile
+            });
+        },
         change(current) {
             this.current = current;
             this.statistic();

@@ -1,5 +1,5 @@
 {
-    "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    "pages": [
         {
             "path": "pages/bind/bind",
             "style": {
@@ -159,13 +159,6 @@
                     "path": "statistics/construction-project/edit/edit",
                     "style": {
                         "navigationBarTitleText": "项目看板",
-                        "enablePullDownRefresh": false
-                    }
-                },
-                {
-                    "path": "statistics/cp/cp",
-                    "style": {
-                        "navigationBarTitleText": "工地看板",
                         "enablePullDownRefresh": false
                     }
                 },

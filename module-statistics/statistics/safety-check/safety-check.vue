@@ -52,7 +52,7 @@ export default {
             ...JSON.parse(JSON.stringify(uni.listModel))
         };
     },
-    onShow() {
+    onLoad() {
         this.getProjectList();
     },
     methods: {

@@ -19,7 +19,7 @@
                     <u-icon name="arrow-right" @click="plus"></u-icon>
                 </view>
                 <view class="info">培训场次: {{ total }}</view>
-                <view class="info">应到人数: {{ participate + leave }}</view>
+                <view class="warning">应到人数: {{ should_arrive }}</view>
                 <view class="success">实到人数: {{ participate }}</view>
                 <view class="danger">未到人数: {{ leave }}</view>
             </view>
@@ -35,6 +35,8 @@
                 (<text class="info">{{ project.total }} </text>)
             </view>
             <view class="number">
+                <text class="warning">{{ project.should_arrive }}</text>
+                /
                 <text class="success">{{ project.participate }}</text>
                 /
                 <text class="danger">{{ project.leave }}</text>
@@ -69,6 +71,7 @@ export default {
             month: new Date().getMonth() + 1,
             year: new Date().getFullYear(),
             total: 0,
+            should_arrive: 0,
             participate: 0,
             leave: 0,
             ec: {
@@ -93,10 +96,15 @@ export default {
             ...JSON.parse(JSON.stringify(uni.listModel))
         };
     },
-    onShow() {
+    onLoad() {
         this.getProjects();
     },
     methods: {
+        makePhoneCall(mobile) {
+            uni.makePhoneCall({
+                phoneNumber: mobile
+            });
+        },
         change(current) {
             this.current = current;
             this.statistic();
@@ -136,6 +144,7 @@ export default {
                     this.listData = res.data;
                     this.listData.forEach((project) => {
                         project.total = 0;
+                        project.should_arrive = 0;
                         project.participate = 0;
                         project.leave = 0;
                     });
@@ -181,6 +190,7 @@ export default {
                     break;
             }
             this.total = 0;
+            this.should_arrive = 0;
             this.participate = 0;
             this.leave = 0;
             uni.request({
@@ -195,16 +205,19 @@ export default {
                 success: (res) => {
                     this.listData.forEach((project) => {
                         project.total = 0;
+                        project.should_arrive = 0;
                         project.participate = 0;
                         project.leave = 0;
                         res.data.forEach((data) => {
                             if (data.project === project.id) {
                                 project.total = data.count;
+                                project.should_arrive = data.should_arrive;
                                 project.participate = data.participate;
                                 project.leave = data.leave;
                             }
                         });
                         this.total += project.total;
+                        this.should_arrive += project.should_arrive;
                         this.participate += project.participate;
                         this.leave += project.leave;
                     });
@@ -273,13 +286,8 @@ export default {
         flex: 1;
     }
     .number {
-        width: 60px;
+        width: 80px;
         text-align: center;
-    }
-    .cashier {
-        width: 65px;
-        display: flex;
-        justify-content: center;
     }
     .manager {
         width: 65px;

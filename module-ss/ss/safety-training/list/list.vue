@@ -130,7 +130,7 @@ export default {
                             ? res.data.content
                             : this.listData.concat(res.data.content);
                 },
-                fail: (data, code) => {
+                fail: (data) => {
                     console.log('fail' + JSON.stringify(data));
                 }
             });

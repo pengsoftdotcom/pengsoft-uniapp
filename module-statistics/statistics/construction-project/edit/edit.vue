@@ -1,13 +1,13 @@
 <template>
     <view class="w-form-wrap">
         <u--form v-if="!loading" :model="formModel" :labelWidth="80">
-            <u-form-item label="项目编码" prop="code" borderBottom>
+            <u-form-item label="项目编码" prop="code">
                 {{ formModel.code }}
             </u-form-item>
-            <u-form-item label="项目名称" prop="code" borderBottom>
+            <u-form-item label="项目名称" prop="code">
                 {{ formModel.name }}
             </u-form-item>
-            <u-form-item label="项目简称" prop="code" borderBottom>
+            <u-form-item label="项目简称" prop="code">
                 {{ formModel.shortName }}
             </u-form-item>
         </u--form>
@@ -23,11 +23,9 @@
                 v-for="staff in staffs"
                 :key="staff.id"
                 class="staff-content"
-                @click="makePhoneCall(formModel[manager].person.mobile)"
+                @click="makePhoneCall(staff.person.mobile)"
             >
-                <view class="staff-job">
-                    {{ staff.job.name }}
-                </view>
+                <view class="staff-job"> {{ staff.job.name }} </view>
                 <view class="staff-main">
                     <view class="staff-name">
                         {{ staff.person.name }}
@@ -100,8 +98,6 @@ export default {
         if (option.id) {
             this.formModel.id = option.id;
         }
-    },
-    onShow() {
         this.findOne();
     },
     methods: {
@@ -211,26 +207,6 @@ export default {
                     }
                 });
             }
-            // uni.request({
-            // 	url: '/api/ss/quality-check/statistic-by-checker',
-            // 	data: {
-            // 		'project.id': this.formModel.id,
-            // 		'checker.id': this.staffs.map(staff => staff.id).join(','),
-            // 		startTime,
-            // 		endTime
-            // 	},
-            // 	success: res => {
-            // 		this.staffs.forEach(staff => {
-            // 			const data = res.data.find(item => staff.id === item.checker);
-            // 			if (data) {
-            // 				staff.qualityCheckDays = data.count;
-            // 			} else {
-            // 				staff.qualityCheckDays = 0;
-            // 			}
-            // 		});
-            // 		this.timestamp = new Date().getTime();
-            // 	}
-            // });
             const trainerIds = this.staffs
                 .filter((staff) => this.isSafetyTrainingDaysVisible(staff))
                 .map((staff) => staff.id)
@@ -259,8 +235,7 @@ export default {
                     }
                 });
             }
-        },
-        statistics() {}
+        }
     }
 };
 </script>
