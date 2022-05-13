@@ -126,7 +126,7 @@ uni.listModel = {
 	status: 'more',
 	pageData: {
 		page: 0,
-		size: 10
+		size: 20
 	},
 	listData: [],
 	filterData: {

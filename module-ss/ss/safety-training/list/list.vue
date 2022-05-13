@@ -87,7 +87,7 @@ export default {
     },
     methods: {
         isCreateVisible() {
-            return uni.hasAnyAuthority('ss::safety_training::save_and_submit');
+            return uni.hasAnyAuthority('ss::safety_training::submit');
         },
         getStatusCode(item) {
             if (item.endedAt) {

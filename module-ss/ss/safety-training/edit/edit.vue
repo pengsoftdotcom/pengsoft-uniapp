@@ -1,10 +1,9 @@
 <template>
     <view class="w-form-wrap">
-        <u--form :labelWidth="80" :model="formModel" :rules="rules" ref="form">
+        <u--form :labelWidth="75" :model="formModel" :rules="rules" ref="form">
             <u-form-item
                 label="项　　目"
                 prop="project"
-                borderBottom
                 @click="showProjectPicker"
             >
                 <u-picker
@@ -23,19 +22,19 @@
                     suffixIcon="arrow-right"
                 ></u--input>
             </u-form-item>
-            <u-form-item label="培训编码" prop="code" borderBottom>
+            <u-form-item label="培训编码" prop="code">
                 {{ formModel.code ? formModel.code : '' }}
             </u-form-item>
-            <u-form-item label="培训主题" prop="subject" borderBottom>
+            <u-form-item label="培训主题" prop="subject">
                 <u--input
                     v-model="formModel.subject"
                     border="surround"
                 ></u--input>
             </u-form-item>
             <u-form-item
-                label="培 训 人"
+                label="培训人"
                 prop="trainer.person.name"
-                borderBottom
+                customStyle="letter-spacing: 0.5rem"
             >
                 {{
                     formModel.trainer.person.name
@@ -43,16 +42,31 @@
                         : ''
                 }}
             </u-form-item>
-            <u-form-item label="全员参加" prop="allWorkers" borderBottom>
-                <u-switch
-                    v-model="formModel.allWorkers"
-                    :disabled="true"
-                ></u-switch>
+            <u-form-item
+                label="参与人"
+                prop="participants"
+                customStyle="letter-spacing: 0.5rem"
+                @click="editParticipant"
+            >
+                <text class="info" style="letter-spacing: normal">
+                    已选择
+                    <text
+                        v-if="formModel.participantSize === 0"
+                        class="danger"
+                        style="margin: 0 5px"
+                    >
+                        0
+                    </text>
+                    <text v-else class="success" style="margin: 0 5px">
+                        {{ formModel.participantSize }}
+                    </text>
+                    人
+                </text>
+                <u-icon slot="right" name="arrow-right"></u-icon>
             </u-form-item>
             <u-form-item
                 label="预计开始"
                 prop="estimatedStartTime"
-                borderBottom
                 @click="estShow = !formModel.submittedAt"
             >
                 <u--input
@@ -67,7 +81,6 @@
             <u-form-item
                 label="预计结束"
                 prop="estimatedEndTime"
-                borderBottom
                 @click="eetShow = !formModel.submittedAt"
             >
                 <u--input
@@ -79,14 +92,13 @@
                     suffixIcon="calendar-fill"
                 ></u--input>
             </u-form-item>
-            <u-form-item label="培训地址" prop="address" borderBottom>
+            <u-form-item label="培训地址" prop="address">
                 <u--textarea v-model="formModel.address"></u--textarea>
             </u-form-item>
             <u-form-item
                 v-if="formModel.startedAt"
                 label="过程图片"
                 prop="files"
-                borderBottom
             >
                 <u-upload
                     :capture="['camera']"
@@ -122,45 +134,25 @@
         >
         </u-datetime-picker>
 
-        <u-button
-            v-if="formModel.createdAt"
-            size="small"
-            type="primary"
-            text="参与人"
-            @click="editParticipant"
-        >
-        </u-button>
         <view class="w-form-btn-content">
-            <!-- <u-button size="small" v-if="isButtonVisible('save')" :disabled="isSaveDisabled()" type="primary" text="保存"
-				@click="save">
-			</u-button>
-			<u-button size="small" v-if="isButtonVisible('submit')" :disabled="isSubmitDisabled()" type="primary"
-				text="提交" @click="saveAndSubmit">
-			</u-button> -->
             <u-button
-                size="small"
-                v-if="isSaveAndSubmitVisible()"
+                v-if="isSubmitVisible()"
                 type="primary"
                 text="提交"
-                @click="saveAndSubmit"
-            >
-            </u-button>
+                @click="submit"
+            />
             <u-button
-                size="small"
                 v-if="isStartVisible()"
                 type="success"
                 text="开始"
                 @click="start"
-            >
-            </u-button>
+            />
             <u-button
-                size="small"
                 v-if="isEndVisible()"
                 type="error"
                 text="结束"
                 @click="end"
-            >
-            </u-button>
+            />
         </view>
     </view>
 </template>
@@ -181,11 +173,12 @@ export default {
                 code: '',
                 subject: '',
                 trainer: null,
-                allWorkers: true,
                 estimatedStartTime: '',
                 estimatedEndTime: '',
                 address: '',
-                files: []
+                files: [],
+                departments: [],
+                staffs: []
             },
             estShow: false,
             eetShow: false,
@@ -295,62 +288,32 @@ export default {
                 }
             });
         },
-        save() {
-            this.$refs.form
-                .validate()
-                .then(() => {
-                    uni.request({
-                        url: '/api/ss/safety-training/save',
-                        method: 'POST',
-                        header: {
-                            'Content-Type': 'application/json'
-                        },
-                        data: this.formModel,
-                        success: () =>
-                            uni.showModal({
-                                title: '保存成功',
-                                success: () => {
-                                    uni.navigateBack();
-                                }
-                            })
-                    });
-                })
-                .catch(() => this.verificationFailed());
-        },
         verificationFailed() {
             uni.showToast({
                 title: '请完成填写后提交',
                 icon: 'none'
             });
         },
-        saveAndSubmit() {
-            this.$refs.form
-                .validate()
-                .then(() => {
-                    uni.request({
-                        url: '/api/ss/safety-training/save-and-submit',
-                        method: 'POST',
-                        header: {
-                            'Content-Type': 'application/json'
-                        },
-                        data: this.formModel,
-                        success: () => this.afterSubmit()
-                    });
-                })
-                .catch(() =>
-                    uni.showToast({
-                        title: '请完成填写后提交',
-                        icon: 'none'
-                    })
-                );
-        },
         submit() {
+            let url = '/api/ss/safety-training/submit';
+            url += '?department.id=';
+            if (
+                this.formModel.departments &&
+                this.formModel.departments.length > 0
+            ) {
+                url += this.formModel.departments.join(',');
+            }
+            url += '&staff.id=';
+            if (this.formModel.staffs && this.formModel.staffs.length > 0) {
+                url += this.formModel.staffs.join(',');
+            }
             uni.request({
-                url: '/api/ss/safety-training/submit',
-                method: 'PUT',
-                data: {
-                    id: this.formModel.id
+                url,
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
                 },
+                data: this.formModel,
                 success: () => this.afterSubmit()
             });
         },
@@ -428,14 +391,8 @@ export default {
                 }
             });
         },
-        // isSaveDisabled() {
-        // 	return this.formModel.allWorkers || this.formModel.id;
-        // },
-        // isSubmitDisabled() {
-        // 	return !this.formModel.id || this.formModel.submittedAt;
-        // },
-        isSaveAndSubmitVisible() {
-            return this.formModel.allWorkers && !this.formModel.submittedAt;
+        isSubmitVisible() {
+            return !this.formModel.submittedAt;
         },
         isStartVisible() {
             return (
@@ -458,8 +415,18 @@ export default {
             );
         },
         editParticipant() {
+            let url = `../../safety-training-participant/list/list?training.id=${this.formModel.id}&type=${this.type}`;
+            if (
+                this.formModel.departments &&
+                this.formModel.departments.length > 0
+            ) {
+                url += `&departments=${this.formModel.departments.join(',')}`;
+            }
+            if (this.formModel.staffs && this.formModel.staffs.length > 0) {
+                url += `&staffs=${this.formModel.staffs.join(',')}`;
+            }
             uni.navigateTo({
-                url: `../../safety-training-participant/list/list?training.id=${this.formModel.id}`
+                url
             });
         },
         async afterReadPicture(event) {
@@ -499,6 +466,11 @@ export default {
                 e.value,
                 'yyyy-mm-dd hh:MM:ss'
             );
+        },
+        selectWorkers(params) {
+            this.formModel.participantSize = params.selected;
+            this.formModel.departments = params.departments;
+            this.formModel.staffs = params.staffs;
         }
     }
 };
