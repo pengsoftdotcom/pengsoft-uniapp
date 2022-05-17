@@ -126,6 +126,7 @@ export default {
                     this.unconfirmed = 0;
                     this.listData.forEach((project) => {
                         project.total = 0;
+                        project.not_uploaded = 0;
                         project.confirmed = 0;
                         project.unconfirmed = 0;
                         res.data.forEach((data) => {

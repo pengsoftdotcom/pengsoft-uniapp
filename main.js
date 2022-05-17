@@ -77,10 +77,19 @@ uni.getDictionaryItem = (code, callback) => {
 	})
 };
 
-uni.upload = (file, locked) => {
+uni.upload = (file, locked, zoomed, width, height) => {
+	if (zoomed === undefined) {
+		zoomed = true;
+	}
+	if (!width) {
+		width = 1200;
+	}
+	if (!height) {
+		height = 1200;
+	}
 	uni.showLoading();
 	return new Promise((resolve, reject) => uni.uploadFile({
-		url: URL_PREFIX + `/api/system/asset/upload?locked=${locked}`,
+		url: URL_PREFIX + `/api/system/asset/upload?locked=${locked}&${zoomed}&width=${width}&height=${height}`,
 		header: {
 			'Authorization': uni.getAccessToken()
 		},
@@ -92,9 +101,18 @@ uni.upload = (file, locked) => {
 	}))
 };
 
-uni.download = file => {
+uni.download = (file, zoomed, width, height) => {
+	if (zoomed === undefined) {
+		zoomed = false;
+	}
+	if (!width) {
+		width = 1200;
+	}
+	if (!height) {
+		height = 1200;
+	}
 	return new Promise((resolve) => uni.request({
-		url: `/api/system/asset/download?id=${file.id}`,
+		url: `/api/system/asset/download?id=${file.id}&zoomed=${zoomed}&width=${width}&height=${height}`,
 		success: res => resolve(res.data)
 	}))
 };

@@ -2,29 +2,42 @@
     <view>
         <view class="w-form-wrap">
             <u--form :labelWidth="80" :model="formModel" ref="form">
-                <u-form-item label="乙方" prop="partyB" borderBottom>
+                <u-form-item label="乙方" prop="partyB">
                     {{ formModel.partyB.name ? formModel.partyB.name : '' }}
                 </u-form-item>
-                <u-form-item label="合同图片" prop="pictures" borderBottom>
+                <u-form-item label="合同图片" prop="pictures">
                     <u-upload
-                        :capture="['camera']"
+                        :capture="['camera', 'album']"
                         :fileList="pictures"
                         @afterRead="afterReadPicture()"
                         @delete="deletePicture"
                         :maxCount="6"
-                        :deletable="!isDisabled()"
-                        :disabled="isDisabled()"
+                        :disabled="!isSaveVisible()"
                     >
                     </u-upload>
                 </u-form-item>
-                <u-form-item label="确认时间" prop="finishedAt" borderBottom>
+                <u-form-item
+                    v-if="isSaveVisible()"
+                    label="确认图片"
+                    prop="confirmPictures"
+                >
+                    <u-upload
+                        :capture="['camera', 'album']"
+                        :fileList="confirmPictures"
+                        @afterRead="afterReadConfirmPicture()"
+                        @delete="deleteConfirmPicture"
+                        :maxCount="6"
+                        :disabled="!isSaveVisible()"
+                    >
+                    </u-upload>
+                </u-form-item>
+                <u-form-item label="确认时间" prop="finishedAt">
                     {{ formModel.confirmedAt ? formModel.confirmedAt : '' }}
                 </u-form-item>
             </u--form>
             <view class="w-form-btn-content">
                 <u-button
                     v-if="isSaveVisible()"
-                    :disabled="isSaveDisabled()"
                     type="primary"
                     text="保存"
                     @click="save"
@@ -32,7 +45,6 @@
                 </u-button>
                 <u-button
                     v-if="isConfirmVisible()"
-                    :disabled="isConfirmDisabled()"
                     type="primary"
                     text="确认"
                     @click="confirm()"
@@ -60,6 +72,7 @@ export default {
             typeArr: [],
             statusArray: [],
             pictures: [],
+            confirmPictures: [],
             rules: {
                 pictures: {
                     type: 'array',
@@ -92,9 +105,6 @@ export default {
         this.$refs.form.setRules(this.rules);
     },
     methods: {
-        isDisabled() {
-            return uni.hasAnyRole('worker') || this.formModel.confirmedAt;
-        },
         findOne() {
             let operation = 'find-one-with-party';
             if (uni.hasAnyRole('worker')) {
@@ -113,25 +123,35 @@ export default {
                             uni.convertToFile(file)
                         );
                     }
+                    if (this.formModel.confirmPictures) {
+                        this.confirmPictures =
+                            this.formModel.confirmPictures.map((file) =>
+                                uni.convertToFile(file)
+                            );
+                    }
                 }
             });
         },
         isSaveVisible() {
             return uni.hasAnyAuthority('oa::contract::save');
         },
-        isSaveDisabled() {
-            return this.formModel.confirmedAt;
-        },
         save() {
             this.$refs.form
                 .validate()
                 .then(() => {
-                    let url = '/api/oa/contract/save-with-pictures?';
-                    if (this.pictures) {
-                        this.pictures.forEach(
-                            (file) => (url += 'picture.id=' + file.id + '&')
-                        );
-                        url = url.substring(0, url.length - 1);
+                    let url = '/api/oa/contract/save-with-pictures';
+                    url += '?picture.id=';
+                    if (this.pictures && this.pictures.length > 0) {
+                        url += this.pictures.map((file) => file.id).join(',');
+                    }
+                    url += '&confirmPicture.id=';
+                    if (
+                        this.confirmPictures &&
+                        this.confirmPictures.length > 0
+                    ) {
+                        url += this.confirmPictures
+                            .map((file) => file.id)
+                            .join(',');
                     }
                     uni.request({
                         url,
@@ -153,9 +173,6 @@ export default {
         },
         isConfirmVisible() {
             return uni.hasAnyRole('worker');
-        },
-        isConfirmDisabled() {
-            return this.pictures.length < 1 || this.formModel.confirmedAt;
         },
         confirm() {
             let operation = 'confirm';
@@ -208,6 +225,33 @@ export default {
                     },
                     success: () => {
                         this.pictures.splice(event.index, 1);
+                        resolve();
+                    }
+                });
+            });
+        },
+        async afterReadConfirmPicture(event) {
+            const file = JSON.parse(await uni.upload(event.file, true))[0];
+            if (!this.formModel.confirmPictures) {
+                this.formModel.confirmPictures = [];
+            }
+            this.formModel.confirmPictures.push(file);
+            if (file.locked) {
+                file.accessPath = await uni.download(file);
+            }
+            this.confirmPictures.push(uni.convertToFile(file));
+        },
+        deleteConfirmPicture(event) {
+            return new Promise((resolve) => {
+                uni.request({
+                    url: '/api/oa/contract/delete-confirm-picture-by-asset',
+                    method: 'DELETE',
+                    data: {
+                        id: this.formModel.id,
+                        'asset.id': event.file.id
+                    },
+                    success: () => {
+                        this.confirmPictures.splice(event.index, 1);
                         resolve();
                     }
                 });

@@ -106,6 +106,20 @@
                 @click="handle"
             >
             </u-button>
+            <u-button
+                v-if="isRemoveVisible()"
+                type="error"
+                text="删除"
+                @click="remove"
+            >
+            </u-button>
+            <u-button
+                v-if="isReduceVisible()"
+                type="error"
+                text="还原"
+                @click="reduce"
+            >
+            </u-button>
         </view>
     </view>
 </template>
@@ -312,6 +326,62 @@ export default {
                             uni.navigateBack();
                         }
                     })
+            });
+        },
+        isRemoveVisible() {
+            return (
+                uni.hasAnyAuthority('ss::safety_check::delete') &&
+                this.formModel.id &&
+                !this.formModel.handledAt &&
+                this.formModel.checker &&
+                this.formModel.checker.person.id ===
+                    uni.getUserDetails().person.id
+            );
+        },
+        remove() {
+            uni.showModal({
+                title: '删除后数据不可恢复，确定继续吗？',
+                success: (res) => {
+                    if (res.confirm) {
+                        uni.request({
+                            url: `/api/ss/safety-check/delete?id=${this.formModel.id}`,
+                            method: 'DELETE',
+                            success: () =>
+                                uni.showModal({
+                                    title: '删除成功',
+                                    success: () => {
+                                        uni.navigateBack();
+                                    }
+                                })
+                        });
+                    }
+                }
+            });
+        },
+        isReduceVisible() {
+            return (
+                uni.hasAnyAuthority('ss::safety_check::reduce') &&
+                this.formModel.handledAt
+            );
+        },
+        reduce() {
+            uni.showModal({
+                title: '还原后会回到整改前的状态且不可恢复，确定继续吗？',
+                success: (res) => {
+                    if (res.confirm) {
+                        uni.request({
+                            url: `/api/ss/safety-check/reduce?id=${this.formModel.id}`,
+                            method: 'PUT',
+                            success: () =>
+                                uni.showModal({
+                                    title: '还原成功',
+                                    success: () => {
+                                        uni.navigateBack();
+                                    }
+                                })
+                        });
+                    }
+                }
             });
         },
         async afterReadSubmitPicture(event) {

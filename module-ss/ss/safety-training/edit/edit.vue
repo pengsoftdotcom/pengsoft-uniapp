@@ -111,6 +111,22 @@
                 >
                 </u-upload>
             </u-form-item>
+            <u-form-item
+                v-if="formModel.startedAt"
+                label="签到图片"
+                prop="confirmFiles"
+            >
+                <u-upload
+                    :capture="['camera']"
+                    :fileList="confirmFiles"
+                    @afterRead="afterReadConfirmPicture()"
+                    @delete="deleteConfirmPicture"
+                    :maxCount="6"
+                    :deletable="!formModel.endedAt"
+                    :disabled="formModel.endedAt"
+                >
+                </u-upload>
+            </u-form-item>
         </u--form>
 
         <u-datetime-picker
@@ -185,6 +201,7 @@ export default {
             estTime: Number(new Date()),
             eetTime: Number(new Date()),
             files: [],
+            confirmFiles: [],
             rules: {
                 project: [
                     { type: 'object', required: true, message: '请选择项目' }
@@ -284,6 +301,11 @@ export default {
                             uni.convertToFile(file)
                         );
                     }
+                    if (this.formModel.confirmFiles) {
+                        this.confirmFiles = this.formModel.confirmFiles.map(
+                            (file) => uni.convertToFile(file)
+                        );
+                    }
                     this.getProjects();
                 }
             });
@@ -361,17 +383,29 @@ export default {
                 });
                 return;
             }
+            const title =
+                (!this.formModel.confirmFiles ||
+                this.formModel.confirmFiles.length === 0
+                    ? '签到图片未上传，'
+                    : '') + '确定结束吗?';
             uni.showModal({
-                title: '确定结束吗?',
+                title,
                 success: (res) => {
                     if (res.confirm) {
                         let url =
                             '/api/ss/safety-training/end?id=' +
                             this.formModel.id;
                         if (this.files) {
-                            this.files.forEach(
-                                (file) => (url += '&file.id=' + file.id)
-                            );
+                            url +=
+                                '&file.id=' +
+                                this.files.map((file) => file.id).join(',');
+                        }
+                        if (this.confirmFiles) {
+                            url +=
+                                '&confirmFile.id=' +
+                                this.confirmFiles
+                                    .map((file) => file.id)
+                                    .join(',');
                         }
                         uni.request({
                             url,
@@ -447,7 +481,31 @@ export default {
                         'asset.id': event.file.id
                     },
                     success: () => {
-                        this.submitFiles.splice(event.index, 1);
+                        this.files.splice(event.index, 1);
+                        resolve();
+                    }
+                });
+            });
+        },
+        async afterReadConfirmPicture(event) {
+            const file = JSON.parse(await uni.upload(event.file, false))[0];
+            if (!this.formModel.confirmFiles) {
+                this.formModel.confirmFiles = [];
+            }
+            this.formModel.confirmFiles.push(file);
+            this.confirmFiles.push(uni.convertToFile(file));
+        },
+        deleteConfirmPicture(event) {
+            return new Promise((resolve) => {
+                uni.request({
+                    url: '/api/ss/safety-training/delete-confirm-file-by-asset',
+                    method: 'DELETE',
+                    data: {
+                        id: this.formModel.id,
+                        'asset.id': event.file.id
+                    },
+                    success: () => {
+                        this.confirmFiles.splice(event.index, 1);
                         resolve();
                     }
                 });
