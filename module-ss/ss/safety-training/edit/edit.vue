@@ -105,7 +105,6 @@
                     :fileList="files"
                     @afterRead="afterReadPicture()"
                     @delete="deletePicture"
-                    :maxCount="6"
                     :deletable="!formModel.endedAt"
                     :disabled="formModel.endedAt"
                 >
@@ -121,7 +120,6 @@
                     :fileList="confirmFiles"
                     @afterRead="afterReadConfirmPicture()"
                     @delete="deleteConfirmPicture"
-                    :maxCount="6"
                     :deletable="!formModel.endedAt"
                     :disabled="formModel.endedAt"
                 >
@@ -464,12 +462,10 @@ export default {
             });
         },
         async afterReadPicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, false))[0];
             if (!this.formModel.files) {
                 this.formModel.files = [];
             }
-            this.formModel.files.push(file);
-            this.files.push(uni.convertToFile(file));
+            uni.afterReadFile(event, false, this.formModel.files, this.files);
         },
         deletePicture(event) {
             return new Promise((resolve) => {
@@ -488,12 +484,15 @@ export default {
             });
         },
         async afterReadConfirmPicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, false))[0];
             if (!this.formModel.confirmFiles) {
                 this.formModel.confirmFiles = [];
             }
-            this.formModel.confirmFiles.push(file);
-            this.confirmFiles.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                false,
+                this.formModel.confirmFiles,
+                this.confirmFiles
+            );
         },
         deleteConfirmPicture(event) {
             return new Promise((resolve) => {

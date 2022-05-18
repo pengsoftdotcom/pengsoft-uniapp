@@ -11,7 +11,6 @@
                         :fileList="pictures"
                         @afterRead="afterReadPicture()"
                         @delete="deletePicture"
-                        :maxCount="6"
                         :disabled="!isSaveVisible()"
                     >
                     </u-upload>
@@ -26,7 +25,6 @@
                         :fileList="confirmPictures"
                         @afterRead="afterReadConfirmPicture()"
                         @delete="deleteConfirmPicture"
-                        :maxCount="6"
                         :disabled="!isSaveVisible()"
                     >
                     </u-upload>
@@ -204,15 +202,15 @@ export default {
             });
         },
         async afterReadPicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, true))[0];
             if (!this.formModel.pictures) {
                 this.formModel.pictures = [];
             }
-            this.formModel.pictures.push(file);
-            if (file.locked) {
-                file.accessPath = await uni.download(file);
-            }
-            this.pictures.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                true,
+                this.formModel.pictures,
+                this.pictures
+            );
         },
         deletePicture(event) {
             return new Promise((resolve) => {
@@ -231,15 +229,15 @@ export default {
             });
         },
         async afterReadConfirmPicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, true))[0];
             if (!this.formModel.confirmPictures) {
                 this.formModel.confirmPictures = [];
             }
-            this.formModel.confirmPictures.push(file);
-            if (file.locked) {
-                file.accessPath = await uni.download(file);
-            }
-            this.confirmPictures.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                true,
+                this.formModel.confirmPictures,
+                this.confirmPictures
+            );
         },
         deleteConfirmPicture(event) {
             return new Promise((resolve) => {

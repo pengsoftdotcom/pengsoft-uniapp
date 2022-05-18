@@ -43,7 +43,6 @@
                     :fileList="submitFiles"
                     @afterRead="afterReadSubmitPicture()"
                     @delete="deletePicture"
-                    :maxCount="6"
                     :deletable="isSubmitVisible()"
                     :disabled="!isSubmitVisible()"
                 >
@@ -66,7 +65,6 @@
                     :fileList="handleFiles"
                     @afterRead="afterReadHandlePicture()"
                     @delete="deletePicture"
-                    :maxCount="6"
                     :deletable="isHandleVisible()"
                     :disabled="!isHandleVisible()"
                 >
@@ -385,20 +383,26 @@ export default {
             });
         },
         async afterReadSubmitPicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, false))[0];
             if (!this.formModel.submitFiles) {
                 this.formModel.submitFiles = [];
             }
-            this.formModel.submitFiles.push(file);
-            this.submitFiles.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                false,
+                this.formModel.submitFiles,
+                this.submitFiles
+            );
         },
         async afterReadHandlePicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, false))[0];
             if (!this.formModel.handleFiles) {
                 this.formModel.handleFiles = [];
             }
-            this.formModel.handleFiles.push(file);
-            this.handleFiles.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                false,
+                this.formModel.handleFiles,
+                this.handleFiles
+            );
         },
         deletePicture(event) {
             return new Promise((resolve) => {

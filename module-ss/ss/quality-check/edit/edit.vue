@@ -28,7 +28,6 @@
                     :fileList="submitFiles"
                     @afterRead="afterReadSubmitPicture()"
                     @delete="deletePicture"
-                    :maxCount="6"
                     :deletable="!isSubmitDisabled()"
                     :disabled="isSubmitDisabled()"
                 >
@@ -51,7 +50,6 @@
                     :fileList="handleFiles"
                     @afterRead="afterReadHandlePicture()"
                     @delete="deletePicture"
-                    :maxCount="6"
                     :deletable="!isHandleDisabled()"
                     :disabled="isHandleDisabled()"
                 >
@@ -199,7 +197,7 @@ export default {
             );
             this.$refs.form
                 .validate()
-                .then((res) => {
+                .then(() => {
                     let url = '/api/ss/quality-check/submit?';
                     if (this.submitFiles) {
                         this.submitFiles.forEach(
@@ -214,7 +212,7 @@ export default {
                             'Content-Type': 'application/json'
                         },
                         data: this.formModel,
-                        success: (res) =>
+                        success: () =>
                             uni.showModal({
                                 title: '提交成功',
                                 success: () => {
@@ -223,7 +221,7 @@ export default {
                             })
                     });
                 })
-                .catch((errors) =>
+                .catch(() =>
                     uni.showToast({
                         title: '请完成填写后提交',
                         icon: 'none'
@@ -267,7 +265,7 @@ export default {
                         .join(','),
                     result: this.formModel.result
                 },
-                success: (res) =>
+                success: () =>
                     uni.showModal({
                         title: '整改成功',
                         success: () => {
@@ -277,20 +275,26 @@ export default {
             });
         },
         async afterReadSubmitPicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, false))[0];
             if (!this.formModel.submitFiles) {
                 this.formModel.submitFiles = [];
             }
-            this.formModel.submitFiles.push(file);
-            this.submitFiles.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                false,
+                this.formModel.submitFiles,
+                this.submitFiles
+            );
         },
         async afterReadHandlePicture(event) {
-            const file = JSON.parse(await uni.upload(event.file, false))[0];
             if (!this.formModel.handleFiles) {
                 this.formModel.handleFiles = [];
             }
-            this.formModel.handleFiles.push(file);
-            this.handleFiles.push(uni.convertToFile(file));
+            uni.afterReadFile(
+                event,
+                false,
+                this.formModel.handleFiles,
+                this.handleFiles
+            );
         },
         deletePicture(event) {
             return new Promise((resolve) => {
@@ -301,7 +305,7 @@ export default {
                         id: this.formModel.id,
                         'asset.id': event.file.id
                     },
-                    success: (res) => {
+                    success: () => {
                         this.submitFiles.splice(event.index, 1);
                         resolve();
                     }

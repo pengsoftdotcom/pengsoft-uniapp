@@ -13,7 +13,7 @@ const startDay = new Date();
 const endDay = new Date();
 endDay.setDate(endDay.getDate() + 1);
 
-uni.format = (number) =>{
+uni.format = (number) => {
 	if (number < 10) {
 		return '0' + number;
 	} else {
@@ -21,13 +21,17 @@ uni.format = (number) =>{
 	}
 }
 
-uni.atStartOfToday = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay.getDate()) + ' 00:00:01'
+uni.atStartOfToday = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(
+	startDay.getDate()) + ' 00:00:01'
 
-uni.atEndOfToday = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay.getDate()) + ' 23:59:59'
+uni.atEndOfToday = () => startDay.getFullYear() + '-' + uni.format(startDay.getMonth() + 1) + '-' + uni.format(startDay
+	.getDate()) + ' 23:59:59'
 
-uni.atStartOfTomorrow = () => endDay.getFullYear() + '-' + uni.format(endDay.getMonth() + 1) + '-' + uni.format(endDay.getDate()) + ' 00:00:01'
+uni.atStartOfTomorrow = () => endDay.getFullYear() + '-' + uni.format(endDay.getMonth() + 1) + '-' + uni.format(endDay
+	.getDate()) + ' 00:00:01'
 
-uni.atStartOfCurrentMonth = () => startMonth.getFullYear() + '-' + uni.format(startMonth.getMonth() + 1) + '-01 00:00:01'
+uni.atStartOfCurrentMonth = () => startMonth.getFullYear() + '-' + uni.format(startMonth.getMonth() + 1) +
+	'-01 00:00:01'
 
 uni.atStartOfNextMonth = () => endMonth.getFullYear() + '-' + uni.format(endMonth.getMonth() + 1) + '-01 00:00:01'
 
@@ -89,16 +93,31 @@ uni.upload = (file, locked, zoomed, width, height) => {
 	}
 	uni.showLoading();
 	return new Promise((resolve, reject) => uni.uploadFile({
-		url: URL_PREFIX + `/api/system/asset/upload?locked=${locked}&${zoomed}&width=${width}&height=${height}`,
+		url: URL_PREFIX +
+			`/api/system/asset/upload?locked=${locked}&${zoomed}&width=${width}&height=${height}`,
 		header: {
 			'Authorization': uni.getAccessToken()
 		},
 		filePath: file.url,
 		name: 'file',
-		success: res => resolve(res.data),
+		success: res => resolve(res),
 		fail: res => reject(res),
 		complete: () => uni.hideLoading()
 	}))
+};
+
+uni.afterReadFile = async (event, locked, formFileList, fileList) => {
+	const res = await uni.upload(event.file, locked);
+	if (res.statusCode === 200) {
+		const file = JSON.parse(res.data)[0];
+		formFileList.push(file);
+		if (file.locked) {
+			file.accessPath = await uni.download(file);
+		}
+		fileList.push(uni.convertToFile(file));
+	} else {
+		uni.failure(res);
+	}
 };
 
 uni.download = (file, zoomed, width, height) => {
@@ -174,7 +193,7 @@ uni.addInterceptor('request', {
 		const success = args.success;
 		args.success = (res) => {
 			if (res.statusCode !== 200) {
-				failure(res);
+				uni.failure(res);
 			} else {
 				if (success) {
 					success(res);
@@ -183,14 +202,14 @@ uni.addInterceptor('request', {
 		};
 	},
 	fail(args) {
-		failure(args);
+		uni.failure(args);
 	},
 	complete() {
 		uni.hideLoading();
 	}
 });
 
-const failure = (args) => {
+uni.failure = (args) => {
 	switch (args.statusCode) {
 		case 401:
 			uni.showModal({
@@ -218,6 +237,9 @@ const failure = (args) => {
 			break;
 		default:
 			if (args.data) {
+				if (typeof args.data === 'string') {
+					args.data = JSON.parse(args.data);
+				}
 				uni.showModal({
 					title: '提示',
 					content: args.data.error_description,
