@@ -14,7 +14,12 @@
             <view class="handled">未整改</view>
             <view class="manager">项目经理</view>
         </view>
-        <view v-for="project in listData" :key="project.id" class="project">
+        <view
+            v-for="project in listData"
+            :key="project.id"
+            class="project"
+            @click="view(project.id)"
+        >
             <view class="name">
                 {{ project.shortName }}
             </view>
@@ -148,6 +153,11 @@ export default {
                     });
                     this.d = new Date().getTime();
                 }
+            });
+        },
+        view(project) {
+            uni.navigateTo({
+                url: `/module-ss/ss/safety-check/list/list?project=${project}`
             });
         }
     }

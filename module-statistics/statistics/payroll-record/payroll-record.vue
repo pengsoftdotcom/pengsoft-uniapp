@@ -28,7 +28,12 @@
             <view class="cashier">发薪员</view>
             <view class="manager">项目经理</view>
         </view>
-        <view v-for="project in listData" :key="project.id" class="project">
+        <view
+            v-for="project in listData"
+            :key="project.id"
+            class="project"
+            @click="view(project.id)"
+        >
             <view class="name">
                 {{ project.shortName }}
                 (<text class="info">{{ project.paid }} </text>)
@@ -189,6 +194,11 @@ export default {
                     this.ec.option.series[0].data[0].value = this.unconfirmed;
                     this.ec.option.series[0].data[1].value = this.confirmed;
                 }
+            });
+        },
+        view(project) {
+            uni.navigateTo({
+                url: `/module-oa/oa/payroll-record/list/list?project=${project}`
             });
         }
     }

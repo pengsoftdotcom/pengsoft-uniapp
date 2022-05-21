@@ -29,7 +29,12 @@
             <view class="number">人数</view>
             <view class="manager">项目经理</view>
         </view>
-        <view v-for="project in listData" :key="project.id" class="project">
+        <view
+            v-for="project in listData"
+            :key="project.id"
+            class="project"
+            @click="view(project.id)"
+        >
             <view class="name">
                 {{ project.shortName }}
                 (<text class="info">{{ project.total }} </text>)
@@ -225,6 +230,11 @@ export default {
                     this.ec.option.series[0].data[0].value = this.participate;
                     this.ec.option.series[0].data[1].value = this.leave;
                 }
+            });
+        },
+        view(project) {
+            uni.navigateTo({
+                url: `/module-ss/ss/safety-training/list/list?project=${project}`
             });
         }
     }
