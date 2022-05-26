@@ -11,21 +11,19 @@
                         :fileList="pictures"
                         @afterRead="afterReadPicture()"
                         @delete="deletePicture"
+                        :deletable="isSaveVisible()"
                         :disabled="!isSaveVisible()"
                     >
                     </u-upload>
                 </u-form-item>
-                <u-form-item
-                    v-if="isSaveVisible()"
-                    label="确认图片"
-                    prop="confirmPictures"
-                >
+                <u-form-item label="确认图片" prop="confirmPictures">
                     <u-upload
                         :capture="['camera', 'album']"
                         :fileList="confirmPictures"
                         @afterRead="afterReadConfirmPicture()"
                         @delete="deleteConfirmPicture"
-                        :disabled="!isSaveVisible()"
+                        :deletable="isSaveVisible() || isConfirmVisible()"
+                        :disabled="!isSaveVisible() && !isConfirmVisible()"
                     >
                     </u-upload>
                 </u-form-item>
