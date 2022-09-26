@@ -105,7 +105,7 @@ export default {
                     ]
                 }
             },
-            ...JSON.parse(JSON.stringify(uni.listModel))
+            ...uni.$u.deepClone(uni.listModel)
         };
     },
     onLoad() {

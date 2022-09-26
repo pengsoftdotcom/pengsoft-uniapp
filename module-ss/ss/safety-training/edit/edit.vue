@@ -44,7 +44,7 @@
             </u-form-item>
             <u-form-item
                 label="参与人"
-                prop="participants"
+                prop="participantSize"
                 customStyle="letter-spacing: 0.5rem"
                 @click="editParticipant"
             >
@@ -223,6 +223,11 @@ export default {
                     type: 'string',
                     required: true,
                     message: '请填写培训地点'
+                },
+                participantSize: {
+                    type: 'number',
+                    min: 1,
+                    message: '请选择参与人'
                 }
             },
             projects: [],
@@ -327,15 +332,25 @@ export default {
             if (this.formModel.staffs && this.formModel.staffs.length > 0) {
                 url += this.formModel.staffs.join(',');
             }
-            uni.request({
-                url,
-                method: 'POST',
-                header: {
-                    'Content-Type': 'application/json'
-                },
-                data: this.formModel,
-                success: () => this.afterSubmit()
-            });
+            this.$refs.form
+                .validate()
+                .then(() => {
+                    uni.request({
+                        url,
+                        method: 'POST',
+                        header: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: this.formModel,
+                        success: () => this.afterSubmit()
+                    });
+                })
+                .catch(() =>
+                    uni.showToast({
+                        title: '请完成填写后提交',
+                        icon: 'none'
+                    })
+                );
         },
         afterSubmit() {
             uni.showModal({

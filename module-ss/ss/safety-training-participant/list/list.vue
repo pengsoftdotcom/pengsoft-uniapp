@@ -8,6 +8,18 @@
                 @change="change"
             ></u-subsection>
 
+            <u--input
+                v-if="current === 1"
+                placeholder="请输入姓名、手机号码或身份证号"
+                v-model="keyword"
+                @change="keywordChange"
+                suffixIcon="search"
+                clearable
+                :customStyle="{
+                    margin: '15px 11px 0',
+                    background: '#ffffff'
+                }"
+            ></u--input>
             <view class="w-form-wrap">
                 <template v-if="current === 0">
                     <u-checkbox-group
@@ -16,11 +28,11 @@
                         @change="changeDepartments"
                     >
                         <u-checkbox
-                            v-for="(item, index) in departments"
+                            v-for="(department, index) in departments"
                             :customStyle="{ margin: '8px 8px 8px 0' }"
-                            :key="index"
-                            :label="`${item.parent.shortName}${item.shortName}  (${item.number})`"
-                            :name="item.id"
+                            :key="department.id"
+                            :label="`${department.parent.shortName}${department.shortName}  (${department.number})`"
+                            :name="department.id"
                         />
                     </u-checkbox-group>
                 </template>
@@ -31,11 +43,15 @@
                         @change="changeStaffs"
                     >
                         <u-checkbox
-                            v-for="(item, index) in staffs"
-                            :customStyle="{ margin: '8px 8px 8px 0' }"
-                            :key="index"
-                            :label="`${item.person.name} - ${item.person.mobile}`"
-                            :name="item.id"
+                            v-for="(staff, index) in staffs"
+                            :customStyle="{
+                                margin: '8px 8px 8px 0',
+                                display:
+                                    staff.visible === false ? 'none' : 'flex'
+                            }"
+                            :key="staff.id"
+                            :label="`${staff.person.name} - ${staff.person.mobile} - ${staff.visible}`"
+                            :name="staff.id"
                         />
                     </u-checkbox-group>
                 </template>
@@ -50,10 +66,18 @@
             </view>
         </template>
         <template v-else>
+            <u--input
+                placeholder="请输入姓名、手机号码或身份证号"
+                v-model="keyword"
+                @change="keywordChange"
+                suffixIcon="search"
+                clearable
+                :customStyle="{ margin: '0 11px', background: '#ffffff' }"
+            ></u--input>
             <view class="w-list-wrap">
                 <view
                     v-for="(item, index) in listData"
-                    :key="index"
+                    :key="item.id"
                     class="w-list-item"
                     @click="edit(item)"
                 >
@@ -100,7 +124,8 @@ export default {
             departments: [],
             staffs: [],
             selected: 0,
-            ...uni.$u.deepClone(uni.listModel)
+            ...uni.$u.deepClone(uni.listModel),
+            keyword: ''
         };
     },
     onLoad(option) {
@@ -163,13 +188,30 @@ export default {
                 url: '/api/basedata/staff/find-all-by-department-and-role-codes',
                 data: {
                     'department.id': uni.getUserDetails().primaryDepartment.id,
-                    'role.code': 'worker'
+                    'role.code': 'worker',
+                    keyword: this.keyword
                 },
-                success: (res) => (this.staffs = res.data)
+                success: (res) => (this.staffs = res.data.splice(0, 20))
             });
         },
         changeStaffs(event) {
             this.selected = event.length;
+        },
+        keywordChange() {
+            this.pageData.page = 0;
+            if (this.type === 'create') {
+                this.staffs.forEach(
+                    (staff) =>
+                        (staff.visible =
+                            staff.person.name.indexOf(this.keyword) > -1 ||
+                            staff.person.mobile.indexOf(this.keyword) > -1 ||
+                            staff.person.identityCardNumber.indexOf(
+                                this.keyword
+                            ) > -1)
+                );
+            } else {
+                this.getList();
+            }
         },
         getList() {
             this.status = 'more';
@@ -181,6 +223,7 @@ export default {
                 data: {
                     page: this.pageData.page,
                     size: this.pageData.size,
+                    keyword: this.keyword,
                     ...this.filterData
                 },
                 success: (res) => {

@@ -52,16 +52,16 @@
 <script>
 export default {
     data() {
-        return { ...uni.$u.deepClone(uni.listModel), keyword: '' };
+        return { ...uni.$u.deepClone(uni.listModel), keyword: '', project: '' };
     },
     onLoad(option) {
-        const status = option.status;
-        if (status) {
-            this.filterData['status.code'] = status;
+        if (option.status) {
+            this.filterData['status.code'] = option.status;
         }
-        const project = option.project;
-        if (project) {
-            this.filterData['project.id'] = project;
+
+        if (option.project) {
+            this.filterData['project.id'] = option.project;
+            this.project = option.project;
         }
     },
     onShow() {
@@ -114,7 +114,7 @@ export default {
         },
         edit(id, type) {
             uni.navigateTo({
-                url: `../edit/edit?project=${this.filterData['project.id']}&id=${id}&type=${type}`
+                url: `../edit/edit?project=${this.project}&id=${id}&type=${type}`
             });
         }
     }

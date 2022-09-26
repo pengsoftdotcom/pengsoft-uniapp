@@ -73,13 +73,23 @@ export default {
                             name: '用工合同',
                             icon: 'shop-filled',
                             page: '/module-oa/oa/contract/list/list',
-                            roles: ['bu_manager', 'cashier']
+                            roles: [
+                                'ru_manager',
+                                'owner_manager',
+                                'bu_manager',
+                                'cashier'
+                            ]
                         },
                         {
                             name: '薪酬发放',
                             icon: 'shop-filled',
                             page: '/module-oa/oa/payroll-record/list/list',
-                            roles: ['bu_manager', 'cashier']
+                            roles: [
+                                'ru_manager',
+                                'owner_manager',
+                                'bu_manager',
+                                'cashier'
+                            ]
                         }
                     ]
                 },

@@ -64,7 +64,7 @@ export default {
             total: 0,
             building: 0,
             complete: 0,
-            ...JSON.parse(JSON.stringify(uni.listModel))
+            ...uni.$u.deepClone(uni.listModel)
         };
     },
     computed: {

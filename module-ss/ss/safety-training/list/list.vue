@@ -56,7 +56,7 @@
 <script>
 export default {
     data() {
-        return JSON.parse(JSON.stringify(uni.listModel));
+        return uni.$u.deepClone(uni.listModel);
     },
     onLoad(option) {
         const project = option.project;
