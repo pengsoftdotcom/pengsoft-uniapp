@@ -97,6 +97,7 @@ export default {
         getProjectList() {
             uni.request({
                 url: '/api/ss/construction-project/find-all',
+                data: { 'status.code': 'building' },
                 success: (res) => {
                     this.listData = res.data;
                     this.listData.forEach((project) => {
