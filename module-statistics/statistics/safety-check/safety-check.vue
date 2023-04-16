@@ -15,7 +15,7 @@
             <view class="manager">项目经理</view>
         </view>
         <view
-            v-for="project in listData"
+            v-for="project in projects"
             :key="project.id"
             class="project"
             @click="view(project.id)"
@@ -57,6 +57,16 @@ export default {
             ...uni.$u.deepClone(uni.listModel)
         };
     },
+    computed: {
+        projects() {
+            return this.listData.filter(
+                (project) =>
+                    project.startedAt <= this.selectedDate &&
+                    (!project.completedAt ||
+                        project.completedAt >= this.selectedDate)
+            );
+        }
+    },
     onLoad() {
         this.getProjectList();
     },
@@ -97,7 +107,6 @@ export default {
         getProjectList() {
             uni.request({
                 url: '/api/ss/construction-project/find-all',
-                data: { 'status.code': 'building' },
                 success: (res) => {
                     this.listData = res.data;
                     this.listData.forEach((project) => {
@@ -131,7 +140,7 @@ export default {
             uni.request({
                 url: '/api/ss/safety-check/statistic-by-day',
                 data: {
-                    'project.id': this.listData
+                    'project.id': this.projects
                         .map((project) => project.id)
                         .join(','),
                     startTime,
