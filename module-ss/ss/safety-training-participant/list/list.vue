@@ -50,7 +50,7 @@
                                     staff.visible === false ? 'none' : 'flex'
                             }"
                             :key="staff.id"
-                            :label="`${staff.person.name} - ${staff.person.mobile} - ${staff.visible}`"
+                            :label="`${staff.person.name} - ${staff.person.mobile}`"
                             :name="staff.id"
                         />
                     </u-checkbox-group>
