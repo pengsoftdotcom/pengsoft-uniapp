@@ -191,7 +191,7 @@ export default {
                     'role.code': 'worker',
                     keyword: this.keyword
                 },
-                success: (res) => (this.staffs = res.data.splice(0, 20))
+                success: (res) => (this.staffs = res.data)
             });
         },
         changeStaffs(event) {
